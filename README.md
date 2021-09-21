@@ -39,7 +39,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 | 成员&nbsp; | 个人简介                                            | 个人主页                                           |
 | --------------- | --------------------------------------------------- | -------------------------------------------------- |
 |   李嘉骐   | DataWhale成员，清华大学研究生                       | https://www.zhihu.com/people/li-jia-qi-16-9/posts  |
-|   牛志康   | DataWhale贡献者，西安电子科技大学本科生             | https://www.zhihu.com/people/obeah-82              |
+|   牛志康   | DataWhale成员，西安电子科技大学本科生             | https://www.zhihu.com/people/obeah-82              |
 |    刘洋    | Datawhale成员，中国科学院数学与系统科学研究所研究生 | https://www.zhihu.com/people/ming-ren-19-34/asks   |
 |   陈安东   | DataWhale成员，中央民族大学研究生                   | https://andongblue.github.io/chenandong.github.io/ |
 
@@ -56,7 +56,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 ## 四、 课程编排与使用方法
 
 - 课程编排：
-  由浅入深PyTorch分为三个阶段：PyTorch深度学习基础知识、PyTorch进阶操作、PyTorch生态介绍与案例分析。
+  深入浅出PyTorch分为三个阶段：PyTorch深度学习基础知识、PyTorch进阶操作、PyTorch生态介绍与案例分析。
 
 - 使用方法:
 

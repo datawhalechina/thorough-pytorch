@@ -55,6 +55,8 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 
 ## 四、 课程编排与使用方法
 
+部分章节直播讲解请观看B站回放（持续更新）：https://www.bilibili.com/video/BV1e341127Lt
+
 - 课程编排：
   深入浅出PyTorch分为三个阶段：PyTorch深度学习基础知识、PyTorch进阶操作、PyTorch生态介绍与案例分析。
 

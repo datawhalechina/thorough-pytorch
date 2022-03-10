@@ -91,7 +91,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 
 ## 五、鸣谢与反馈
 
-- 非常感谢DataWhale成员 叶前坤 @[PureBuckwheat](https://github.com/PureBuckwheat) 对文档的细致校对！
+- 非常感谢DataWhale成员 叶前坤 @[PureBuckwheat](https://github.com/PureBuckwheat) 和 胡锐锋 @[Relph1119](https://github.com/Relph1119) 对文档的细致校对！
 - 如果有任何想法可以联系我们DataWhale  
 
 ![二维码.png](./figures/qrcode.jpeg)

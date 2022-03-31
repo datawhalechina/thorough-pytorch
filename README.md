@@ -57,16 +57,16 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 
 | 成员&nbsp; | 个人简介                                            | 个人主页                                           |
 | --------------- | --------------------------------------------------- | -------------------------------------------------- |
-|   李嘉骐   | DataWhale成员，清华大学研究生                       | https://www.zhihu.com/people/li-jia-qi-16-9/posts  |
-|   牛志康   | DataWhale成员，西安电子科技大学本科生             | https://www.zhihu.com/people/obeah-82              |
+|   牛志康   | DataWhale成员，西安电子科技大学本科生 | https://www.zhihu.com/people/obeah-82 |
+|   李嘉骐   | DataWhale成员，清华大学研究生 | https://www.zhihu.com/people/li-jia-qi-16-9/posts |
 |    刘洋    | Datawhale成员，中国科学院数学与系统科学研究所研究生 | https://www.zhihu.com/people/ming-ren-19-34/asks   |
 |   陈安东   | DataWhale成员，中央民族大学研究生                   | https://andongblue.github.io/chenandong.github.io/ |
 
 教程贡献情况（已上线课程内容）：
 
-李嘉骐：第三章；第四章；第五章；第六章；第七章；第八章；内容整合
-
 牛志康：第一章；第三章；第六章；第七章；第八章
+
+李嘉骐：第三章；第四章；第五章；第六章；第七章；第八章；内容整合
 
 刘洋：第二章；第三章
 
@@ -77,7 +77,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 部分章节直播讲解请观看B站回放（持续更新）：https://www.bilibili.com/video/BV1L44y1472Z
 
 - 课程编排：
-  深入浅出PyTorch分为三个阶段：PyTorch深度学习基础知识、PyTorch进阶操作、PyTorch生态介绍与案例分析。
+  深入浅出PyTorch分为三个阶段：PyTorch深度学习基础知识、PyTorch进阶操作、PyTorch案例分析。
 
 - 使用方法:
 
@@ -87,7 +87,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 
   第一部分：第一章到第四章，学习周期：10天；
 
-  第二部分：第五章到第八章，学习周期待定
+  第二部分：第五章到第八章，学习周期：11天
 
 ## 五、鸣谢与反馈
 

@@ -26,7 +26,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |   成员  |                个人简介               |          个人主页         |
 |:-------|:-------------------------------------|:-------------------------:|
 |  牛志康 | DataWhale成员，西安电子科技大学本科生 | [个人主页](https://www.zhihu.com/people/obeah-82) |
-|  李嘉琪 | DataWhale成员，清华大学研究生         | [个人主页](https://www.zhihu.com/people/li-jia-qi-16-9/posts) |
+|  李嘉骐 | DataWhale成员，清华大学研究生         | [个人主页](https://www.zhihu.com/people/li-jia-qi-16-9/posts) |
 | 刘洋 | Datawhale成员，中国科学院数学与系统科学研究所研究生  |  [个人主页](https://www.zhihu.com/people/ming-ren-19-34/asks)  |
 | 陈安东 | Datawhale成员，中央民族大学研究生  |  [个人主页](https://andongblue.github.io/chenandong.github.io/)  |
 
@@ -43,17 +43,17 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 ## 更新计划
 | 内容 | 更新时间 |内容|
 | :---- | :---- |:----:|
-|模型初始化| 2022.4.2 |`torch.nn.init`的使用|
-|visdom可视化| 2022.4.2 |`Visdom`的使用|
+|模型初始化| 2022.4.5 |`torch.nn.init`的使用|
+|visdom可视化| 2022.4.5 |`Visdom`的使用|
 |apex| 2022.5.4 |apex的简介和使用|
-|超参数的保存 | 2022.4.2 |介绍argparse与yaml|
+|超参数的保存 | 2022.4.5 |介绍argparse与yaml|
 |onnx| 2022.5.31 |讲述ONNX格式和实战例子|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|
 |数据增强| 2022.4.9 |Augmentation的使用|
 |并行训练| 2022.4.9 |并行训练 |
 |模型预训练 - torchhub| 2022.4.16  |torchhub的简介和使用方法|
-|模型预训练 - timm| 2022.4.2 |timm预训练模型的使用方法|
+|模型预训练 - timm| 2022.4.5 |timm预训练模型的使用方法|
 |模型预训练 - openmmlab| 2022.4.27|openmmlab系列的使用|
 |目标检测 - yolo系列|  |Yolo系列介绍与trick实现|
 |目标检测 - SSD|  |SSD的简介和实现|

@@ -180,13 +180,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
-     3.5 损失函数
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     模型初始化
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.6 Pytorch优化器
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.5 损失函数
     </a>
    </li>
    <li class="toctree-l2">
@@ -197,6 +197,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
      3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.6 Pytorch优化器
     </a>
    </li>
   </ul>
@@ -271,8 +276,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83.html">
-     6.3 模型微调
+    <a class="reference internal" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
     </a>
    </li>
    <li class="toctree-l2">
@@ -22211,12 +22221,6 @@ module.outc.conv.bias 	 False
 tensor([-0.1994], device=&#39;cuda:0&#39;)
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
 <p><strong>Point 8：半精度训练</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## 演示时需要restart kernel，并运行Unet模块</span>
 
@@ -22381,46 +22385,45 @@ KeyboardInterrupt                         Traceback (most recent call last)
 KeyboardInterrupt: 
 </pre></div>
 </div>
-<p>``bash
-!nvidia-smi</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-    <span class="n">Sun</span> <span class="n">Mar</span> <span class="mi">27</span> <span class="mi">21</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">28</span> <span class="mi">2022</span>       
-    <span class="o">+-----------------------------------------------------------------------------+</span>
-    <span class="o">|</span> <span class="n">NVIDIA</span><span class="o">-</span><span class="n">SMI</span> <span class="mf">460.91.03</span>    <span class="n">Driver</span> <span class="n">Version</span><span class="p">:</span> <span class="mf">460.91.03</span>    <span class="n">CUDA</span> <span class="n">Version</span><span class="p">:</span> <span class="mf">11.2</span>     <span class="o">|</span>
-    <span class="o">|-------------------------------+----------------------+----------------------+</span>
-    <span class="o">|</span> <span class="n">GPU</span>  <span class="n">Name</span>        <span class="n">Persistence</span><span class="o">-</span><span class="n">M</span><span class="o">|</span> <span class="n">Bus</span><span class="o">-</span><span class="n">Id</span>        <span class="n">Disp</span><span class="o">.</span><span class="n">A</span> <span class="o">|</span> <span class="n">Volatile</span> <span class="n">Uncorr</span><span class="o">.</span> <span class="n">ECC</span> <span class="o">|</span>
-    <span class="o">|</span> <span class="n">Fan</span>  <span class="n">Temp</span>  <span class="n">Perf</span>  <span class="n">Pwr</span><span class="p">:</span><span class="n">Usage</span><span class="o">/</span><span class="n">Cap</span><span class="o">|</span>         <span class="n">Memory</span><span class="o">-</span><span class="n">Usage</span> <span class="o">|</span> <span class="n">GPU</span><span class="o">-</span><span class="n">Util</span>  <span class="n">Compute</span> <span class="n">M</span><span class="o">.</span> <span class="o">|</span>
-    <span class="o">|</span>                               <span class="o">|</span>                      <span class="o">|</span>               <span class="n">MIG</span> <span class="n">M</span><span class="o">.</span> <span class="o">|</span>
-    <span class="o">|===============================+======================+======================|</span>
-    <span class="o">|</span>   <span class="mi">0</span>  <span class="n">GeForce</span> <span class="n">RTX</span> <span class="mf">208.</span><span class="o">..</span>  <span class="n">Off</span>  <span class="o">|</span> <span class="mi">00000000</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">Off</span> <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">|</span> <span class="mi">49</span><span class="o">%</span>   <span class="mi">49</span><span class="n">C</span>    <span class="n">P2</span>    <span class="mi">52</span><span class="n">W</span> <span class="o">/</span> <span class="mi">250</span><span class="n">W</span> <span class="o">|</span>   <span class="mi">8989</span><span class="n">MiB</span> <span class="o">/</span> <span class="mi">11019</span><span class="n">MiB</span> <span class="o">|</span>      <span class="mi">1</span><span class="o">%</span>      <span class="n">Default</span> <span class="o">|</span>
-    <span class="o">|</span>                               <span class="o">|</span>                      <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">+-------------------------------+----------------------+----------------------+</span>
-    <span class="o">|</span>   <span class="mi">1</span>  <span class="n">GeForce</span> <span class="n">RTX</span> <span class="mf">208.</span><span class="o">..</span>  <span class="n">Off</span>  <span class="o">|</span> <span class="mi">00000000</span><span class="p">:</span><span class="mi">3</span><span class="n">B</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">Off</span> <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">|</span> <span class="mi">59</span><span class="o">%</span>   <span class="mi">53</span><span class="n">C</span>    <span class="n">P2</span>    <span class="mi">64</span><span class="n">W</span> <span class="o">/</span> <span class="mi">250</span><span class="n">W</span> <span class="o">|</span>   <span class="mi">7866</span><span class="n">MiB</span> <span class="o">/</span> <span class="mi">11019</span><span class="n">MiB</span> <span class="o">|</span>      <span class="mi">1</span><span class="o">%</span>      <span class="n">Default</span> <span class="o">|</span>
-    <span class="o">|</span>                               <span class="o">|</span>                      <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">+-------------------------------+----------------------+----------------------+</span>
-    <span class="o">|</span>   <span class="mi">2</span>  <span class="n">GeForce</span> <span class="n">RTX</span> <span class="mf">208.</span><span class="o">..</span>  <span class="n">Off</span>  <span class="o">|</span> <span class="mi">00000000</span><span class="p">:</span><span class="mi">86</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">Off</span> <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">|</span> <span class="mi">52</span><span class="o">%</span>   <span class="mi">54</span><span class="n">C</span>    <span class="n">P2</span>    <span class="mi">61</span><span class="n">W</span> <span class="o">/</span> <span class="mi">250</span><span class="n">W</span> <span class="o">|</span>   <span class="mi">5862</span><span class="n">MiB</span> <span class="o">/</span> <span class="mi">11019</span><span class="n">MiB</span> <span class="o">|</span>      <span class="mi">0</span><span class="o">%</span>      <span class="n">Default</span> <span class="o">|</span>
-    <span class="o">|</span>                               <span class="o">|</span>                      <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">+-------------------------------+----------------------+----------------------+</span>
-    <span class="o">|</span>   <span class="mi">3</span>  <span class="n">GeForce</span> <span class="n">RTX</span> <span class="mf">208.</span><span class="o">..</span>  <span class="n">Off</span>  <span class="o">|</span> <span class="mi">00000000</span><span class="p">:</span><span class="n">AF</span><span class="p">:</span><span class="mf">00.0</span> <span class="n">Off</span> <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">|</span> <span class="mi">52</span><span class="o">%</span>   <span class="mi">54</span><span class="n">C</span>    <span class="n">P2</span>    <span class="mi">61</span><span class="n">W</span> <span class="o">/</span> <span class="mi">250</span><span class="n">W</span> <span class="o">|</span>   <span class="mi">5814</span><span class="n">MiB</span> <span class="o">/</span> <span class="mi">11019</span><span class="n">MiB</span> <span class="o">|</span>      <span class="mi">0</span><span class="o">%</span>      <span class="n">Default</span> <span class="o">|</span>
-    <span class="o">|</span>                               <span class="o">|</span>                      <span class="o">|</span>                  <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="o">|</span>
-    <span class="o">+-------------------------------+----------------------+----------------------+</span>
-                                                                                   
-    <span class="o">+-----------------------------------------------------------------------------+</span>
-    <span class="o">|</span> <span class="n">Processes</span><span class="p">:</span>                                                                  <span class="o">|</span>
-    <span class="o">|</span>  <span class="n">GPU</span>   <span class="n">GI</span>   <span class="n">CI</span>        <span class="n">PID</span>   <span class="n">Type</span>   <span class="n">Process</span> <span class="n">name</span>                  <span class="n">GPU</span> <span class="n">Memory</span> <span class="o">|</span>
-    <span class="o">|</span>        <span class="n">ID</span>   <span class="n">ID</span>                                                   <span class="n">Usage</span>      <span class="o">|</span>
-    <span class="o">|=============================================================================|</span>
-    <span class="o">|</span>    <span class="mi">0</span>   <span class="n">N</span><span class="o">/</span><span class="n">A</span>  <span class="n">N</span><span class="o">/</span><span class="n">A</span>   <span class="mi">1140407</span>      <span class="n">C</span>   <span class="o">.../</span><span class="n">envs</span><span class="o">/</span><span class="n">r411py37</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span>     <span class="mi">1123</span><span class="n">MiB</span> <span class="o">|</span>
-    <span class="o">|</span>    <span class="mi">0</span>   <span class="n">N</span><span class="o">/</span><span class="n">A</span>  <span class="n">N</span><span class="o">/</span><span class="n">A</span>   <span class="mi">2231210</span>      <span class="n">C</span>   <span class="n">python</span>                           <span class="mi">7863</span><span class="n">MiB</span> <span class="o">|</span>
-    <span class="o">|</span>    <span class="mi">1</span>   <span class="n">N</span><span class="o">/</span><span class="n">A</span>  <span class="n">N</span><span class="o">/</span><span class="n">A</span>   <span class="mi">2233380</span>      <span class="n">C</span>   <span class="n">python</span>                           <span class="mi">7863</span><span class="n">MiB</span> <span class="o">|</span>
-    <span class="o">|</span>    <span class="mi">2</span>   <span class="n">N</span><span class="o">/</span><span class="n">A</span>  <span class="n">N</span><span class="o">/</span><span class="n">A</span>   <span class="mi">2233881</span>      <span class="n">C</span>   <span class="o">.../</span><span class="n">ljq</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span>     <span class="mi">5859</span><span class="n">MiB</span> <span class="o">|</span>
-    <span class="o">|</span>    <span class="mi">3</span>   <span class="n">N</span><span class="o">/</span><span class="n">A</span>  <span class="n">N</span><span class="o">/</span><span class="n">A</span>   <span class="mi">2233881</span>      <span class="n">C</span>   <span class="o">.../</span><span class="n">ljq</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span>     <span class="mi">5811</span><span class="n">MiB</span> <span class="o">|</span>
-    <span class="o">+-----------------------------------------------------------------------------+</span>
-    
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>!nvidia-smi
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Sun Mar 27 21:17:28 2022       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 460.91.03    Driver Version: 460.91.03    CUDA Version: 11.2     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  GeForce RTX 208...  Off  | 00000000:18:00.0 Off |                  N/A |
+| 49%   49C    P2    52W / 250W |   8989MiB / 11019MiB |      1%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   1  GeForce RTX 208...  Off  | 00000000:3B:00.0 Off |                  N/A |
+| 59%   53C    P2    64W / 250W |   7866MiB / 11019MiB |      1%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   2  GeForce RTX 208...  Off  | 00000000:86:00.0 Off |                  N/A |
+| 52%   54C    P2    61W / 250W |   5862MiB / 11019MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   3  GeForce RTX 208...  Off  | 00000000:AF:00.0 Off |                  N/A |
+| 52%   54C    P2    61W / 250W |   5814MiB / 11019MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|    0   N/A  N/A   1140407      C   .../envs/r411py37/bin/python     1123MiB |
+|    0   N/A  N/A   2231210      C   python                           7863MiB |
+|    1   N/A  N/A   2233380      C   python                           7863MiB |
+|    2   N/A  N/A   2233881      C   .../ljq/anaconda3/bin/python     5859MiB |
+|    3   N/A  N/A   2233881      C   .../ljq/anaconda3/bin/python     5811MiB |
++-----------------------------------------------------------------------------+
 </pre></div>
 </div>
 </section>

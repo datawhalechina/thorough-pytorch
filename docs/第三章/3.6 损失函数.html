@@ -43,8 +43,8 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="3.6 Pytorch优化器" href="3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html" />
-    <link rel="prev" title="3.4 模型构建" href="3.4%20%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA.html" />
+    <link rel="next" title="3.7 训练和评估" href="3.7%20%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0.html" />
+    <link rel="prev" title="模型初始化" href="3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh">
     
@@ -181,14 +181,14 @@
      3.4 模型构建
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     模型初始化
+    </a>
+   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      3.5 损失函数
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.6 Pytorch优化器
     </a>
    </li>
    <li class="toctree-l2">
@@ -199,6 +199,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
      3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.6 Pytorch优化器
     </a>
    </li>
   </ul>
@@ -273,8 +278,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83.html">
-     6.3 模型微调
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
     </a>
    </li>
    <li class="toctree-l2">
@@ -443,7 +453,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第三章/3.5 损失函数.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第三章/3.6 损失函数.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -460,7 +470,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第三章/3.5 损失函数.md"
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第三章/3.6 损失函数.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -488,7 +498,7 @@ title="Edit this page"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../_sources/第三章/3.5 损失函数.md.txt"
+        <a href="../_sources/第三章/3.6 损失函数.md.txt"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -1256,17 +1266,17 @@ x_{n}, &amp; \text { if } y_{n}=1 \\
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="3.4%20%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA.html" title="上一页 页">
+    <a class='left-prev' id="prev-link" href="3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html" title="上一页 页">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">上一页</p>
-            <p class="prev-next-title">3.4 模型构建</p>
+            <p class="prev-next-title">模型初始化</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html" title="下一页 页">
+    <a class='right-next' id="next-link" href="3.7%20%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0.html" title="下一页 页">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">3.6 Pytorch优化器</p>
+        <p class="prev-next-title">3.7 训练和评估</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

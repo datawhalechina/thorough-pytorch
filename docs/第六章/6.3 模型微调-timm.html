@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>6.2 动态调整学习率 &#8212; 深入浅出PyTorch</title>
+    <title>6.3 模型微调 - timm &#8212; 深入浅出PyTorch</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -41,8 +41,8 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="6.3 模型微调-torchvision" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html" />
-    <link rel="prev" title="6.1 自定义损失函数" href="6.1%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html" />
+    <link rel="next" title="6.4 半精度训练" href="6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html" />
+    <link rel="prev" title="6.3 模型微调-torchvision" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh">
     
@@ -270,8 +270,8 @@
      6.1 自定义损失函数
     </a>
    </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
+   <li class="toctree-l2">
+    <a class="reference internal" href="6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html">
      6.2 动态调整学习率
     </a>
    </li>
@@ -280,8 +280,8 @@
      6.3 模型微调-torchvision
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      6.3 模型微调 - timm
     </a>
    </li>
@@ -451,7 +451,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第六章/6.2 动态调整学习率.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第六章/6.3 模型微调-timm.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -468,7 +468,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第六章/6.2 动态调整学习率.md"
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第六章/6.3 模型微调-timm.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -496,7 +496,7 @@ title="Edit this page"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../_sources/第六章/6.2 动态调整学习率.md.txt"
+        <a href="../_sources/第六章/6.3 模型微调-timm.md.txt"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -556,18 +556,28 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#scheduler">
-   6.2.1 使用官方scheduler
+  <a class="reference internal nav-link" href="#id1">
+   timm的安装
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
-   6.2.2 自定义scheduler
+   如何查看预训练模型种类
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
-   本节参考
+   使用和修改预训练模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   模型的保存
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   推荐材料
   </a>
  </li>
 </ul>
@@ -579,7 +589,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>6.2 动态调整学习率</h1>
+                <h1>6.3 模型微调 - timm</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -590,18 +600,28 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#scheduler">
-   6.2.1 使用官方scheduler
+  <a class="reference internal nav-link" href="#id1">
+   timm的安装
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
-   6.2.2 自定义scheduler
+   如何查看预训练模型种类
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
-   本节参考
+   使用和修改预训练模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   模型的保存
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   推荐材料
   </a>
  </li>
 </ul>
@@ -614,81 +634,158 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>6.2 动态调整学习率<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
-<p>学习率的选择是深度学习中一个困扰人们许久的问题，学习速率设置过小，会极大降低收敛速度，增加训练时间；学习率太大，可能导致参数在最优解两侧来回振荡。但是当我们选定了一个合适的学习率后，经过许多轮的训练后，可能会出现准确率震荡或loss不再下降等情况，说明当前学习率已不能满足模型调优的需求。此时我们就可以通过一个适当的学习率衰减策略来改善这种现象，提高我们的精度。这种设置方式在PyTorch中被称为scheduler，也是我们本节所研究的对象。</p>
-<p>经过本节的学习，你将收获：</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="timm">
+<h1>6.3 模型微调 - timm<a class="headerlink" href="#timm" title="永久链接至标题">#</a></h1>
+<p>除了使用<code class="docutils literal notranslate"><span class="pre">torchvision.models</span></code>进行预训练以外，还有一个常见的预训练模型库，叫做<code class="docutils literal notranslate"><span class="pre">timm</span></code>，这个库是由来自加拿大温哥华Ross Wightman创建的。里面提供了许多计算机视觉的SOTA模型，可以当作是torchvision的扩充版本，并且里面的模型在准确度上也较高。在本章内容中，我们主要是针对这个库的预训练模型的使用做叙述，其他部分内容（数据扩增，优化器等）如果大家感兴趣，可以参考以下两个链接。</p>
 <ul class="simple">
-<li><p>如何根据需要选取已有的学习率调整策略</p></li>
-<li><p>如何自定义设置学习调整策略并实现</p></li>
+<li><p>Github链接：https://github.com/rwightman/pytorch-image-models</p></li>
+<li><p>官网链接：https://fastai.github.io/timmdocs/
+https://rwightman.github.io/pytorch-image-models/</p></li>
 </ul>
-<section id="scheduler">
-<h2>6.2.1 使用官方scheduler<a class="headerlink" href="#scheduler" title="永久链接至标题">#</a></h2>
-<ul class="simple">
-<li><p><strong>了解官方提供的API</strong></p></li>
-</ul>
-<p>在训练神经网络的过程中，学习率是最重要的超参数之一，作为当前较为流行的深度学习框架，PyTorch已经在<code class="docutils literal notranslate"><span class="pre">torch.optim.lr_scheduler</span></code>为我们封装好了一些动态调整学习率的方法供我们使用，如下面列出的这些scheduler。</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.LambdaLR.html#torch.optim.lr_scheduler.LambdaLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.LambdaLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.MultiplicativeLR.html#torch.optim.lr_scheduler.MultiplicativeLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.MultiplicativeLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html#torch.optim.lr_scheduler.StepLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.StepLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.MultiStepLR.html#torch.optim.lr_scheduler.MultiStepLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.MultiStepLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ExponentialLR.html#torch.optim.lr_scheduler.ExponentialLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.ExponentialLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.CosineAnnealingLR.html#torch.optim.lr_scheduler.CosineAnnealingLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.CosineAnnealingLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html#torch.optim.lr_scheduler.ReduceLROnPlateau"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.ReduceLROnPlateau</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.CyclicLR.html#torch.optim.lr_scheduler.CyclicLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.CyclicLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.OneCycleLR.html#torch.optim.lr_scheduler.OneCycleLR"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.OneCycleLR</span></code></a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.CosineAnnealingWarmRestarts.html#torch.optim.lr_scheduler.CosineAnnealingWarmRestarts"><code class="docutils literal notranslate"><span class="pre">lr_scheduler.CosineAnnealingWarmRestarts</span></code></a></p></li>
-</ul>
-<ul class="simple">
-<li><p><strong>使用官方API</strong></p></li>
-</ul>
-<p>关于如何使用这些动态调整学习率的策略，<code class="docutils literal notranslate"><span class="pre">PyTorch</span></code>官方也很人性化的给出了使用实例代码帮助大家理解，我们也将结合官方给出的代码来进行解释。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 选择一种优化器</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> 
-<span class="c1"># 选择上面提到的一种或多种动态调整学习率的方法</span>
-<span class="n">scheduler1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">....</span> 
-<span class="n">scheduler2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">....</span>
-<span class="o">...</span>
-<span class="n">schedulern</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">....</span>
-<span class="c1"># 进行训练</span>
-<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
-    <span class="n">train</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-    <span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-    <span class="c1"># 需要在优化器参数更新之后再动态调整学习率</span>
-	<span class="n">scheduler1</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> 
-	<span class="o">...</span>
-    <span class="n">schedulern</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<section id="id1">
+<h2>timm的安装<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<p>关于timm的安装，我们可以选择以下两种方式进行：</p>
+<ol class="simple">
+<li><p>通过pip安装</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install timm
 </pre></div>
 </div>
-<p><strong>注</strong>：</p>
-<p>我们在使用官方给出的<code class="docutils literal notranslate"><span class="pre">torch.optim.lr_scheduler</span></code>时，需要将<code class="docutils literal notranslate"><span class="pre">scheduler.step()</span></code>放在<code class="docutils literal notranslate"><span class="pre">optimizer.step()</span></code>后面进行使用。</p>
+<ol class="simple">
+<li><p>通过git与pip进行安装</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/rwightman/pytorch-image-models
+<span class="nb">cd</span> pytorch-image-models <span class="o">&amp;&amp;</span> pip install -e .
+</pre></div>
+</div>
 </section>
 <section id="id2">
-<h2>6.2.2 自定义scheduler<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
-<p>虽然PyTorch官方给我们提供了许多的API，但是在实验中也有可能碰到需要我们自己定义学习率调整策略的情况，而我们的方法是自定义函数<code class="docutils literal notranslate"><span class="pre">adjust_learning_rate</span></code>来改变<code class="docutils literal notranslate"><span class="pre">param_group</span></code>中<code class="docutils literal notranslate"><span class="pre">lr</span></code>的值，在下面的叙述中会给出一个简单的实现。</p>
-<p>假设我们现在正在做实验，需要学习率每30轮下降为原来的1/10，假设已有的官方API中没有符合我们需求的，那就需要自定义函数来实现学习率的改变。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">adjust_learning_rate</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
-    <span class="n">lr</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">lr</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.1</span> <span class="o">**</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">//</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">param_group</span> <span class="ow">in</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
-        <span class="n">param_group</span><span class="p">[</span><span class="s1">&#39;lr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
+<h2>如何查看预训练模型种类<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
+<ol class="simple">
+<li><p>查看timm提供的预训练模型
+截止到2022.3.27日为止，timm提供的预训练模型已经达到了592个，我们可以通过<code class="docutils literal notranslate"><span class="pre">timm.list_models()</span></code>方法查看timm提供的预训练模型（注：本章测试代码均是在jupyter notebook上进行）</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">timm</span>
+<span class="n">avail_pretrained_models</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">list_models</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">avail_pretrained_models</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>有了<code class="docutils literal notranslate"><span class="pre">adjust_learning_rate</span></code>函数的定义，在训练的过程就可以调用我们的函数来实现学习率的动态变化</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">adjust_learning_rate</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
-    <span class="o">...</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span><span class="n">lr</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span><span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">train</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-    <span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-    <span class="n">adjust_learning_rate</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span><span class="n">epoch</span><span class="p">)</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="m">592</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>查看特定模型的所有种类
+每一种系列可能对应着不同方案的模型，比如Resnet系列就包括了ResNet18，50，101等模型，我们可以在<code class="docutils literal notranslate"><span class="pre">timm.list_models()</span></code>传入想查询的模型名称（模糊查询），比如我们想查询densenet系列的所有模型。</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">all_densnet_models</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">list_models</span><span class="p">(</span><span class="s2">&quot;*densenet*&quot;</span><span class="p">)</span>
+<span class="n">all_densnet_models</span>
+</pre></div>
+</div>
+<p>我们发现以列表的形式返回了所有densenet系列的所有模型。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="s1">&#39;densenet121&#39;</span>,
+ <span class="s1">&#39;densenet121d&#39;</span>,
+ <span class="s1">&#39;densenet161&#39;</span>,
+ <span class="s1">&#39;densenet169&#39;</span>,
+ <span class="s1">&#39;densenet201&#39;</span>,
+ <span class="s1">&#39;densenet264&#39;</span>,
+ <span class="s1">&#39;densenet264d_iabn&#39;</span>,
+ <span class="s1">&#39;densenetblur121d&#39;</span>,
+ <span class="s1">&#39;tv_densenet121&#39;</span><span class="o">]</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>查看模型的具体参数
+当我们想查看下模型的具体参数的时候，我们可以通过访问模型的<code class="docutils literal notranslate"><span class="pre">default_cfg</span></code>属性来进行查看，具体操作如下</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">default_cfg</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/resnet34-43635321.pth&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;num_classes&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+ <span class="s1">&#39;input_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+ <span class="s1">&#39;pool_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+ <span class="s1">&#39;crop_pct&#39;</span><span class="p">:</span> <span class="mf">0.875</span><span class="p">,</span>
+ <span class="s1">&#39;interpolation&#39;</span><span class="p">:</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">),</span>
+ <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">),</span>
+ <span class="s1">&#39;first_conv&#39;</span><span class="p">:</span> <span class="s1">&#39;conv1&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;classifier&#39;</span><span class="p">:</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;architecture&#39;</span><span class="p">:</span> <span class="s1">&#39;resnet34&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>除此之外，我们可以通过访问这个<a class="reference external" href="https://rwightman.github.io/pytorch-image-models/results/">链接</a> 查看提供的预训练模型的准确度等信息。</p>
+</section>
+<section id="id3">
+<h2>使用和修改预训练模型<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
+<p>在得到我们想要使用的预训练模型后，我们可以通过<code class="docutils literal notranslate"><span class="pre">timm.create_model()</span></code>的方法来进行模型的创建，我们可以通过传入参数<code class="docutils literal notranslate"><span class="pre">pretrained=True</span></code>，来使用预训练模型。同样的，我们也可以使用跟torchvision里面的模型一样的方法查看模型的参数，类型/</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">timm</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">output</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>torch.Size<span class="o">([</span><span class="m">1</span>, <span class="m">1000</span><span class="o">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>查看某一层模型参数（以第一层卷积为例）</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">())[</span><span class="s1">&#39;conv1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
+ <span class="n">tensor</span><span class="p">([[[[</span><span class="o">-</span><span class="mf">2.9398e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.6421e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.8832e-02</span><span class="p">,</span>  <span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.8349e-02</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">6.9210e-03</span><span class="p">,</span>  <span class="mf">1.2127e-02</span><span class="p">],</span>
+           <span class="p">[</span><span class="o">-</span><span class="mf">3.6199e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0810e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.3891e-02</span><span class="p">,</span>  <span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.2744e-02</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">7.3169e-03</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1834e-02</span><span class="p">],</span>
+            <span class="o">...</span>
+           <span class="p">[</span> <span class="mf">8.4563e-03</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7099e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2176e-03</span><span class="p">,</span>  <span class="o">...</span><span class="p">,</span>  <span class="mf">7.0081e-02</span><span class="p">,</span>
+             <span class="mf">2.9756e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.1400e-03</span><span class="p">]]]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+            
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>修改模型（将1000类改为10类输出）</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">output</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>改变输入通道数（比如我们传入的图片是单通道的，但是模型需要的是三通道图片）
+我们可以通过添加<code class="docutils literal notranslate"><span class="pre">in_chans=1</span></code>来改变</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">in_chans</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="id3">
-<h2>本节参考<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
-<p>【1】<a class="reference external" href="https://pytorch.org/docs/stable/optim.html">PyTorch官方文档</a></p>
+<section id="id4">
+<h2>模型的保存<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h2>
+<p>timm库所创建的模型是<code class="docutils literal notranslate"><span class="pre">torch.model</span></code>的子类，我们可以直接使用torch库中内置的模型参数保存和加载的方法，具体操作如下方代码所示</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span><span class="s1">&#39;./checkpoint/timm_model.pth&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./checkpoint/timm_model.pth&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>推荐材料<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h2>
+<ol class="simple">
+<li><p>https://www.aiuai.cn/aifarm1967.html</p></li>
+<li><p>https://towardsdatascience.com/getting-started-with-pytorch-image-models-timm-a-practitioners-guide-4e77b4bf9055</p></li>
+<li><p>https://chowdera.com/2022/03/202203170834122729.html</p></li>
+</ol>
 </section>
 </section>
 
@@ -700,17 +797,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="6.1%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html" title="上一页 页">
+    <a class='left-prev' id="prev-link" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html" title="上一页 页">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">上一页</p>
-            <p class="prev-next-title">6.1 自定义损失函数</p>
+            <p class="prev-next-title">6.3 模型微调-torchvision</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html" title="下一页 页">
+    <a class='right-next' id="next-link" href="6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html" title="下一页 页">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">6.3 模型微调-torchvision</p>
+        <p class="prev-next-title">6.4 半精度训练</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

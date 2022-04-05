@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>6.3 模型微调 &#8212; 深入浅出PyTorch</title>
+    <title>6.3 模型微调-torchvision &#8212; 深入浅出PyTorch</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -41,7 +41,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="6.4 半精度训练" href="6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html" />
+    <link rel="next" title="6.3 模型微调 - timm" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html" />
     <link rel="prev" title="6.2 动态调整学习率" href="6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh">
@@ -180,13 +180,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
-     3.5 损失函数
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     模型初始化
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.6 Pytorch优化器
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.5 损失函数
     </a>
    </li>
    <li class="toctree-l2">
@@ -197,6 +197,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
      3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.6 Pytorch优化器
     </a>
    </li>
   </ul>
@@ -272,7 +277,12 @@
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     6.3 模型微调
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
     </a>
    </li>
    <li class="toctree-l2">
@@ -441,7 +451,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第六章/6.3 模型微调.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第六章/6.3 模型微调-torchvision.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -458,7 +468,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第六章/6.3 模型微调.md"
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第六章/6.3 模型微调-torchvision.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -486,7 +496,7 @@ title="Edit this page"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../_sources/第六章/6.3 模型微调.md.txt"
+        <a href="../_sources/第六章/6.3 模型微调-torchvision.md.txt"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -546,22 +556,22 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
+  <a class="reference internal nav-link" href="#id1">
    6.3.1 模型微调的流程
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id3">
+  <a class="reference internal nav-link" href="#id2">
    6.3.2 使用已有模型结构
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id4">
+  <a class="reference internal nav-link" href="#id3">
    6.3.3 训练特定层
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
+  <a class="reference internal nav-link" href="#id4">
    本节参考
   </a>
  </li>
@@ -574,7 +584,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>6.3 模型微调</h1>
+                <h1>6.3 模型微调-torchvision</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -585,22 +595,22 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
+  <a class="reference internal nav-link" href="#id1">
    6.3.1 模型微调的流程
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id3">
+  <a class="reference internal nav-link" href="#id2">
    6.3.2 使用已有模型结构
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id4">
+  <a class="reference internal nav-link" href="#id3">
    6.3.3 训练特定层
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id5">
+  <a class="reference internal nav-link" href="#id4">
    本节参考
   </a>
  </li>
@@ -614,8 +624,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>6.3 模型微调<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="torchvision">
+<h1>6.3 模型微调-torchvision<a class="headerlink" href="#torchvision" title="永久链接至标题">#</a></h1>
 <p>随着深度学习的发展，模型的参数越来越大，许多开源模型都是在较大数据集上进行训练的，比如Imagenet-1k，Imagenet-11k，甚至是ImageNet-21k等。但在实际应用中，我们的数据集可能只有几千张，这时从头开始训练具有几千万参数的大型神经网络是不现实的，因为越大的模型对数据量的要求越大，过拟合无法避免。</p>
 <p>假设我们想从图像中识别出不同种类的椅⼦，然后将购买链接推荐给用户。一种可能的方法是先找出100种常见的椅子，为每种椅子拍摄1000张不同⻆度的图像，然后在收集到的图像数据集上训练一个分类模型。这个椅子数据集虽然可能比Fashion-MNIST数据集要庞⼤，但样本数仍然不及ImageNet数据集中样本数的十分之⼀。这可能会导致适用于ImageNet数据集的复杂模型在这个椅⼦数据集上过拟合。同时，因为数据量有限，最终训练得到的模型的精度也可能达不到实用的要求。</p>
 <p>为了应对上述问题，一个显⽽易⻅的解决办法是收集更多的数据。然而，收集和标注数据会花费大量的时间和资⾦。例如，为了收集ImageNet数据集，研究人员花费了数百万美元的研究经费。虽然目前的数据采集成本已降低了不少，但其成本仍然不可忽略。</p>
@@ -627,8 +637,8 @@ title="Print to PDF"
 <li><p>了解PyTorch提供的常用model</p></li>
 <li><p>掌握如何指定训练模型的部分层</p></li>
 </ul>
-<section id="id2">
-<h2>6.3.1 模型微调的流程<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
+<section id="id1">
+<h2>6.3.1 模型微调的流程<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
 <ol class="simple">
 <li><p>在源数据集(如ImageNet数据集)上预训练一个神经网络模型，即源模型。</p></li>
 <li><p>创建一个新的神经网络模型，即目标模型。它复制了源模型上除了输出层外的所有模型设计及其参数。我们假设这些模型参数包含了源数据集上学习到的知识，且这些知识同样适用于目标数据集。我们还假设源模型的输出层跟源数据集的标签紧密相关，因此在目标模型中不予采用。</p></li>
@@ -637,8 +647,8 @@ title="Print to PDF"
 </ol>
 <p><img alt="finetune" src="../_images/finetune.png" /></p>
 </section>
-<section id="id3">
-<h2>6.3.2 使用已有模型结构<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
+<section id="id2">
+<h2>6.3.2 使用已有模型结构<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
 <p>这里我们以torchvision中的常见模型为例，列出了如何在图像分类任务中使用PyTorch提供的常见模型结构和参数。对于其他任务和网络结构，使用方式是类似的：</p>
 <ul>
 <li><p>实例化网络</p>
@@ -694,8 +704,8 @@ title="Print to PDF"
 <li><p>如果中途强行停止下载的话，一定要去对应路径下将权重文件删除干净，要不然可能会报错。</p></li>
 </ol>
 </section>
-<section id="id4">
-<h2>6.3.3 训练特定层<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h2>
+<section id="id3">
+<h2>6.3.3 训练特定层<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
 <p>在默认情况下，参数的属性<code class="docutils literal notranslate"><span class="pre">.requires_grad</span> <span class="pre">=</span> <span class="pre">True</span></code>，如果我们从头开始训练或微调不需要注意这里。但如果我们正在提取特征并且只想为新初始化的层计算梯度，其他参数不进行改变。那我们就需要通过设置<code class="docutils literal notranslate"><span class="pre">requires_grad</span> <span class="pre">=</span> <span class="pre">False</span></code>来冻结部分层。在PyTorch官方中提供了这样一个例程。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">set_parameter_requires_grad</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_extracting</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">feature_extracting</span><span class="p">:</span>
@@ -716,8 +726,8 @@ title="Print to PDF"
 </div>
 <p>之后在训练过程中，model仍会进行梯度回传，但是参数更新则只会发生在fc层。通过设定参数的requires_grad属性，我们完成了指定训练模型的特定层的目标，这对实现模型微调非常重要。</p>
 </section>
-<section id="id5">
-<h2>本节参考<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h2>
+<section id="id4">
+<h2>本节参考<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h2>
 <p>【1】<a class="reference external" href="https://www.pytorchtutorial.com/docs/package_references/torch-optim/">参数更新</a><br />
 【2】<a class="reference external" href="https://blog.csdn.net/jdzwanghao/article/details/90402577">给不同层分配不同的学习率</a></p>
 </section>
@@ -738,10 +748,10 @@ title="Print to PDF"
             <p class="prev-next-title">6.2 动态调整学习率</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html" title="下一页 页">
+    <a class='right-next' id="next-link" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html" title="下一页 页">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">6.4 半精度训练</p>
+        <p class="prev-next-title">6.3 模型微调 - timm</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

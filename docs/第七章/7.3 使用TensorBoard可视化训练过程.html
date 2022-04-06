@@ -897,8 +897,10 @@ title="Print to PDF"
 <li><p>MobaXterm</p>
 <ol class="simple">
 <li><p>在MobaXterm点击Tunneling</p></li>
-<li><p>选择New SSH tunnel，我们会出现以下界面。
-<img alt="ssh_tunnel_UI.png" src="../_images/ssh_tunnel_UI.png" /></p></li>
+<li><p>选择New SSH tunnel，我们会出现以下界面。</p></li>
+</ol>
+<p><img alt="ssh_tunnel" src="../_images/ssh_tunnel_UI.png" /></p>
+<ol class="simple">
 <li><p>对新建的SSH通道做以下设置，第一栏我们选择<code class="docutils literal notranslate"><span class="pre">Local</span> <span class="pre">port</span> <span class="pre">forwarding</span></code>，<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">Remote</span> <span class="pre">Server&gt;</span></code>我们填写<strong>localhost</strong>，<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">Remote</span> <span class="pre">port&gt;</span></code>填写6006，tensorboard默认会在6006端口进行显示，我们也可以根据 <strong>tensorboard --logdir=/path/to/logs/ --port=xxxx</strong>的命令中的port进行修改，<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">SSH</span> <span class="pre">server&gt;</span></code> 填写我们连接服务器的ip地址，<code class="docutils literal notranslate"><span class="pre">&lt;SSH</span> <span class="pre">login&gt;</span></code>填写我们连接的服务器的用户名，<code class="docutils literal notranslate"><span class="pre">&lt;SSH</span> <span class="pre">port&gt;</span></code>填写端口号（通常为22），<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">forwarded</span> <span class="pre">port&gt;</span></code>填写的是本地的一个端口号，以便我们后面可以对其进行访问。</p></li>
 <li><p>设定好之后，点击Save，然后Start。在启动tensorboard，这样我们就可以在本地的浏览器输入<code class="docutils literal notranslate"><span class="pre">http://localhost:6006/</span></code>对其进行访问了</p></li>
 </ol>
@@ -907,9 +909,9 @@ title="Print to PDF"
 <ol class="simple">
 <li><p>Xshell的连接方法与MobaXterm的连接方式本质上是一样的，具体操作如下：</p></li>
 <li><p>连接上服务器后，打开当前会话属性，会出现下图，我们选择隧道，点击添加
-<img alt="" src="../_images/xshell_ui.png" /></p></li>
+<img alt="xhell_ui" src="../_images/xshell_ui.png" /></p></li>
 <li><p>按照下方图进行选择，其中目标主机代表的是服务器，源主机代表的是本地，端口的选择根据实际情况而定。
-<img alt="" src="../_images/xshell_set.png" /></p></li>
+<img alt="xhell_set" src="../_images/xshell_set.png" /></p></li>
 <li><p>启动tensorboard，在本地127.0.0.1:6006 或者 localhost:6006进行访问。</p></li>
 </ol>
 </li>

@@ -102,8 +102,8 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |onnx| 2022.5.31 |讲述ONNX格式和实战例子|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|
-|数据增强| 2022.4.9 |imgaug的使用|
-|并行训练| 2022.4.9 |并行训练 |
+|数据增强| 2022.4月 |imgaug的使用|
+|并行训练| |并行训练 |
 |模型预训练 - torchhub| 2022.4.16  |torchhub的简介和使用方法|
 |模型预训练 - timm|  &#x2705;|timm预训练模型的使用方法|
 |模型预训练 - openmmlab| 2022.4.27|openmmlab系列的使用|
@@ -113,8 +113,8 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |目标检测 - DETR|  |DETR的实现|
 |图像分类 - GoogLeNet| 2022.5.11 |GoogLeNet的介绍与实现|
 |图像分类 - Vision transformer| 2022.5.18 |Vit介绍与实现|
-|图像分类 - MobileNet系列|  2022.4.9|MobileNet系列介绍与实现|
-|图像分类 - GhostNet| 2022.4.9 |GhostNet代码讲解|
+|图像分类 - MobileNet系列|  2022.4月|MobileNet系列介绍与实现|
+|图像分类 - GhostNet| 2022.4月 |GhostNet代码讲解|
 |生成式对抗网络 - 生成手写数字实战| 2022.5.25 |生成数字并可视化|
 |生成式对抗网络 - DCGAN|  ||
 |风格迁移 - StyleGAN|  ||

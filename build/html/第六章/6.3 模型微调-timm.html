@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>6.3 模型微调 &#8212; 深入浅出PyTorch</title>
+    <title>6.3 模型微调 - timm &#8212; 深入浅出PyTorch</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -42,7 +42,7 @@
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
     <link rel="next" title="6.4 半精度训练" href="6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html" />
-    <link rel="prev" title="6.2 动态调整学习率" href="6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html" />
+    <link rel="prev" title="6.3 模型微调-torchvision" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh">
     
@@ -180,13 +180,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
-     3.5 损失函数
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     3.5 模型初始化
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.6 Pytorch优化器
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.5 损失函数
     </a>
    </li>
    <li class="toctree-l2">
@@ -197,6 +197,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
      3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.6 Pytorch优化器
     </a>
    </li>
   </ul>
@@ -210,7 +215,12 @@
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="simple">
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+     基础实战——FashionMNIST时装分类
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -265,9 +275,14 @@
      6.2 动态调整学习率
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     6.3 模型微调
+     6.3 模型微调 - timm
     </a>
    </li>
    <li class="toctree-l2">
@@ -436,7 +451,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第六章/6.3 模型微调.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第六章/6.3 模型微调-timm.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -453,7 +468,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第六章/6.3 模型微调.md"
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第六章/6.3 模型微调-timm.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -481,7 +496,7 @@ title="Edit this page"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../_sources/第六章/6.3 模型微调.md.txt"
+        <a href="../_sources/第六章/6.3 模型微调-timm.md.txt"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -541,23 +556,28 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   timm的安装
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
-   6.3.1 模型微调的流程
+   如何查看预训练模型种类
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
-   6.3.2 使用已有模型结构
+   使用和修改预训练模型
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id4">
-   6.3.3 训练特定层
+   模型的保存
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id5">
-   本节参考
+   推荐材料
   </a>
  </li>
 </ul>
@@ -569,7 +589,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>6.3 模型微调</h1>
+                <h1>6.3 模型微调 - timm</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -580,23 +600,28 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   timm的安装
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
-   6.3.1 模型微调的流程
+   如何查看预训练模型种类
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id3">
-   6.3.2 使用已有模型结构
+   使用和修改预训练模型
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id4">
-   6.3.3 训练特定层
+   模型的保存
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id5">
-   本节参考
+   推荐材料
   </a>
  </li>
 </ul>
@@ -609,112 +634,158 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>6.3 模型微调<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
-<p>随着深度学习的发展，模型的参数越来越大，许多开源模型都是在较大数据集上进行训练的，比如Imagenet-1k，Imagenet-11k，甚至是ImageNet-21k等。但在实际应用中，我们的数据集可能只有几千张，这时从头开始训练具有几千万参数的大型神经网络是不现实的，因为越大的模型对数据量的要求越大，过拟合无法避免。</p>
-<p>假设我们想从图像中识别出不同种类的椅⼦，然后将购买链接推荐给用户。一种可能的方法是先找出100种常见的椅子，为每种椅子拍摄1000张不同⻆度的图像，然后在收集到的图像数据集上训练一个分类模型。这个椅子数据集虽然可能比Fashion-MNIST数据集要庞⼤，但样本数仍然不及ImageNet数据集中样本数的十分之⼀。这可能会导致适用于ImageNet数据集的复杂模型在这个椅⼦数据集上过拟合。同时，因为数据量有限，最终训练得到的模型的精度也可能达不到实用的要求。</p>
-<p>为了应对上述问题，一个显⽽易⻅的解决办法是收集更多的数据。然而，收集和标注数据会花费大量的时间和资⾦。例如，为了收集ImageNet数据集，研究人员花费了数百万美元的研究经费。虽然目前的数据采集成本已降低了不少，但其成本仍然不可忽略。</p>
-<p>另外一种解决办法是应用迁移学习(transfer learning)，将从源数据集学到的知识迁移到目标数据集上。例如，虽然ImageNet数据集的图像大多跟椅子无关，但在该数据集上训练的模型可以抽取较通用的图像特征，从而能够帮助识别边缘、纹理、形状和物体组成等。这些类似的特征对于识别椅子也可能同样有效。</p>
-<p>迁移学习的一大应用场景是模型微调（finetune）。简单来说，就是我们先找到一个同类的别人训练好的模型，把别人现成的训练好了的模型拿过来，换成自己的数据，通过训练调整一下参数。 在PyTorch中提供了许多预训练好的网络模型（VGG，ResNet系列，mobilenet系列......），这些模型都是PyTorch官方在相应的大型数据集训练好的。学习如何进行模型微调，可以方便我们快速使用预训练模型完成自己的任务。</p>
-<p>经过本节的学习，你将收获：</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="timm">
+<h1>6.3 模型微调 - timm<a class="headerlink" href="#timm" title="永久链接至标题">#</a></h1>
+<p>除了使用<code class="docutils literal notranslate"><span class="pre">torchvision.models</span></code>进行预训练以外，还有一个常见的预训练模型库，叫做<code class="docutils literal notranslate"><span class="pre">timm</span></code>，这个库是由来自加拿大温哥华Ross Wightman创建的。里面提供了许多计算机视觉的SOTA模型，可以当作是torchvision的扩充版本，并且里面的模型在准确度上也较高。在本章内容中，我们主要是针对这个库的预训练模型的使用做叙述，其他部分内容（数据扩增，优化器等）如果大家感兴趣，可以参考以下两个链接。</p>
 <ul class="simple">
-<li><p>掌握模型微调的流程</p></li>
-<li><p>了解PyTorch提供的常用model</p></li>
-<li><p>掌握如何指定训练模型的部分层</p></li>
+<li><p>Github链接：https://github.com/rwightman/pytorch-image-models</p></li>
+<li><p>官网链接：https://fastai.github.io/timmdocs/
+https://rwightman.github.io/pytorch-image-models/</p></li>
 </ul>
-<section id="id2">
-<h2>6.3.1 模型微调的流程<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
+<section id="id1">
+<h2>timm的安装<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<p>关于timm的安装，我们可以选择以下两种方式进行：</p>
 <ol class="simple">
-<li><p>在源数据集(如ImageNet数据集)上预训练一个神经网络模型，即源模型。</p></li>
-<li><p>创建一个新的神经网络模型，即目标模型。它复制了源模型上除了输出层外的所有模型设计及其参数。我们假设这些模型参数包含了源数据集上学习到的知识，且这些知识同样适用于目标数据集。我们还假设源模型的输出层跟源数据集的标签紧密相关，因此在目标模型中不予采用。</p></li>
-<li><p>为目标模型添加一个输出⼤小为⽬标数据集类别个数的输出层，并随机初始化该层的模型参数。</p></li>
-<li><p>在目标数据集上训练目标模型。我们将从头训练输出层，而其余层的参数都是基于源模型的参数微调得到的。</p></li>
+<li><p>通过pip安装</p></li>
 </ol>
-<p><img alt="finetune" src="../_images/finetune.png" /></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install timm
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>通过git与pip进行安装</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/rwightman/pytorch-image-models
+<span class="nb">cd</span> pytorch-image-models <span class="o">&amp;&amp;</span> pip install -e .
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>如何查看预训练模型种类<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
+<ol class="simple">
+<li><p>查看timm提供的预训练模型
+截止到2022.3.27日为止，timm提供的预训练模型已经达到了592个，我们可以通过<code class="docutils literal notranslate"><span class="pre">timm.list_models()</span></code>方法查看timm提供的预训练模型（注：本章测试代码均是在jupyter notebook上进行）</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">timm</span>
+<span class="n">avail_pretrained_models</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">list_models</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">avail_pretrained_models</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="m">592</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>查看特定模型的所有种类
+每一种系列可能对应着不同方案的模型，比如Resnet系列就包括了ResNet18，50，101等模型，我们可以在<code class="docutils literal notranslate"><span class="pre">timm.list_models()</span></code>传入想查询的模型名称（模糊查询），比如我们想查询densenet系列的所有模型。</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">all_densnet_models</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">list_models</span><span class="p">(</span><span class="s2">&quot;*densenet*&quot;</span><span class="p">)</span>
+<span class="n">all_densnet_models</span>
+</pre></div>
+</div>
+<p>我们发现以列表的形式返回了所有densenet系列的所有模型。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="s1">&#39;densenet121&#39;</span>,
+ <span class="s1">&#39;densenet121d&#39;</span>,
+ <span class="s1">&#39;densenet161&#39;</span>,
+ <span class="s1">&#39;densenet169&#39;</span>,
+ <span class="s1">&#39;densenet201&#39;</span>,
+ <span class="s1">&#39;densenet264&#39;</span>,
+ <span class="s1">&#39;densenet264d_iabn&#39;</span>,
+ <span class="s1">&#39;densenetblur121d&#39;</span>,
+ <span class="s1">&#39;tv_densenet121&#39;</span><span class="o">]</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>查看模型的具体参数
+当我们想查看下模型的具体参数的时候，我们可以通过访问模型的<code class="docutils literal notranslate"><span class="pre">default_cfg</span></code>属性来进行查看，具体操作如下</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">default_cfg</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/resnet34-43635321.pth&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;num_classes&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+ <span class="s1">&#39;input_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+ <span class="s1">&#39;pool_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+ <span class="s1">&#39;crop_pct&#39;</span><span class="p">:</span> <span class="mf">0.875</span><span class="p">,</span>
+ <span class="s1">&#39;interpolation&#39;</span><span class="p">:</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">),</span>
+ <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">),</span>
+ <span class="s1">&#39;first_conv&#39;</span><span class="p">:</span> <span class="s1">&#39;conv1&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;classifier&#39;</span><span class="p">:</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;architecture&#39;</span><span class="p">:</span> <span class="s1">&#39;resnet34&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>除此之外，我们可以通过访问这个<a class="reference external" href="https://rwightman.github.io/pytorch-image-models/results/">链接</a> 查看提供的预训练模型的准确度等信息。</p>
 </section>
 <section id="id3">
-<h2>6.3.2 使用已有模型结构<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
-<p>这里我们以torchvision中的常见模型为例，列出了如何在图像分类任务中使用PyTorch提供的常见模型结构和参数。对于其他任务和网络结构，使用方式是类似的：</p>
-<ul>
-<li><p>实例化网络</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="n">resnet18</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">()</span>
-<span class="c1"># resnet18 = models.resnet18(pretrained=False)  等价于与上面的表达式</span>
-<span class="n">alexnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">alexnet</span><span class="p">()</span>
-<span class="n">vgg16</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">()</span>
-<span class="n">squeezenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">squeezenet1_0</span><span class="p">()</span>
-<span class="n">densenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">densenet161</span><span class="p">()</span>
-<span class="n">inception</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">inception_v3</span><span class="p">()</span>
-<span class="n">googlenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">googlenet</span><span class="p">()</span>
-<span class="n">shufflenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">shufflenet_v2_x1_0</span><span class="p">()</span>
-<span class="n">mobilenet_v2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v2</span><span class="p">()</span>
-<span class="n">mobilenet_v3_large</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v3_large</span><span class="p">()</span>
-<span class="n">mobilenet_v3_small</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v3_small</span><span class="p">()</span>
-<span class="n">resnext50_32x4d</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnext50_32x4d</span><span class="p">()</span>
-<span class="n">wide_resnet50_2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">wide_resnet50_2</span><span class="p">()</span>
-<span class="n">mnasnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mnasnet1_0</span><span class="p">()</span>
+<h2>使用和修改预训练模型<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
+<p>在得到我们想要使用的预训练模型后，我们可以通过<code class="docutils literal notranslate"><span class="pre">timm.create_model()</span></code>的方法来进行模型的创建，我们可以通过传入参数<code class="docutils literal notranslate"><span class="pre">pretrained=True</span></code>，来使用预训练模型。同样的，我们也可以使用跟torchvision里面的模型一样的方法查看模型的参数，类型/</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">timm</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">output</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
-</li>
-<li><p>传递<code class="docutils literal notranslate"><span class="pre">pretrained</span></code>参数</p></li>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>torch.Size<span class="o">([</span><span class="m">1</span>, <span class="m">1000</span><span class="o">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>查看某一层模型参数（以第一层卷积为例）</p></li>
 </ul>
-<p>通过<code class="docutils literal notranslate"><span class="pre">True</span></code>或者<code class="docutils literal notranslate"><span class="pre">False</span></code>来决定是否使用预训练好的权重，在默认状态下<code class="docutils literal notranslate"><span class="pre">pretrained</span> <span class="pre">=</span> <span class="pre">False</span></code>，意味着我们不使用预训练得到的权重，当<code class="docutils literal notranslate"><span class="pre">pretrained</span> <span class="pre">=</span> <span class="pre">True</span></code>，意味着我们将使用在一些数据集上预训练得到的权重。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="n">resnet18</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">alexnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">alexnet</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">squeezenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">squeezenet1_0</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">vgg16</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">densenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">densenet161</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">inception</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">inception_v3</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">googlenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">googlenet</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">shufflenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">shufflenet_v2_x1_0</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">mobilenet_v2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">mobilenet_v3_large</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v3_large</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">mobilenet_v3_small</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v3_small</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">resnext50_32x4d</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnext50_32x4d</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">wide_resnet50_2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">wide_resnet50_2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">mnasnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">mnasnet1_0</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">())[</span><span class="s1">&#39;conv1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
 </pre></div>
 </div>
-<p><strong>注意事项：</strong></p>
-<ol>
-<li><p>通常PyTorch模型的扩展为<code class="docutils literal notranslate"><span class="pre">.pt</span></code>或<code class="docutils literal notranslate"><span class="pre">.pth</span></code>，程序运行时会首先检查默认路径中是否有已经下载的模型权重，一旦权重被下载，下次加载就不需要下载了。</p></li>
-<li><p>一般情况下预训练模型的下载会比较慢，我们可以直接通过迅雷或者其他方式去 <a class="reference external" href="https://github.com/pytorch/vision/tree/master/torchvision/models">这里</a> 查看自己的模型里面<code class="docutils literal notranslate"><span class="pre">model_urls</span></code>，然后手动下载，预训练模型的权重在<code class="docutils literal notranslate"><span class="pre">Linux</span></code>和<code class="docutils literal notranslate"><span class="pre">Mac</span></code>的默认下载路径是用户根目录下的<code class="docutils literal notranslate"><span class="pre">.cache</span></code>文件夹。在<code class="docutils literal notranslate"><span class="pre">Windows</span></code>下就是<code class="docutils literal notranslate"><span class="pre">C:\Users\&lt;username&gt;\.cache\torch\hub\checkpoint</span></code>。我们可以通过使用 <a class="reference external" href="https://pytorch.org/docs/stable/model_zoo.html#torch.utils.model_zoo.load_url"><code class="docutils literal notranslate"><span class="pre">torch.utils.model_zoo.load_url()</span></code></a>设置权重的下载地址。</p></li>
-<li><p>如果觉得麻烦，还可以将自己的权重下载下来放到同文件夹下，然后再将参数加载网络。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet50</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./model/resnet50-19c8e357.pth&#39;</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
+ <span class="n">tensor</span><span class="p">([[[[</span><span class="o">-</span><span class="mf">2.9398e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.6421e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.8832e-02</span><span class="p">,</span>  <span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.8349e-02</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">6.9210e-03</span><span class="p">,</span>  <span class="mf">1.2127e-02</span><span class="p">],</span>
+           <span class="p">[</span><span class="o">-</span><span class="mf">3.6199e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0810e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.3891e-02</span><span class="p">,</span>  <span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.2744e-02</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">7.3169e-03</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1834e-02</span><span class="p">],</span>
+            <span class="o">...</span>
+           <span class="p">[</span> <span class="mf">8.4563e-03</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7099e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2176e-03</span><span class="p">,</span>  <span class="o">...</span><span class="p">,</span>  <span class="mf">7.0081e-02</span><span class="p">,</span>
+             <span class="mf">2.9756e-02</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.1400e-03</span><span class="p">]]]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+            
 </pre></div>
 </div>
-</li>
-<li><p>如果中途强行停止下载的话，一定要去对应路径下将权重文件删除干净，要不然可能会报错。</p></li>
-</ol>
+<ul class="simple">
+<li><p>修改模型（将1000类改为10类输出）</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">output</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>改变输入通道数（比如我们传入的图片是单通道的，但是模型需要的是三通道图片）
+我们可以通过添加<code class="docutils literal notranslate"><span class="pre">in_chans=1</span></code>来改变</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">timm</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span><span class="s1">&#39;resnet34&#39;</span><span class="p">,</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">in_chans</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="id4">
-<h2>6.3.3 训练特定层<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h2>
-<p>在默认情况下，参数的属性<code class="docutils literal notranslate"><span class="pre">.requires_grad</span> <span class="pre">=</span> <span class="pre">True</span></code>，如果我们从头开始训练或微调不需要注意这里。但如果我们正在提取特征并且只想为新初始化的层计算梯度，其他参数不进行改变。那我们就需要通过设置<code class="docutils literal notranslate"><span class="pre">requires_grad</span> <span class="pre">=</span> <span class="pre">False</span></code>来冻结部分层。在PyTorch官方中提供了这样一个例程。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">set_parameter_requires_grad</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_extracting</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">feature_extracting</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
-            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+<h2>模型的保存<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h2>
+<p>timm库所创建的模型是<code class="docutils literal notranslate"><span class="pre">torch.model</span></code>的子类，我们可以直接使用torch库中内置的模型参数保存和加载的方法，具体操作如下方代码所示</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span><span class="s1">&#39;./checkpoint/timm_model.pth&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./checkpoint/timm_model.pth&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>在下面我们仍旧使用<code class="docutils literal notranslate"><span class="pre">resnet18</span></code>为例的将1000类改为4类，但是仅改变最后一层的模型参数，不改变特征提取的模型参数；注意我们先冻结模型参数的梯度，再对模型输出部分的全连接层进行修改，这样修改后的全连接层的参数就是可计算梯度的。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="c1"># 冻结参数的梯度</span>
-<span class="n">feature_extract</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">set_parameter_requires_grad</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_extract</span><span class="p">)</span>
-<span class="c1"># 修改模型</span>
-<span class="n">num_ftrs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fc</span><span class="o">.</span><span class="n">in_features</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>之后在训练过程中，model仍会进行梯度回传，但是参数更新则只会发生在fc层。通过设定参数的requires_grad属性，我们完成了指定训练模型的特定层的目标，这对实现模型微调非常重要。</p>
 </section>
 <section id="id5">
-<h2>本节参考<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h2>
-<p>【1】<a class="reference external" href="https://www.pytorchtutorial.com/docs/package_references/torch-optim/">参数更新</a><br />
-【2】<a class="reference external" href="https://blog.csdn.net/jdzwanghao/article/details/90402577">给不同层分配不同的学习率</a></p>
+<h2>推荐材料<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h2>
+<ol class="simple">
+<li><p>https://www.aiuai.cn/aifarm1967.html</p></li>
+<li><p>https://towardsdatascience.com/getting-started-with-pytorch-image-models-timm-a-practitioners-guide-4e77b4bf9055</p></li>
+<li><p>https://chowdera.com/2022/03/202203170834122729.html</p></li>
+</ol>
 </section>
 </section>
 
@@ -726,11 +797,11 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html" title="上一页 页">
+    <a class='left-prev' id="prev-link" href="6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html" title="上一页 页">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">上一页</p>
-            <p class="prev-next-title">6.2 动态调整学习率</p>
+            <p class="prev-next-title">6.3 模型微调-torchvision</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html" title="下一页 页">

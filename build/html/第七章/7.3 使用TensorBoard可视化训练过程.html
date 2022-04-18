@@ -180,13 +180,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
-     3.5 损失函数
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     3.5 模型初始化
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.6 Pytorch优化器
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.5 损失函数
     </a>
    </li>
    <li class="toctree-l2">
@@ -197,6 +197,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
      3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.6 Pytorch优化器
     </a>
    </li>
   </ul>
@@ -210,7 +215,12 @@
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="simple">
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+     基础实战——FashionMNIST时装分类
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -266,8 +276,13 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83.html">
-     6.3 模型微调
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
     </a>
    </li>
    <li class="toctree-l2">
@@ -577,11 +592,16 @@ title="Print to PDF"
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id8">
-   7.3.8 总结
+   7.3.8 服务器端使用TensorBoard
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id9">
+   7.3.9 总结
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id10">
    本节参考
   </a>
  </li>
@@ -641,11 +661,16 @@ title="Print to PDF"
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id8">
-   7.3.8 总结
+   7.3.8 服务器端使用TensorBoard
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id9">
+   7.3.9 总结
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id10">
    本节参考
   </a>
  </li>
@@ -865,13 +890,61 @@ title="Print to PDF"
 <p><img alt="tb_hist" src="../_images/tb_hist.png" /></p>
 </section>
 <section id="id8">
-<h2>7.3.8 总结<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h2>
+<h2>7.3.8 服务器端使用TensorBoard<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h2>
+<p>一般情况下，我们会连接远程的服务器来对模型进行训练，但由于服务器端是没有浏览器的（纯命令模式），因此，我们需要进行相应的配置，才可以在本地浏览器，使用tensorboard查看服务器运行的训练过程。
+本文提供以下几种方式进行，其中前两种方法都是建立SSH隧道，实现远程端口到本机端口的转发，最后一种方法适用于没有下载Xshell等SSH连接工具的用户</p>
+<ul>
+<li><p>MobaXterm</p>
+<ol class="simple">
+<li><p>在MobaXterm点击Tunneling</p></li>
+<li><p>选择New SSH tunnel，我们会出现以下界面。</p></li>
+</ol>
+<p><img alt="ssh_tunnel" src="../_images/ssh_tunnel_UI.png" /></p>
+<ol class="simple">
+<li><p>对新建的SSH通道做以下设置，第一栏我们选择<code class="docutils literal notranslate"><span class="pre">Local</span> <span class="pre">port</span> <span class="pre">forwarding</span></code>，<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">Remote</span> <span class="pre">Server&gt;</span></code>我们填写<strong>localhost</strong>，<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">Remote</span> <span class="pre">port&gt;</span></code>填写6006，tensorboard默认会在6006端口进行显示，我们也可以根据 <strong>tensorboard --logdir=/path/to/logs/ --port=xxxx</strong>的命令中的port进行修改，<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">SSH</span> <span class="pre">server&gt;</span></code> 填写我们连接服务器的ip地址，<code class="docutils literal notranslate"><span class="pre">&lt;SSH</span> <span class="pre">login&gt;</span></code>填写我们连接的服务器的用户名，<code class="docutils literal notranslate"><span class="pre">&lt;SSH</span> <span class="pre">port&gt;</span></code>填写端口号（通常为22），<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">forwarded</span> <span class="pre">port&gt;</span></code>填写的是本地的一个端口号，以便我们后面可以对其进行访问。</p></li>
+<li><p>设定好之后，点击Save，然后Start。在启动tensorboard，这样我们就可以在本地的浏览器输入<code class="docutils literal notranslate"><span class="pre">http://localhost:6006/</span></code>对其进行访问了</p></li>
+</ol>
+</li>
+<li><p>Xshell</p>
+<ol class="simple">
+<li><p>Xshell的连接方法与MobaXterm的连接方式本质上是一样的，具体操作如下：</p></li>
+<li><p>连接上服务器后，打开当前会话属性，会出现下图，我们选择隧道，点击添加
+<img alt="xhell_ui" src="../_images/xshell_ui.png" /></p></li>
+<li><p>按照下方图进行选择，其中目标主机代表的是服务器，源主机代表的是本地，端口的选择根据实际情况而定。
+<img alt="xhell_set" src="../_images/xshell_set.png" /></p></li>
+<li><p>启动tensorboard，在本地127.0.0.1:6006 或者 localhost:6006进行访问。</p></li>
+</ol>
+</li>
+<li><p>SSL</p>
+<ol class="simple">
+<li><p>该方法是将服务器的6006端口重定向到自己机器上来，我们可以在本地的终端里输入以下代码：其中16006代表映射到本地的端口，6006代表的是服务器上的端口。</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>  ssh -L <span class="m">16006</span>:127.0.0.1:6006 username@remote_server_ip
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>在服务上使用默认的6006端口正常启动tensorboard</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>tensorboard --logdir<span class="o">=</span>xxx --port<span class="o">=</span><span class="m">6006</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>在本地的浏览器输入地址</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="m">127</span>.0.0.1:16006 或者 localhost:16006
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="id9">
+<h2>7.3.9 总结<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h2>
 <p>对于TensorBoard来说，它的功能是很强大的，可以记录的东西不只限于本节所介绍的范围。</p>
 <p>主要的实现方案是构建一个SummaryWriter，然后通过<code class="docutils literal notranslate"><span class="pre">add_XXX()</span></code>函数来实现。</p>
 <p>其实TensorBoard的逻辑还是很简单的，它的<strong>基本逻辑就是文件的读写逻辑</strong>，写入想要可视化的数据，然后TensorBoard自己会读出来。</p>
 </section>
-<section id="id9">
-<h2>本节参考<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h2>
+<section id="id10">
+<h2>本节参考<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h2>
 <p>【1】https://blog.csdn.net/Python_Ai_Road/article/details/107704530</p>
 </section>
 </section>

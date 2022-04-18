@@ -21831,17 +21831,6 @@ param
     tensor([-0.1994], device='cuda:0')
 
 
-
-
-```python
-
-```
-
-
-```python
-
-```
-
 **Point 8：半精度训练**
 
 
@@ -22020,7 +22009,7 @@ for epoch in range(1, epochs+1):
 
 
 
-``bash
+```bash
 !nvidia-smi
 ```
 

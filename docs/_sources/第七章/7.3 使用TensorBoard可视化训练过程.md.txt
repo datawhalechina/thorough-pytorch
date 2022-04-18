@@ -245,7 +245,37 @@ writer.close()
 
 ![tb_hist](./figures/tb_hist.png)
 
-## 7.3.8 总结
+## 7.3.8 服务器端使用TensorBoard
+一般情况下，我们会连接远程的服务器来对模型进行训练，但由于服务器端是没有浏览器的（纯命令模式），因此，我们需要进行相应的配置，才可以在本地浏览器，使用tensorboard查看服务器运行的训练过程。
+本文提供以下几种方式进行，其中前两种方法都是建立SSH隧道，实现远程端口到本机端口的转发，最后一种方法适用于没有下载Xshell等SSH连接工具的用户
+- MobaXterm
+	1. 在MobaXterm点击Tunneling
+	2. 选择New SSH tunnel，我们会出现以下界面。
+
+    ![ssh_tunnel](./figures/ssh_tunnel_UI.png)
+	3. 对新建的SSH通道做以下设置，第一栏我们选择`Local port forwarding`，`< Remote Server>`我们填写**localhost**，`< Remote port>`填写6006，tensorboard默认会在6006端口进行显示，我们也可以根据 **tensorboard --logdir=/path/to/logs/ --port=xxxx**的命令中的port进行修改，`< SSH server>` 填写我们连接服务器的ip地址，`<SSH login>`填写我们连接的服务器的用户名，`<SSH port>`填写端口号（通常为22），`< forwarded port>`填写的是本地的一个端口号，以便我们后面可以对其进行访问。
+	4. 设定好之后，点击Save，然后Start。在启动tensorboard，这样我们就可以在本地的浏览器输入`http://localhost:6006/`对其进行访问了
+- Xshell 
+	1. Xshell的连接方法与MobaXterm的连接方式本质上是一样的，具体操作如下：
+	2. 连接上服务器后，打开当前会话属性，会出现下图，我们选择隧道，点击添加
+	![xhell_ui](./figures/xshell_ui.png)
+	3. 按照下方图进行选择，其中目标主机代表的是服务器，源主机代表的是本地，端口的选择根据实际情况而定。
+	![xhell_set](./figures/xshell_set.png)
+	4. 启动tensorboard，在本地127.0.0.1:6006 或者 localhost:6006进行访问。
+- SSL
+	1. 该方法是将服务器的6006端口重定向到自己机器上来，我们可以在本地的终端里输入以下代码：其中16006代表映射到本地的端口，6006代表的是服务器上的端口。
+	```shell
+      ssh -L 16006:127.0.0.1:6006 username@remote_server_ip
+	```
+	2. 在服务上使用默认的6006端口正常启动tensorboard
+	```shell
+	tensorboard --logdir=xxx --port=6006
+	```
+	3. 在本地的浏览器输入地址
+	```shell
+	127.0.0.1:16006 或者 localhost:16006
+	```
+## 7.3.9 总结
 
 对于TensorBoard来说，它的功能是很强大的，可以记录的东西不只限于本节所介绍的范围。
 

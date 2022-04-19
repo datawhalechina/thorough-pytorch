@@ -55,6 +55,20 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 图像—torchvision
   - 视频—PyTorchVideo
   - 文本—torchtext
+- 第九章：PyTorch技巧
+  - 数据扩充
+    - imgaug
+    - Albumentation
+  - 超参数的保存
+- 第十章：常见网络代码的解读
+  - 计算机视觉
+    - 图像分类
+    - 目标检测
+    - 图像分割
+  - 自然语言处理
+  - 音频处理
+  - 视频处理
+  - 其他
 
 ## 三、人员安排
 
@@ -102,7 +116,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |onnx| 2022.5.31 |讲述ONNX格式和实战例子|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|
-|数据增强| 2022.4月 |imgaug的使用|
+|数据增强| &#x2705;|imgaug的使用|
 |并行训练| |并行训练 |
 |模型预训练 - torchhub| 2022.4.16  |torchhub的简介和使用方法|
 |模型预训练 - timm|  &#x2705;|timm预训练模型的使用方法|

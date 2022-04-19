@@ -46,6 +46,9 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 动态调整学习率
   - 模型微调
   - 半精度训练
+  - 数据扩充
+    - imgaug
+    - Albumentation
 - 第七章：PyTorch可视化
   - 可视化网络结构
   - 可视化CNN卷积层
@@ -55,12 +58,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 图像—torchvision
   - 视频—PyTorchVideo
   - 文本—torchtext
-- 第九章：PyTorch技巧
-  - 数据扩充
-    - imgaug
-    - Albumentation
-  - 超参数的保存
-- 第十章：常见网络代码的解读
+- 第九章：常见网络代码的解读
   - 计算机视觉
     - 图像分类
     - 目标检测

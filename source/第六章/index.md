@@ -6,5 +6,6 @@
 6.3 模型微调-torchvision
 6.3 模型微调-timm
 6.4 半精度训练
+6.5 数据增强-imgaug
 PyTorch模型定义与进阶训练技巧
 ```

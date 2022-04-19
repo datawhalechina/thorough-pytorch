@@ -748,7 +748,7 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="imgaug">
 <h1>6.5 数据增强-imgaug<a class="headerlink" href="#imgaug" title="永久链接至标题">#</a></h1>
 <p>深度学习最重要的是数据。我们需要大量数据才能避免模型的过度拟合。但是我们在许多场景无法获得大量数据，例如医学图像分析。数据增强技术的存在是为了解决这个问题，这是针对有限数据问题的解决方案。数据增强一套技术，可提高训练数据集的大小和质量，以便我们可以使用它们来构建更好的深度学习模型。
-在计算视觉领域，生成增强图像相对容易。即使引入噪声或裁剪图像的一部分，模型仍可以对图像进行分类，数据增强有一系列简单有效的方法可供选择，有一些机器学习库来进行计算视觉领域的数据增强，比如：imgaug (https://github.com/aleju/imgaug)它封装了很多数据增强算法，给开发者提供了方便。通过本章内容，您将学会以下内容：</p>
+在计算视觉领域，生成增强图像相对容易。即使引入噪声或裁剪图像的一部分，模型仍可以对图像进行分类，数据增强有一系列简单有效的方法可供选择，有一些机器学习库来进行计算视觉领域的数据增强，比如：imgaug <a class="reference external" href="https://github.com/aleju/imgaug">官网</a>它封装了很多数据增强算法，给开发者提供了方便。通过本章内容，您将学会以下内容：</p>
 <ul class="simple">
 <li><p>imgaug的简介和安装</p></li>
 <li><p>使用imgaug对数据进行增强</p></li>
@@ -810,8 +810,8 @@ pip install git+https://github.com/aleju/imgaug.git
 <span class="n">ia</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="" src="../_images/Lenna_original.png" />
-现在我们已经得到了需要处理的图片，<code class="docutils literal notranslate"><span class="pre">imgaug</span></code>包含了许多从<code class="docutils literal notranslate"><span class="pre">Augmenter</span></code>继承的数据增强的操作。在这里我们以<code class="docutils literal notranslate"><span class="pre">Affine</span></code>为例子。</p>
+<p><img alt="" src="../_images/Lenna_original.png" /></p>
+<p>现在我们已经得到了需要处理的图片，<code class="docutils literal notranslate"><span class="pre">imgaug</span></code>包含了许多从<code class="docutils literal notranslate"><span class="pre">Augmenter</span></code>继承的数据增强的操作。在这里我们以<code class="docutils literal notranslate"><span class="pre">Affine</span></code>为例子。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">imgaug</span> <span class="kn">import</span> <span class="n">augmenters</span> <span class="k">as</span> <span class="n">iaa</span>
 
 <span class="c1"># 设置随机数种子</span>
@@ -823,8 +823,8 @@ pip install git+https://github.com/aleju/imgaug.git
 <span class="n">ia</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img_aug</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="" src="../_images/rotate.png" />
-这是对一张图片进行一种操作方式，但是实际情况下，我们可能对一张图片做多种数据增强处理。这种情况下，我们就需要利用<code class="docutils literal notranslate"><span class="pre">imgaug.augmenters.Sequential()</span></code>来构造我们数据增强的pipline，该方法与<code class="docutils literal notranslate"><span class="pre">torchvison.transforms.Compose()</span></code>相类似。</p>
+<p><img alt="" src="../_images/rotate.png" /></p>
+<p>这是对一张图片进行一种操作方式，但实际情况下，我们可能对一张图片做多种数据增强处理。这种情况下，我们就需要利用<code class="docutils literal notranslate"><span class="pre">imgaug.augmenters.Sequential()</span></code>来构造我们数据增强的pipline，该方法与<code class="docutils literal notranslate"><span class="pre">torchvison.transforms.Compose()</span></code>相类似。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">iaa</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1"># Augmenter集合</span>
                <span class="n">random_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># 是否对每个batch使用不同顺序的Augmenter list</span>
                <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -843,8 +843,8 @@ pip install git+https://github.com/aleju/imgaug.git
 <span class="n">ia</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_aug</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="" src="../_images/aug_seq.png" />
-总的来说，对单张图片处理的方式基本相同，我们可以根据实际需求，选择合适的数据增强方法来对数据进行处理。</p>
+<p><img alt="" src="../_images/aug_seq.png" /></p>
+<p>总的来说，对单张图片处理的方式基本相同，我们可以根据实际需求，选择合适的数据增强方法来对数据进行处理。</p>
 </section>
 <section id="id6">
 <h3>对批次图片进行处理<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h3>
@@ -857,8 +857,8 @@ pip install git+https://github.com/aleju/imgaug.git
 <span class="n">ia</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">images_aug</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>我们就可以得到如下的展示效果：
-<img alt="" src="../_images/image_batch.png" />
+<p>我们就可以得到如下的展示效果：</p>
+<p><img alt="" src="../_images/image_batch.png" />
 在上述的例子中，我们仅仅对图片进行了仿射变换，同样的，我们也可以对批次的图片使用多种增强方法，与单张图片的方法类似，我们同样需要借助<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>来构造数据增强的pipline。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aug_seq</span> <span class="o">=</span> <span class="n">iaa</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
     <span class="n">iaa</span><span class="o">.</span><span class="n">Affine</span><span class="p">(</span><span class="n">rotate</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>

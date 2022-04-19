@@ -47,8 +47,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 模型微调
   - 半精度训练
   - 数据扩充
-    - imgaug
-    - Albumentation
+  - PyTorch模型定义与进阶训练技巧
 - 第七章：PyTorch可视化
   - 可视化网络结构
   - 可视化CNN卷积层

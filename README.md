@@ -47,6 +47,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 模型微调
   - 半精度训练
   - 数据扩充
+  - 超参数的修改及保存
   - PyTorch模型定义与进阶训练技巧
 - 第七章：PyTorch可视化
   - 可视化网络结构
@@ -109,7 +110,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |模型初始化| &#x2705; |`torch.nn.init`的使用|
 |visdom可视化| 2022.4.5 |`Visdom`的使用|
 |apex| 2022.5.4 |apex的简介和使用|
-|超参数的保存 | 2022.4.5 |介绍argparse与yaml|
+|超参数的保存 |  &#x2705; |使用argparse进行参数的修改|
 |onnx| 2022.5.31 |讲述ONNX格式和实战例子|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|

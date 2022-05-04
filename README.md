@@ -103,8 +103,66 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   第一部分：第一章到第四章，学习周期：10天；
 
   第二部分：第五章到第八章，学习周期：11天
+  
+## 五、关于贡献
 
-## 五、更新计划
+本项目使用`Forking`工作流，具体参考[atlassian文档](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
+
+大致步骤如下：
+
+1. 在GitHub上Fork本仓库
+1. Clone Fork后的个人仓库
+1. 设置`upstream`仓库地址，并禁用`push`
+1. 使用分支开发，课程分支名为`lecture{#NO}`，`#NO`保持两位，如`lecture07`，对应课程目录
+1. PR之前保持与原始仓库的同步，之后发起PR请求
+
+命令示例：
+
+```shell
+# fork
+# clone
+git clone git@github.com:USERNAME/thorough-pytorch.git
+# set upstream
+git remote add upstream git@github.com:datawhalechina/thorough-pytorch.git
+# disable upstream push
+git remote set-url --push upstream DISABLE
+# verify
+git remote -v
+# some sample output:
+# origin	git@github.com:NoFish-528/thorough-pytorch.git (fetch)
+# origin	git@github.com:NoFish-528/thorough-pytorch.git (push)
+# upstream	git@github.com:datawhalechina/thorough-pytorch.git (fetch)
+# upstream	DISABLE (push)
+# do your work
+git checkout -b lecture07
+# edit and commit and push your changes
+git push -u origin lecture07
+# keep your fork up to date
+## fetch upstream main and merge with forked main branch
+git fetch upstream
+git checkout main
+git merge upstream/main
+## rebase brach and force push
+git checkout lecture07
+git rebase main
+git push -f
+```
+
+### Commit Message
+
+提交信息使用如下格式：`<type>: <short summary>`
+
+```
+<type>: <short summary>
+  │            │
+  │            └─⫸ Summary in present tense. Not capitalized. No period at the end.
+  │
+  └─⫸ Commit Type: lecture{#NO}|others
+```
+
+`others`包括非课程相关的改动，如本`README.md`中的变动，`.gitignore`的调整等。
+
+## 六、更新计划
 | 内容 | 更新时间 |内容|
 | :---- | :---- |:----:|
 |模型初始化| &#x2705; |`torch.nn.init`的使用|
@@ -139,9 +197,9 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |视频| | 待定|
 |音频| | 待定|
 |自定义CUDA扩展和算子|||
-## 六、鸣谢与反馈
+## 七、鸣谢与反馈
 
 - 非常感谢DataWhale成员 叶前坤 @[PureBuckwheat](https://github.com/PureBuckwheat) 和 胡锐锋 @[Relph1119](https://github.com/Relph1119) 对文档的细致校对！
-- 如果有任何想法可以联系我们DataWhale  
+- 如果有任何想法可以联系我们DataWhale也欢迎大家多多提出issue。
 
 ![二维码.png](./figures/qrcode.jpeg)

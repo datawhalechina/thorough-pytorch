@@ -115,3 +115,8 @@ Temporary Items
 /.tgitconfig
 
 .idea/
+
+# sphinx
+/build
+*.bat
+Makefile

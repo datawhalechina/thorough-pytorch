@@ -357,7 +357,20 @@ for epoch in range(EPOCH):
 	loss.backward()        #BP反向传播
 	optimizer.step()       #梯度更新
 ```
+3. 给网络不同的层赋予不同的优化器参数。
 
+```python
+from torch import optim
+from torchvision.models import resnet18
+
+net = resnet18()
+
+optimizer = optim.SGD([
+    {'params':net.fc.parameters()},#fc的lr使用默认的1e-5
+    {'params':net.layer4[0].conv1.parameters(),'lr':1e-2}],lr=1e-5)
+
+# 可以使用param_groups查看属性
+```
 
 
 ## 3.9.5 实验

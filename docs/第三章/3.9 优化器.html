@@ -1002,6 +1002,21 @@ optim.step()
 	<span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>       <span class="c1">#梯度更新</span>
 </pre></div>
 </div>
+<ol class="simple">
+<li><p>给网络不同的层赋予不同的优化器参数。</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">resnet18</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">resnet18</span><span class="p">()</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">([</span>
+    <span class="p">{</span><span class="s1">&#39;params&#39;</span><span class="p">:</span><span class="n">net</span><span class="o">.</span><span class="n">fc</span><span class="o">.</span><span class="n">parameters</span><span class="p">()},</span><span class="c1">#fc的lr使用默认的1e-5</span>
+    <span class="p">{</span><span class="s1">&#39;params&#39;</span><span class="p">:</span><span class="n">net</span><span class="o">.</span><span class="n">layer4</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span><span class="s1">&#39;lr&#39;</span><span class="p">:</span><span class="mf">1e-2</span><span class="p">}],</span><span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+
+<span class="c1"># 可以使用param_groups查看属性</span>
+</pre></div>
+</div>
 </section>
 <section id="id5">
 <h2>3.9.5 实验<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h2>

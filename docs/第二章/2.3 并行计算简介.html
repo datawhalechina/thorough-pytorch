@@ -668,7 +668,27 @@ title="Print to PDF"
 <section id="cuda">
 <h2>2.3.2  为什么需要CUDA<a class="headerlink" href="#cuda" title="永久链接至标题">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">CUDA</span></code>是我们使用GPU的提供商——NVIDIA提供的GPU并行计算框架。对于GPU本身的编程，使用的是<code class="docutils literal notranslate"><span class="pre">CUDA</span></code>语言来实现的。但是，在我们使用PyTorch编写深度学习代码时，使用的<code class="docutils literal notranslate"><span class="pre">CUDA</span></code>又是另一个意思。在PyTorch使用 <code class="docutils literal notranslate"><span class="pre">CUDA</span></code>表示要开始要求我们的模型或者数据开始使用GPU了。</p>
-<p>在编写程序中，当我们使用了 <code class="docutils literal notranslate"><span class="pre">cuda()</span></code> 时，其功能是让我们的模型或者数据迁移到GPU当中，通过GPU开始计算。</p>
+<p>在编写程序中，当我们使用了 <code class="docutils literal notranslate"><span class="pre">.cuda</span></code> 时，其功能是让我们的模型或者数据迁移到GPU当中，通过GPU开始计算。</p>
+<p>注：</p>
+<ol>
+<li><p>我们使用GPU时使用的是.cuda而不是使用.gpu。这是因为当前GPU的编程接口采用CUDA，但是市面上的GPU并不是都支持CUDA，只有部分NVIDIA的GPU才支持，AMD的GPU编程接口采用的是OpenGL，在现阶段PyTorch并不支持。</p></li>
+<li><p>数据在GPU和CPU之间进行传递时会比较耗时，应当尽量避免。</p></li>
+<li><p>GPU运算很快，但是在使用简单的操作时，我们应该尽量使用CPU去完成。</p></li>
+<li><p>当我们的服务器上有多个GPU，我们应该指明我们使用的GPU是哪一块，如果我们不设置的话，tensor.cuda()方法会默认将tensor保存到第一块GPU上，等价于tensor.cuda(0)，这将会导致爆出<code class="docutils literal notranslate"><span class="pre">out</span> <span class="pre">of</span> <span class="pre">memory</span></code>的错误。我们可以通过以下两种方式继续设置。</p>
+<ol>
+<li><div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1">#设置在文件最开始部分</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span> <span class="c1"># 设置默认的显卡</span>
+</pre></div>
+</div>
+</li>
+<li><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> <span class="nv">CUDA_VISBLE_DEVICE</span><span class="o">=</span><span class="m">0</span>,1 python train.py <span class="c1"># 使用0，1两块GPU</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
 </section>
 <section id="id3">
 <h2>2.3.3  常见的并行的方法：<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>

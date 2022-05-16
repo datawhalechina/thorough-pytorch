@@ -696,7 +696,7 @@ title="Print to PDF"
 <h3>网络结构分布到不同的设备中(Network partitioning)<a class="headerlink" href="#network-partitioning" title="永久链接至标题">#</a></h3>
 <p>在刚开始做模型并行的时候，这个方案使用的比较多。其中主要的思路是，将一个模型的各个部分拆分，然后将不同的部分放入到GPU来做不同任务的计算。其架构如下：</p>
 <p><img alt="模型并行.png" src="../_images/model_parllel.png" /></p>
-<p>这里遇到的问题就是，不同模型组件在不同的GPU上时，GPU之间的传输就很重要，对于GPU之间的通信是一个考验。但是GPU的通信在这种密集任务中很难办到。所有这个方式慢慢淡出了视野，</p>
+<p>这里遇到的问题就是，不同模型组件在不同的GPU上时，GPU之间的传输就很重要，对于GPU之间的通信是一个考验。但是GPU的通信在这种密集任务中很难办到，所以这个方式慢慢淡出了视野。</p>
 </section>
 <section id="layer-wise-partitioning">
 <h3>同一层的任务分布到不同数据中(Layer-wise partitioning)<a class="headerlink" href="#layer-wise-partitioning" title="永久链接至标题">#</a></h3>

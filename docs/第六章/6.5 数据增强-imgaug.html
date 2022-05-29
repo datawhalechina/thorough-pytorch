@@ -824,7 +824,7 @@ pip install git+https://github.com/aleju/imgaug.git
 
 <span class="c1"># 实例化方法</span>
 <span class="n">rotate</span> <span class="o">=</span> <span class="n">iaa</span><span class="o">.</span><span class="n">Affine</span><span class="p">(</span><span class="n">rotate</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">45</span><span class="p">))</span>
-<span class="n">img_aug</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+<span class="n">img_aug</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">img</span><span class="p">)</span>
 <span class="n">ia</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img_aug</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -857,7 +857,7 @@ pip install git+https://github.com/aleju/imgaug.git
 <section id="id7">
 <h4>对批次的图片以同一种方式处理<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h4>
 <p>对一批次的图片进行处理时，我们只需要将待处理的图片放在一个<code class="docutils literal notranslate"><span class="pre">list</span></code>中，并将image改为image即可进行数据增强操作，具体实际操作如下：</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">image</span><span class="p">,</span><span class="n">image</span><span class="p">,</span><span class="n">image</span><span class="p">,</span><span class="n">image</span><span class="p">,]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">img</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">img</span><span class="p">,]</span>
 <span class="n">images_aug</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">images</span><span class="o">=</span><span class="n">images</span><span class="p">)</span>
 <span class="n">ia</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">images_aug</span><span class="p">))</span>
 </pre></div>

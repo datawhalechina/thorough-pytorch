@@ -2,10 +2,10 @@ asttokens==2.0.5
 backcall==0.2.0
 brotlipy==0.7.0
 certifi==2021.10.8
-cffi @ file:///opt/conda/conda-bld/cffi_1642701102775/work
-charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+cffi==1.15.0
+charset-normalizer==2.0.4
 cloudpickle==2.0.0
-cryptography @ file:///tmp/build/80754af9/cryptography_1639400846433/work
+cryptography==36.0.0
 cycler==0.11.0
 decorator==5.1.1
 executing==0.8.3
@@ -14,7 +14,7 @@ fonttools==4.31.2
 future==0.18.2
 gym==0.23.1
 gym-notices==0.0.6
-idna @ file:///tmp/build/80754af9/idna_1637925883363/work
+idna==3.3
 imageio==2.16.1
 imgaug==0.4.0
 importlib-metadata==4.11.3
@@ -24,10 +24,10 @@ kiwisolver==1.4.2
 matplotlib==3.5.1
 matplotlib-inline==0.1.3
 mkl-fft==1.3.1
-mkl-random @ file:///tmp/build/80754af9/mkl_random_1626186064646/work
+mkl-random==1.2.2
 mkl-service==2.4.0
 networkx==2.7.1
-numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1634095647912/work
+numpy==1.21.2
 opencv-python==4.5.5.64
 packaging==21.3
 pandas==1.4.2
@@ -35,22 +35,24 @@ parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==9.0.1
+pip==21.2.4
 prompt-toolkit==3.0.29
 ptyprocess==0.7.0
 pure-eval==0.2.2
-pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pycparser==2.21
 Pygments==2.11.2
-pyOpenSSL @ file:///opt/conda/conda-bld/pyopenssl_1643788558760/work
+pyOpenSSL==22.0.0
 pyparsing==3.0.7
-PySocks @ file:///tmp/build/80754af9/pysocks_1605305779399/work
+PySocks==1.7.1
 python-dateutil==2.8.2
 pytz==2022.1
 PyWavelets==1.3.0
-requests @ file:///opt/conda/conda-bld/requests_1641824580448/work
+requests==2.27.1
 scikit-image==0.19.2
 scipy==1.8.0
+setuptools==58.0.4
 Shapely==1.8.1.post1
-six @ file:///tmp/build/80754af9/six_1644875935023/work
+six==1.16.0
 stack-data==0.2.0
 tifffile==2022.3.25
 timm==0.5.4
@@ -60,7 +62,8 @@ torchinfo==1.6.5
 torchvision==0.12.0
 tqdm==4.64.0
 traitlets==5.1.1
-typing_extensions @ file:///opt/conda/conda-bld/typing_extensions_1647553014482/work
-urllib3 @ file:///opt/conda/conda-bld/urllib3_1643638302206/work
+typing_extensions==4.1.1
+urllib3==1.26.8
 wcwidth==0.2.5
+wheel==0.37.1
 zipp==3.8.0

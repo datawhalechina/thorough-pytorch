@@ -1,15 +1,16 @@
 # 1.2 PyTorch的安装
 
-PyTorch的安装，一般常见的是**Anaconda/miniconda+Pytorch**+ (Pycharm) 的工具，我们的安装分为以下几步
+PyTorch的安装是我们学习PyTorch的第一步，也是经常出错的一步。在安装PyTorch时，我们通常使用的是**Anaconda/miniconda+Pytorch**+ IDE 的流程。
 
-1. Anaconda的安装
-2. 检查有无NVIDIA GPU
-3. PyTorch的安装
-4. Pycharm的安装 ( Windows系统上更为常用）
+经过本节的学习，你将收获：
+
+- Anaconda/miniconda的安装及其常见命令
+- PyTorch的安装流程
+- 如何选择一个适合自己的PyTorch版本
 
 ## 1.2.1 Anaconda的安装
 
-在DL和ML中，要用到大量成熟的package。一个个安装 package 很麻烦，而且容易出现奇奇怪怪的问题。而 Anaconda很好的解决了我们的问题，它集成了常用于科学分析（机器学习， 深度学习）的大量package。省略了我们安装一些package的过程。
+在数据科学和最近很火的深度学习中，要用到大量成熟的package。我们一个个安装 package 很麻烦，而且容易出现大量依赖的问题。而 Anaconda/miniconda的出现很好的解决了我们的问题，它集成了常用于科学分析（机器学习， 深度学习）的大量package，并且借助于conda我们可以实现对虚拟Python环境的管理。
 
 ### Step 1：安装Anaconda/miniconda
 登陆[Anaconda | Individual Edition](https://www.anaconda.com/products/individual)，选择相应系统DownLoad，此处以Windows为例：

@@ -2,6 +2,11 @@
 
 PyTorch数据读入是通过Dataset+DataLoader的方式完成的，Dataset定义好数据的格式和数据变换形式，DataLoader用iterative的方式不断读入批次数据。
 
+经过本节的学习，你将收获：
+
+- PyTorch常见的数据读取方式
+- 构建自己的数据读取流程
+
 我们可以定义自己的Dataset类来实现灵活的数据读取，定义的类需要继承PyTorch自身的Dataset类。主要包含三个函数：
 
 - `__init__`: 用于向类中传入外部参数，同时定义样本集

@@ -570,6 +570,11 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>3.3 数据读入<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
 <p>PyTorch数据读入是通过Dataset+DataLoader的方式完成的，Dataset定义好数据的格式和数据变换形式，DataLoader用iterative的方式不断读入批次数据。</p>
+<p>经过本节的学习，你将收获：</p>
+<ul class="simple">
+<li><p>PyTorch常见的数据读取方式</p></li>
+<li><p>构建自己的数据读取流程</p></li>
+</ul>
 <p>我们可以定义自己的Dataset类来实现灵活的数据读取，定义的类需要继承PyTorch自身的Dataset类。主要包含三个函数：</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: 用于向类中传入外部参数，同时定义样本集</p></li>

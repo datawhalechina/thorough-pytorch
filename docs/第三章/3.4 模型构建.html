@@ -628,9 +628,15 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>3.4 模型构建<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
+<p>人工智能的第三次浪潮受益于卷积神经网络的出现和BP反向传播算法的实现，随着深度学习的发展，研究人员研究出了许许多多的模型，PyTorch中神经网络构造一般是基于 Module 类的模型来完成的，它让模型构造更加灵活。</p>
+<p>经过本节的学习，你将收获：</p>
+<ul class="simple">
+<li><p>PyTorch中神经网络的构造方法</p></li>
+<li><p>PyTorch中特殊层的构建</p></li>
+<li><p>LeNet的PyTorch实现</p></li>
+</ul>
 <section id="id2">
 <h2>3.4.1 神经网络的构造<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
-<p>PyTorch中神经网络构造一般是基于 Module 类的模型来完成的，它让模型构造更加灵活。</p>
 <p>Module 类是 nn 模块里提供的一个模型构造类，是所有神经⽹网络模块的基类，我们可以继承它来定义我们想要的模型。下面继承 Module 类构造多层感知机。这里定义的 MLP 类重载了 Module 类的 init 函数和 forward 函数。它们分别用于创建模型参数和定义前向计算。前向计算也即正向传播。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>

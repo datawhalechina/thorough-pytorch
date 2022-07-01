@@ -752,6 +752,11 @@ title="Print to PDF"
 <p><img alt="" src="../_images/3.5.1lossfunciton.png" /></p>
 <p>所以在PyTorch中，损失函数是必不可少的。它是数据输入到模型当中，产生的结果与真实标签的评价指标，我们的模型可以按照损失函数的目标来做出改进。</p>
 <p>下面我们将开始探索pytorch的所拥有的损失函数。这里将列出PyTorch中常用的损失函数（一般通过torch.nn调用），并详细介绍每个损失函数的功能介绍、数学公式和调用代码。当然，PyTorch的损失函数还远不止这些，在解决实际问题的过程中需要进一步探索、借鉴现有工作，或者设计自己的损失函数。</p>
+<p>经过本节的学习，你将收获：</p>
+<ul class="simple">
+<li><p>在深度学习中常见的损失函数及其定义方式</p></li>
+<li><p>PyTorch中损失函数的调用</p></li>
+</ul>
 <section id="id2">
 <h2>3.5.1 二分类交叉熵损失函数<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size_average</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>

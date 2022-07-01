@@ -569,7 +569,13 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>3.2 基本配置<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
-<p>首先导入必须的包。对于一个PyTorch项目，我们需要导入一些Python常用的包来帮助我们快速实现功能。常见的包有os、numpy等，此外还需要调用PyTorch自身一些模块便于灵活使用，比如torch、torch.nn、torch.utils.data.Dataset、torch.utils.data.DataLoader、torch.optimizer等等。注意这里<strong>只是建议导入的包导入的方式</strong>，可以采用不同的方案，比如涉及到表格信息的读入很可能用到pandas，对于不同的项目可能还需要导入一些更上层的包如cv2等。如果涉及可视化还会用到matplotlib、seaborn等。涉及到下游分析和指标计算也常用到sklearn。</p>
+<p>对于一个PyTorch项目，我们需要导入一些Python常用的包来帮助我们快速实现功能。常见的包有os、numpy等，此外还需要调用PyTorch自身一些模块便于灵活使用，比如torch、torch.nn、torch.utils.data.Dataset、torch.utils.data.DataLoader、torch.optimizer等等。</p>
+<p>经过本节的学习，你将收获：</p>
+<ul class="simple">
+<li><p>在深度学习/机器学习中常用到的包</p></li>
+<li><p>GPU的配置</p></li>
+</ul>
+<p>首先导入必须的包。注意这里<strong>只是建议导入的包导入的方式</strong>，可以采用不同的方案，比如涉及到表格信息的读入很可能用到pandas，对于不同的项目可能还需要导入一些更上层的包如cv2等。如果涉及可视化还会用到matplotlib、seaborn等。涉及到下游分析和指标计算也常用到sklearn。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -586,7 +592,9 @@ title="Print to PDF"
 <li><p>GPU配置</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="c1"># 批次的大小</span>
 <span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="c1"># 优化器的学习率</span>
 <span class="n">max_epochs</span> <span class="o">=</span> <span class="mi">100</span>
 </pre></div>
 </div>

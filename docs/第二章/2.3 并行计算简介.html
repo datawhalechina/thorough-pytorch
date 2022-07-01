@@ -660,19 +660,25 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>2.3 并行计算简介<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
-<p>在利用PyTorch做深度学习的过程中，可能会遇到数据量较大无法在单块GPU上完成，或者需要提升计算速度的场景，这时就需要用到并行计算。本节让我们来简单地了解一下并行计算的基本概念和主要实现方式，具体的内容会在课程的第二部分详细介绍。</p>
+<p>在利用PyTorch做深度学习的过程中，可能会遇到数据量较大无法在单块GPU上完成，或者需要提升计算速度的场景，这时就需要用到并行计算。</p>
+<p>经过本节的学习，你将收获：</p>
+<ul class="simple">
+<li><p>并行计算的简介</p></li>
+<li><p>CUDA简介</p></li>
+<li><p>并行计算的三种实现方式</p></li>
+</ul>
 <section id="id2">
 <h2>2.3.1  为什么要做并行计算<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
-<p>我们学习PyTorch的目的就是可以编写我们自己的框架，来完成特定的任务。可以说，在深度学习时代，GPU的出现让我们可以训练的更快，更好。所以，如何充分利用GPU的性能来提高我们模型学习的效果，这一技能是我们必须要学习的。这一节，我们主要讲的就是PyTorch的并行计算。PyTorch可以在编写完模型之后，让多个GPU来参与训练。</p>
+<p>深度学习的发展离不开算力的发展，GPU的出现让我们的模型可以训练的更快，更好。所以，如何充分利用GPU的性能来提高我们模型学习的效果，这一技能是我们必须要学习的。这一节，我们主要讲的就是PyTorch的并行计算。PyTorch可以在编写完模型之后，让多个GPU来参与训练，减少训练时间。</p>
 </section>
 <section id="cuda">
 <h2>2.3.2  为什么需要CUDA<a class="headerlink" href="#cuda" title="永久链接至标题">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">CUDA</span></code>是我们使用GPU的提供商——NVIDIA提供的GPU并行计算框架。对于GPU本身的编程，使用的是<code class="docutils literal notranslate"><span class="pre">CUDA</span></code>语言来实现的。但是，在我们使用PyTorch编写深度学习代码时，使用的<code class="docutils literal notranslate"><span class="pre">CUDA</span></code>又是另一个意思。在PyTorch使用 <code class="docutils literal notranslate"><span class="pre">CUDA</span></code>表示要开始要求我们的模型或者数据开始使用GPU了。</p>
-<p>在编写程序中，当我们使用了 <code class="docutils literal notranslate"><span class="pre">.cuda</span></code> 时，其功能是让我们的模型或者数据迁移到GPU当中，通过GPU开始计算。</p>
+<p>在编写程序中，当我们使用了 <code class="docutils literal notranslate"><span class="pre">.cuda()</span></code> 时，其功能是让我们的模型或者数据从CPU迁移到GPU(0)当中，通过GPU开始计算。</p>
 <p>注：</p>
 <ol>
-<li><p>我们使用GPU时使用的是.cuda而不是使用.gpu。这是因为当前GPU的编程接口采用CUDA，但是市面上的GPU并不是都支持CUDA，只有部分NVIDIA的GPU才支持，AMD的GPU编程接口采用的是OpenGL，在现阶段PyTorch并不支持。</p></li>
-<li><p>数据在GPU和CPU之间进行传递时会比较耗时，应当尽量避免。</p></li>
+<li><p>我们使用GPU时使用的是<code class="docutils literal notranslate"><span class="pre">.cuda()</span></code>而不是使用<code class="docutils literal notranslate"><span class="pre">.gpu()</span></code>。这是因为当前GPU的编程接口采用CUDA，但是市面上的GPU并不是都支持CUDA，只有部分NVIDIA的GPU才支持，AMD的GPU编程接口采用的是OpenCL，在现阶段PyTorch并不支持。</p></li>
+<li><p>数据在GPU和CPU之间进行传递时会比较耗时，我们应当尽量避免数据的切换。</p></li>
 <li><p>GPU运算很快，但是在使用简单的操作时，我们应该尽量使用CPU去完成。</p></li>
 <li><p>当我们的服务器上有多个GPU，我们应该指明我们使用的GPU是哪一块，如果我们不设置的话，tensor.cuda()方法会默认将tensor保存到第一块GPU上，等价于tensor.cuda(0)，这将会导致爆出<code class="docutils literal notranslate"><span class="pre">out</span> <span class="pre">of</span> <span class="pre">memory</span></code>的错误。我们可以通过以下两种方式继续设置。</p>
 <ol>
@@ -708,8 +714,7 @@ title="Print to PDF"
 <h3>不同的数据分布到不同的设备中，执行相同的任务(Data parallelism)<a class="headerlink" href="#data-parallelism" title="永久链接至标题">#</a></h3>
 <p>第三种方式有点不一样，它的逻辑是，我不再拆分模型，我训练的时候模型都是一整个模型。但是我将输入的数据拆分。所谓的拆分数据就是，同一个模型在不同GPU中训练一部分数据，然后再分别计算一部分数据之后，只需要将输出的数据做一个汇总，然后再反传。其架构如下：</p>
 <p><img alt="数据并行.png" src="../_images/data_parllel.png" /></p>
-<p>这种方式可以解决之前模式遇到的通讯问题。</p>
-<p><strong>PS:现在的主流方式是数据并行的方式(Data parallelism)</strong></p>
+<p>这种方式可以解决之前模式遇到的通讯问题。现在的主流方式是<strong>数据并行</strong>的方式(Data parallelism)</p>
 </section>
 </section>
 </section>

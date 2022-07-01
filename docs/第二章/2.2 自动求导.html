@@ -545,12 +545,41 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autograd">
+   Autograd简介
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   2.2.1 梯度
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
@@ -562,6 +591,24 @@ title="Print to PDF"
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autograd">
+   Autograd简介
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   2.2.1 梯度
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -571,7 +618,14 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>2.2 自动求导<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
-<p>PyTorch 中，所有神经网络的核心是 <code class="docutils literal notranslate"><span class="pre">autograd</span> </code>包。autograd包为张量上的所有操作提供了自动求导机制。它是一个在运行时定义 ( define-by-run ）的框架，这意味着反向传播是根据代码如何运行来决定的，并且每次迭代可以是不同的。</p>
+<p>PyTorch 中，所有神经网络的核心是 <code class="docutils literal notranslate"><span class="pre">autograd</span> </code>包。autograd包为张量上的所有操作提供了自动求导机制。它是一个在运行时定义 ( define-by-run ）的框架，这意味着反向传播是根据代码如何运行来决定的，并且每次迭代可以是不同的。
+经过本节的学习，你将收获：</p>
+<ul class="simple">
+<li><p>autograd的求导机制</p></li>
+<li><p>梯度的反向传播</p></li>
+</ul>
+<section id="autograd">
+<h2>Autograd简介<a class="headerlink" href="#autograd" title="永久链接至标题">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">torch.Tensor</span> </code>是这个包的核心类。如果设置它的属性<code class="docutils literal notranslate"> <span class="pre">.requires_grad</span></code> 为 <code class="docutils literal notranslate"><span class="pre">True</span></code>，那么它将会追踪对于该张量的所有操作。当完成计算后可以通过调用<code class="docutils literal notranslate"> <span class="pre">.backward()</span></code>，来自动计算所有的梯度。这个张量的所有梯度将会自动累加到<code class="docutils literal notranslate"><span class="pre">.grad</span></code>属性。</p>
 <p>注意：在 y.backward() 时，如果 y 是标量，则不需要为 backward() 传入任何参数；否则，需要传入一个与 y 同形的Tensor。</p>
 <p>要阻止一个张量被跟踪历史，可以调用<code class="docutils literal notranslate"><span class="pre">.detach()</span></code>方法将其与计算历史分离，并阻止它未来的计算记录被跟踪。为了防止跟踪历史记录(和使用内存），可以将代码块包装在 <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">torch.no_grad():</span> </code>中。在评估模型时特别有用，因为模型可能具有 <code class="docutils literal notranslate"><span class="pre">requires_grad</span> <span class="pre">=</span> <span class="pre">True</span></code> 的可训练的参数，但是我们不需要在此过程中对他们进行梯度计算。</p>
@@ -637,7 +691,9 @@ title="Print to PDF"
 <span class="o">&lt;</span><span class="n">SumBackward0</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000001CB4A19FB50</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p><strong>梯度</strong></p>
+</section>
+<section id="id2">
+<h2>2.2.1 梯度<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
 <p>现在开始进行反向传播，因为<code class="docutils literal notranslate"> <span class="pre">out</span></code> 是一个标量，因此<code class="docutils literal notranslate"><span class="pre">out.backward()</span></code>和<code class="docutils literal notranslate"> <span class="pre">out.backward(torch.tensor(1.))</span></code> 等价。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">out</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
 </pre></div>
@@ -741,6 +797,7 @@ v J=\left(\begin{array}{lll}\frac{\partial l}{\partial y_{1}} &amp; \cdots &amp;
 <span class="n">tensor</span><span class="p">([</span><span class="mf">2.</span><span class="p">])</span>
 </pre></div>
 </div>
+</section>
 </section>
 
 

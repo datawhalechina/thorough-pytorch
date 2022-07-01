@@ -9,8 +9,14 @@
 - 梳理了利用PyTorch完成深度学习的主要步骤和对应实现方式  
   
 现在，我们通过一个基础实战案例，将第一部分所涉及的PyTorch入门知识串起来，便于大家加深理解。同时为后续的进阶学习打好基础。 
+
+经过本节的学习，你将收获：
+
+- 一个完整的深度学习流程
+- 各个组件的实际使用方法
   
-我们这里的任务是对10个类别的“时装”图像进行分类，使用FashionMNIST数据集（https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion ）。上图给出了FashionMNIST中数据的若干样例图，其中每个小图对应一个样本。  
+我们这里的任务是对10个类别的“时装”图像进行分类，使用[FashionMNIST数据集](https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion )。
+上图给出了FashionMNIST中数据的若干样例图，其中每个小图对应一个样本。  
 FashionMNIST数据集中包含已经预先划分好的训练集和测试集，其中训练集共60,000张图像，测试集共10,000张图像。每张图像均为单通道黑白图像，大小为28\*28pixel，分属10个类别。  
   
 下面让我们一起将第三章各部分内容逐步实现，来跑完整个深度学习流程。
@@ -64,7 +70,8 @@ from torchvision import transforms
 
 image_size = 28
 data_transform = transforms.Compose([
-    transforms.ToPILImage(),   # 这一步取决于后续的数据读取方式，如果使用内置数据集则不需要
+    transforms.ToPILImage(),  
+     # 这一步取决于后续的数据读取方式，如果使用内置数据集读取方式则不需要
     transforms.Resize(image_size),
     transforms.ToTensor()
 ])
@@ -132,12 +139,8 @@ print(image.shape, label.shape)
 plt.imshow(image[0][0], cmap="gray")
 ```
 
-    torch.Size([256, 1, 28, 28]) torch.Size([256])
-    
-
-
-
-
+    torch.Size([256, 1, 28, 28]) 
+    torch.Size([256])   
     <matplotlib.image.AxesImage at 0x7f19a043cc10>
 
 

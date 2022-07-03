@@ -1,4 +1,4 @@
-## 基础实战——FashionMNIST时装分类
+# 基础实战——FashionMNIST时装分类
 
 ![](./figures/fashion-mnist-sprite.png)
   

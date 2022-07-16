@@ -371,6 +371,28 @@
    </li>
   </ul>
  </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html">
+   第九章：常见代码解读
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
+     9.1 图像分类（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">
+     目标检测
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
     </div>
@@ -597,16 +619,31 @@ title="Print to PDF"
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id3">
-       删除虚拟环境命令
+       安装包
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id4">
-       激活环境命令
+       卸载包
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id5">
+       显示所有安装的包
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       删除虚拟环境命令
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       激活环境命令
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
        退出当前环境
       </a>
      </li>
@@ -640,12 +677,12 @@ title="Print to PDF"
       </a>
       <ul class="nav section-nav flex-column">
        <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id6">
+        <a class="reference internal nav-link" href="#id9">
          Windows系统：
         </a>
        </li>
        <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id7">
+        <a class="reference internal nav-link" href="#id10">
          Linux系统：
         </a>
        </li>
@@ -656,24 +693,24 @@ title="Print to PDF"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id8">
+  <a class="reference internal nav-link" href="#id11">
    1.2.2 查看显卡
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
+    <a class="reference internal nav-link" href="#id12">
      windows：
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id10">
+    <a class="reference internal nav-link" href="#id13">
      linux：
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
+  <a class="reference internal nav-link" href="#id14">
    1.2.3 安装PyTorch
   </a>
   <ul class="nav section-nav flex-column">
@@ -688,12 +725,12 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
+    <a class="reference internal nav-link" href="#id15">
      Step 3：选择命令
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
+    <a class="reference internal nav-link" href="#id16">
      Step 4：在线下载
     </a>
    </li>
@@ -703,7 +740,7 @@ title="Print to PDF"
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id14">
+      <a class="reference internal nav-link" href="#id17">
        Windows：
       </a>
      </li>
@@ -727,7 +764,7 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id15">
+    <a class="reference internal nav-link" href="#id18">
      Step 2：配置环境
     </a>
    </li>
@@ -784,16 +821,31 @@ title="Print to PDF"
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id3">
-       删除虚拟环境命令
+       安装包
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id4">
-       激活环境命令
+       卸载包
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#id5">
+       显示所有安装的包
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       删除虚拟环境命令
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       激活环境命令
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
        退出当前环境
       </a>
      </li>
@@ -827,12 +879,12 @@ title="Print to PDF"
       </a>
       <ul class="nav section-nav flex-column">
        <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id6">
+        <a class="reference internal nav-link" href="#id9">
          Windows系统：
         </a>
        </li>
        <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id7">
+        <a class="reference internal nav-link" href="#id10">
          Linux系统：
         </a>
        </li>
@@ -843,24 +895,24 @@ title="Print to PDF"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id8">
+  <a class="reference internal nav-link" href="#id11">
    1.2.2 查看显卡
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
+    <a class="reference internal nav-link" href="#id12">
      windows：
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id10">
+    <a class="reference internal nav-link" href="#id13">
      linux：
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id11">
+  <a class="reference internal nav-link" href="#id14">
    1.2.3 安装PyTorch
   </a>
   <ul class="nav section-nav flex-column">
@@ -875,12 +927,12 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id12">
+    <a class="reference internal nav-link" href="#id15">
      Step 3：选择命令
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id13">
+    <a class="reference internal nav-link" href="#id16">
      Step 4：在线下载
     </a>
    </li>
@@ -890,7 +942,7 @@ title="Print to PDF"
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id14">
+      <a class="reference internal nav-link" href="#id17">
        Windows：
       </a>
      </li>
@@ -914,7 +966,7 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id15">
+    <a class="reference internal nav-link" href="#id18">
      Step 2：配置环境
     </a>
    </li>
@@ -941,10 +993,10 @@ title="Print to PDF"
 </ul>
 <section id="anaconda">
 <h2>1.2.1 Anaconda的安装<a class="headerlink" href="#anaconda" title="永久链接至标题">#</a></h2>
-<p>在数据科学和最近很火的深度学习中，要用到大量成熟的package。我们一个个安装 package 很麻烦，而且容易出现大量依赖的问题。而 Anaconda/miniconda的出现很好的解决了我们的问题，它集成了常用于科学分析（机器学习， 深度学习）的大量package，并且借助于conda我们可以实现对虚拟Python环境的管理。</p>
+<p>在数据科学和最近很火的深度学习中，要用到大量成熟的package。我们一个个安装 package 很麻烦，而且很容易出现包之间的依赖不适配的问题。而 Anaconda/miniconda的出现很好的解决了我们的问题，它集成了常用于科学分析（机器学习， 深度学习）的大量package，并且借助于conda我们可以实现对虚拟Python环境的管理。</p>
 <section id="step-1-anaconda-miniconda">
 <h3>Step 1：安装Anaconda/miniconda<a class="headerlink" href="#step-1-anaconda-miniconda" title="永久链接至标题">#</a></h3>
-<p>登陆<a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda | Individual Edition</a>，选择相应系统DownLoad，此处以Windows为例：</p>
+<p>登陆<a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda | Individual Edition</a>，选择相应系统DownLoad，此处以Windows为例（Linux可以点击<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">链接</a>选择合适的版本进行下载或者通过官方提供的脚本进行下载）：</p>
 <p><img alt="" src="../_images/Anaconda.png" /></p>
 </section>
 <section id="step-2">
@@ -977,22 +1029,41 @@ title="Print to PDF"
 </ol>
 </section>
 <section id="id3">
-<h4>删除虚拟环境命令<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda remove -n env_name --all
+<h4>安装包<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install package_name
 </pre></div>
 </div>
 </section>
 <section id="id4">
-<h4>激活环境命令<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate env_name
+<h4>卸载包<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda remove package_name
 </pre></div>
 </div>
 </section>
 <section id="id5">
-<h4>退出当前环境<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h4>
+<h4>显示所有安装的包<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda list
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h4>删除虚拟环境命令<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda remove -n env_name --all
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h4>激活环境命令<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate env_name
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h4>退出当前环境<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda deactivate
 </pre></div>
 </div>
+<p>关于更多的命令，我们可以查看Anaconda/miniconda官方提供的命令，官网链接：<a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/commands.html#conda-general-commands">点击这里</a></p>
 </section>
 </section>
 <section id="step-4">
@@ -1035,8 +1106,8 @@ trusted-host <span class="o">=</span>pypi.douban.com
 </section>
 <section id="conda">
 <h4>conda换源（清华源）<a class="reference external" href="https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/">官方换源帮助</a><a class="headerlink" href="#conda" title="永久链接至标题">#</a></h4>
-<section id="id6">
-<h5>Windows系统：<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h5>
+<section id="id9">
+<h5>Windows系统：<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h5>
 <p>TUNA 提供了 Anaconda 仓库与第三方源的镜像，各系统都可以通过修改用户目录下的 <code class="docutils literal notranslate"><span class="pre">.condarc</span></code> 文件。Windows 用户无法直接创建名为 <code class="docutils literal notranslate"><span class="pre">.condarc</span></code> 的文件，可先执行<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">show_channel_urls</span> <span class="pre">yes</span></code>生成该文件之后再修改。</p>
 <p>完成这一步后，我们需要修改<code class="docutils literal notranslate"><span class="pre">C:\Users\User_name\.condarc</span></code>这个文件，打开后将文件里原始内容删除，将下面的内容复制进去并保存。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>channels:
@@ -1057,8 +1128,8 @@ custom_channels:
 </div>
 <p>这一步完成后，我们需要打开<code class="docutils literal notranslate"><span class="pre">Anaconda</span> <span class="pre">Prompt</span></code> 运行 <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">clean</span> <span class="pre">-i</span></code> 清除索引缓存，保证用的是镜像站提供的索引。</p>
 </section>
-<section id="id7">
-<h5>Linux系统：<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h5>
+<section id="id10">
+<h5>Linux系统：<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h5>
 <p>在Linux系统下，我们还是需要修改<code class="docutils literal notranslate"><span class="pre">.condarc</span></code>来进行换源</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
 vi .condarc
@@ -1073,24 +1144,24 @@ vi .condarc
 </section>
 </section>
 </section>
-<section id="id8">
-<h2>1.2.2 查看显卡<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h2>
+<section id="id11">
+<h2>1.2.2 查看显卡<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h2>
 <p>该部分如果仅仅只有CPU或者集显的小伙伴们可以跳过该部分</p>
-<section id="id9">
-<h3>windows：<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h3>
+<section id="id12">
+<h3>windows：<a class="headerlink" href="#id12" title="永久链接至标题">#</a></h3>
 <p>我们可以通过在<code class="docutils literal notranslate"><span class="pre">cmd/terminal中</span></code>输入<code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code>（Linux和Win命令一样）、使用NVIDIA控制面板和使用任务管理器查看自己是否有NVIDIA的独立显卡及其型号</p>
 <p><img alt="查看GPU" src="../_images/gpu.png" /></p>
 <p><img alt="查看显卡" src="../_images/Nvidia.png" /></p>
 </section>
-<section id="id10">
-<h3>linux：<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h3>
+<section id="id13">
+<h3>linux：<a class="headerlink" href="#id13" title="永久链接至标题">#</a></h3>
 <p><img alt="Linux查看GPU" src="../_images/Linux_GPU.png" /></p>
 <p>我们需要看下版本号，看自己可以兼容的CUDA版本，等会安装PyTorch时是可以向下兼容的。具体适配表如下图所示。</p>
 <p><img alt="适配表" src="../_images/table.png" /></p>
 </section>
 </section>
-<section id="id11">
-<h2>1.2.3 安装PyTorch<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h2>
+<section id="id14">
+<h2>1.2.3 安装PyTorch<a class="headerlink" href="#id14" title="永久链接至标题">#</a></h2>
 <section id="step-1-pytorch">
 <h3>Step 1：登录<a class="reference external" href="https://pytorch.org/">PyTorch官网</a><a class="headerlink" href="#step-1-pytorch" title="永久链接至标题">#</a></h3>
 <p><img alt="" src="../_images/Pytorch.png" /></p>
@@ -1100,16 +1171,16 @@ vi .condarc
 <p><img alt="" src="../_images/download.png" /></p>
 <p>这个界面我们可以选择本地开始（Start Locally），云开发（Cloud Partners)，以前的Pytorch版本（Previous PyTorch Versions），移动端开发（Mobile），在此处我们需要进行本地安装。</p>
 </section>
-<section id="id12">
-<h3>Step 3：选择命令<a class="headerlink" href="#id12" title="永久链接至标题">#</a></h3>
+<section id="id15">
+<h3>Step 3：选择命令<a class="headerlink" href="#id15" title="永久链接至标题">#</a></h3>
 <p>我们需要结合自己情况选择命令并复制下来，然后使用conda下载或者pip下载（建议conda安装）</p>
 <p>打开<code class="docutils literal notranslate"><span class="pre">Terminal</span></code>，输入<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">env_name</span></code>，激活环境并切换到环境下面，我们就可以进行PyTorch的安装了。</p>
 <p><img alt="" src="../_images/choose_envs.png" /></p>
 <p><strong>注</strong>：</p>
 <ol class="simple">
 <li><p><strong>Stable</strong>代表的是稳定版本，<strong>Preview</strong>代表的是先行版本</p></li>
-<li><p>可以结合电脑是否有显卡，选择CPU版本还是CUDA版本，建议还是需要NVIDIA GPU</p></li>
-<li><p>官方建议我们使用<strong>Anaconda</strong>来进行管理</p></li>
+<li><p>可以结合电脑是否有显卡，选择CPU版本还是CUDA版本，CUDA版本需要拥有独显且是NVIDIA的GPU</p></li>
+<li><p>官方建议我们使用<strong>Anaconda/miniconda</strong>来进行管理</p></li>
 <li><p>关于安装的系统要求</p>
 <ol class="simple">
 <li><p><strong>Windows</strong>：</p>
@@ -1131,18 +1202,18 @@ vi .condarc
 </li>
 </ol>
 </li>
-<li><p>有些电脑所支持的cuda版本&lt;10.2，此时我们需要进行手动降级，即就是cudatoolkit = 你所适合的版本，但是这里需要注意下一定要保持Pytorch和cudatoolkit的版本适配。查看<a class="reference external" href="https://pytorch.org/get-started/previous-versions/">Previous PyTorch Versions | PyTorch</a></p></li>
+<li><p>有些电脑所支持的cuda版本&lt;10.2，此时我们需要进行手动降级，即就是cudatoolkit = 你所适合的版本，但是这里需要注意下一定要保持PyTorch和cudatoolkit的版本适配。查看<a class="reference external" href="https://pytorch.org/get-started/previous-versions/">Previous PyTorch Versions | PyTorch</a></p></li>
 </ol>
 </section>
-<section id="id13">
-<h3>Step 4：在线下载<a class="headerlink" href="#id13" title="永久链接至标题">#</a></h3>
+<section id="id16">
+<h3>Step 4：在线下载<a class="headerlink" href="#id16" title="永久链接至标题">#</a></h3>
 <p>如果我们使用的<code class="docutils literal notranslate"><span class="pre">Anaconda</span> <span class="pre">Prompt</span></code>进行下载的话，我们需要先通过<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">env_name</span></code>，激活我们的虚拟环境中去，再输入命令。</p>
 <p><strong>注</strong>: 我们需要要把下载指令后面的 -c pytorch 去掉以保证使用清华源下载，否则还是默认从官网下载。</p>
 </section>
 <section id="step-5">
 <h3>Step 5：离线下载<a class="headerlink" href="#step-5" title="永久链接至标题">#</a></h3>
-<section id="id14">
-<h4>Windows：<a class="headerlink" href="#id14" title="永久链接至标题">#</a></h4>
+<section id="id17">
+<h4>Windows：<a class="headerlink" href="#id17" title="永久链接至标题">#</a></h4>
 <p>在安装的过程中，我们可能会出现一些奇奇怪怪的问题，导致在线下载不成功，我们也可以使用<strong>离线下载</strong>的方法进行。</p>
 <p><strong>下载地址</strong>：https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/</p>
 <p>通过上面下载地址，我们需要下载好对应版本的pytorch和 torchvision 包，然后打开<code class="docutils literal notranslate"><span class="pre">Anaconda</span> <span class="pre">Prompt</span></code>/<code class="docutils literal notranslate"><span class="pre">Terminal</span></code>中，进入我们安装的路径下。</p>
@@ -1189,8 +1260,8 @@ conda install --offline torchvision压缩包的全称（后缀都不能忘记）
 <p>如果是学生的话可以使用学生邮箱注册并下载Professional版本，Community版本也基本能满足我们的日常需求。</p>
 <p><img alt="Pycharm安装" src="../_images/Pycharm.png" /></p>
 </section>
-<section id="id15">
-<h3>Step 2：配置环境<a class="headerlink" href="#id15" title="永久链接至标题">#</a></h3>
+<section id="id18">
+<h3>Step 2：配置环境<a class="headerlink" href="#id18" title="永久链接至标题">#</a></h3>
 <p>我们需要将虚拟环境设为我们的编译器，具体操作：File --&gt; Settings --&gt; Project:你的项目名称--&gt; Python Interpreter</p>
 <p>进去后，我们可以看见他使用的是默认的base环境，现在我们需要将这个环境设置成我们的<code class="docutils literal notranslate"><span class="pre">test</span></code>环境,点击<code class="docutils literal notranslate"><span class="pre">齿轮</span></code>，选择<code class="docutils literal notranslate"><span class="pre">Add</span></code></p>
 <p><img alt="改环境" src="../_images/envs1.png" /></p>

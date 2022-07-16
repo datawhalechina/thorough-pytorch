@@ -371,6 +371,28 @@
    </li>
   </ul>
  </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html">
+   第九章：常见代码解读
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
+     9.1 图像分类（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">
+     目标检测
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
     </div>
@@ -667,23 +689,24 @@ title="Print to PDF"
 <section id="id1">
 <h2>5.1.1 必要的知识回顾<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
 <ul class="simple">
-<li><p>Module 类是 torch.nn 模块里提供的一个模型构造类 (nn.Module)，是所有神经⽹网络模块的基类，我们可以继承它来定义我们想要的模型；</p></li>
-<li><p>PyTorch模型定义应包括两个主要部分：各个部分的初始化（_<em>init</em>_）；数据流向定义（forward）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Module</span></code> 类是 <code class="docutils literal notranslate"><span class="pre">torch.nn</span></code> 模块里提供的一个模型构造类 (<code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>)，是所有神经⽹网络模块的基类，我们可以继承它来定义我们想要的模型；</p></li>
+<li><p>PyTorch模型定义应包括两个主要部分：各个部分的初始化（<code class="docutils literal notranslate"><span class="pre">__init__</span></code>）；数据流向定义（<code class="docutils literal notranslate"><span class="pre">forward</span></code>）</p></li>
 </ul>
-<p>基于nn.Module，我们可以通过Sequential，ModuleList和ModuleDict三种方式定义PyTorch模型。</p>
+<p>基于<code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>，我们可以通过<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>，<code class="docutils literal notranslate"><span class="pre">ModuleList</span></code>和<code class="docutils literal notranslate"><span class="pre">ModuleDict</span></code>三种方式定义PyTorch模型。</p>
 <p>下面我们就来逐个探索这三种模型定义方式。</p>
 </section>
 <section id="sequential">
 <h2>5.1.2 Sequential<a class="headerlink" href="#sequential" title="永久链接至标题">#</a></h2>
-<p>对应模块为nn.Sequential()。</p>
-<p>当模型的前向计算为简单串联各个层的计算时， Sequential 类可以通过更加简单的方式定义模型。它可以接收一个子模块的有序字典(OrderedDict) 或者一系列子模块作为参数来逐一添加 Module 的实例，⽽模型的前向计算就是将这些实例按添加的顺序逐⼀计算。我们结合Sequential和定义方式加以理解：</p>
+<p>对应模块为<code class="docutils literal notranslate"><span class="pre">nn.Sequential()</span></code>。</p>
+<p>当模型的前向计算为简单串联各个层的计算时， <code class="docutils literal notranslate"><span class="pre">Sequential</span></code> 类可以通过更加简单的方式定义模型。它可以接收一个子模块的有序字典(OrderedDict) 或者一系列子模块作为参数来逐一添加 <code class="docutils literal notranslate"><span class="pre">Module</span></code> 的实例，⽽模型的前向计算就是将这些实例按添加的顺序逐⼀计算。我们结合<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>和定义方式加以理解：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MySequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MySequential</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">OrderedDict</span><span class="p">):</span> <span class="c1"># 如果传入的是一个OrderedDict</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>  <span class="c1"># add_module方法会将module添加进self._modules(一个OrderedDict)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>  
+                <span class="c1"># add_module方法会将module添加进self._modules(一个OrderedDict)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># 传入的是一些Module</span>
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">module</span><span class="p">)</span>
@@ -694,7 +717,7 @@ title="Print to PDF"
         <span class="k">return</span> <span class="nb">input</span>
 </pre></div>
 </div>
-<p>下面来看下如何使用Sequential来定义模型。只需要将模型的层按序排列起来即可，根据层名的不同，排列的时候有两种方式：</p>
+<p>下面来看下如何使用<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>来定义模型。只需要将模型的层按序排列起来即可，根据层名的不同，排列的时候有两种方式：</p>
 <ul class="simple">
 <li><p>直接排列</p></li>
 </ul>
@@ -734,12 +757,12 @@ title="Print to PDF"
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>可以看到，使用Sequential定义模型的好处在于简单、易读，同时使用Sequential定义的模型不需要再写forward，因为顺序已经定义好了。但使用Sequential也会使得模型定义丧失灵活性，比如需要在模型中间加入一个外部输入时就不适合用Sequential的方式实现。使用时需根据实际需求加以选择。</p>
+<p>可以看到，使用<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>定义模型的好处在于简单、易读，同时使用<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>定义的模型不需要再写<code class="docutils literal notranslate"><span class="pre">forward</span></code>，因为顺序已经定义好了。但使用<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>也会使得模型定义丧失灵活性，比如需要在模型中间加入一个外部输入时就不适合用<code class="docutils literal notranslate"><span class="pre">Sequential</span></code>的方式实现。使用时需根据实际需求加以选择。</p>
 </section>
 <section id="modulelist">
 <h2>5.1.3 ModuleList<a class="headerlink" href="#modulelist" title="永久链接至标题">#</a></h2>
-<p>对应模块为nn.ModuleList()。</p>
-<p>ModuleList 接收一个子模块（或层，需属于nn.Module类）的列表作为输入，然后也可以类似List那样进行append和extend操作。同时，子模块或层的权重也会自动添加到网络中来。</p>
+<p>对应模块为<code class="docutils literal notranslate"><span class="pre">nn.ModuleList()</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">ModuleList</span></code> 接收一个子模块（或层，需属于<code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>类）的列表作为输入，然后也可以类似<code class="docutils literal notranslate"><span class="pre">List</span></code>那样进行append和extend操作。同时，子模块或层的权重也会自动添加到网络中来。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()])</span>
 <span class="n">net</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="c1"># # 类似List的append操作</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># 类似List的索引访问</span>
@@ -754,7 +777,7 @@ title="Print to PDF"
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>要特别注意的是，nn.ModuleList 并没有定义一个网络，它只是将不同的模块储存在一起。ModuleList中元素的先后顺序并不代表其在网络中的真实位置顺序，需要经过forward函数指定各个层的先后顺序后才算完成了模型的定义。具体实现时用for循环即可完成：</p>
+<p>要特别注意的是，<code class="docutils literal notranslate"><span class="pre">nn.ModuleList</span></code> 并没有定义一个网络，它只是将不同的模块储存在一起。<code class="docutils literal notranslate"><span class="pre">ModuleList</span></code>中元素的先后顺序并不代表其在网络中的真实位置顺序，需要经过forward函数指定各个层的先后顺序后才算完成了模型的定义。具体实现时用for循环即可完成：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">model</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -770,8 +793,8 @@ title="Print to PDF"
 </section>
 <section id="moduledict">
 <h2>5.1.4 ModuleDict<a class="headerlink" href="#moduledict" title="永久链接至标题">#</a></h2>
-<p>对应模块为nn.ModuleDict()。</p>
-<p>ModuleDict和ModuleList的作用类似，只是ModuleDict能够更方便地为神经网络的层添加名称。</p>
+<p>对应模块为<code class="docutils literal notranslate"><span class="pre">nn.ModuleDict()</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">ModuleDict</span></code>和<code class="docutils literal notranslate"><span class="pre">ModuleList</span></code>的作用类似，只是<code class="docutils literal notranslate"><span class="pre">ModuleDict</span></code>能够更方便地为神经网络的层添加名称。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleDict</span><span class="p">({</span>
     <span class="s1">&#39;linear&#39;</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
     <span class="s1">&#39;act&#39;</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
@@ -794,7 +817,7 @@ title="Print to PDF"
 </section>
 <section id="id2">
 <h2>5.1.5 三种方法的比较与适用场景<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h2>
-<p>Sequential适用于快速验证结果，因为已经明确了要用哪些层，直接写一下就好了，不需要同时写__init__和forward；</p>
+<p><code class="docutils literal notranslate"><span class="pre">Sequential</span></code>适用于快速验证结果，因为已经明确了要用哪些层，直接写一下就好了，不需要同时写<code class="docutils literal notranslate"><span class="pre">__init__</span></code>和<code class="docutils literal notranslate"><span class="pre">forward</span></code>；</p>
 <p>ModuleList和ModuleDict在某个完全相同的层需要重复出现多次时，非常方便实现，可以”一行顶多行“；</p>
 <p>当我们需要之前层的信息的时候，比如 ResNets 中的残差计算，当前层的结果需要和之前层中的结果进行融合，一般使用 ModuleList/ModuleDict 比较方便。</p>
 </section>

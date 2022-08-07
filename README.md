@@ -170,7 +170,7 @@ git push -f
 |visdom可视化| 2022.4.5 |`Visdom`的使用|
 |apex| 2022.5.4 |apex的简介和使用|
 |超参数的保存 |  &#x2705; |使用argparse进行参数的修改|
-|onnx| 2022.5.31 |讲述ONNX格式和实战例子|
+|onnx| &#x2705; |将模型导出为onnx并使用onnxruntime进行推理|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|
 |数据增强| &#x2705;|imgaug的使用|

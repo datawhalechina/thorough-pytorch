@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>第九章：常见代码解读 &#8212; 深入浅出PyTorch</title>
+    <title>第十章：常见代码解读 &#8212; 深入浅出PyTorch</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -41,7 +41,8 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="prev" title="第九章：PyTorch的部署" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html" />
+    <link rel="next" title="9.1 图像分类（补充中）" href="10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html" />
+    <link rel="prev" title="9.1 使用ONNX进行部署并推理" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh">
     
@@ -300,7 +301,7 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/PyTorch%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89%E4%B8%8E%E8%BF%9B%E9%98%B6%E8%AE%AD%E7%BB%83%E6%8A%80%E5%B7%A7.html">
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.7%20PyTorch%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89%E4%B8%8E%E8%BF%9B%E9%98%B6%E8%AE%AD%E7%BB%83%E6%8A%80%E5%B7%A7.html">
      PyTorch模型定义与进阶训练技巧
     </a>
    </li>
@@ -372,26 +373,41 @@
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html">
-   第九章：PyTorch的部署
+   第九章：PyTorch的模型部署
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
   <label for="toctree-checkbox-9">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="simple">
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html">
+     9.1 使用ONNX进行部署并推理
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
   <a class="current reference internal" href="#">
-   第九章：常见代码解读
+   第十章：常见代码解读
   </a>
   <input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
   <label for="toctree-checkbox-10">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="simple">
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
+     9.1 图像分类（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">
+     目标检测
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -578,7 +594,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>第九章：常见代码解读</h1>
+                <h1>第十章：常见代码解读</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -591,8 +607,18 @@ title="Print to PDF"
               <div>
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>第九章：常见代码解读<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
+<h1>第十章：常见代码解读<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">9.1 图像分类（补充中）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">目标检测</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html#id2">目标检测概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html#id3">目标检测应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html#id4">目标检测数据集</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html#id5">目标检测常用算法</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </section>
 
@@ -604,12 +630,19 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html" title="上一页 页">
+    <a class='left-prev' id="prev-link" href="../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html" title="上一页 页">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">上一页</p>
-            <p class="prev-next-title">第九章：PyTorch的部署</p>
+            <p class="prev-next-title">9.1 使用ONNX进行部署并推理</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html" title="下一页 页">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">9.1 图像分类（补充中）</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>

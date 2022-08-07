@@ -21,6 +21,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 第七章/index
 第八章/index
 第九章/index
+第十章/index
 ```
 
 ## 人员安排
@@ -48,7 +49,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 |visdom可视化| 2022.4.5 |`Visdom`的使用|
 |apex| 2022.5.4 |apex的简介和使用|
 |超参数的保存 | &#x2705; |介绍argparse与yaml|
-|onnx| 2022.5.31 |讲述ONNX格式和实战例子|
+|onnx| &#x2705 |讲述ONNX格式和实战例子|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|
 |数据增强| &#x2705;|imgaug的使用|

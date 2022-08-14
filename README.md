@@ -188,6 +188,7 @@ git push -f
 |目标检测 - DETR|  |DETR的实现|
 |图像分类 - GoogLeNet| 2022.5.11 |GoogLeNet的介绍与实现|
 |图像分类 - Vision transformer| 2022.5.18 |Vit介绍与实现|
+|图像分类 - Swin-transformer| &#x2705; |Swin-T解读|
 |图像分类 - MobileNet系列|  2022.4月|MobileNet系列介绍与实现|
 |图像分类 - GhostNet| 2022.4月 |GhostNet代码讲解|
 |生成式对抗网络 - 生成手写数字实战| 2022.5.25 |生成数字并可视化|

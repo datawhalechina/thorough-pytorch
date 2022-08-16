@@ -1,6 +1,16 @@
 # Swin Transformer解读
 
-作者：沈豪，复旦大学，Datawhale成员
+<p>
+<font size=3><b>[Swin-T] Swin Transformer: Hierarchical Vision Transformer using Shifted Windows</b></font>
+<br>
+<font size=2>Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, Baining Guo.</font>
+<br>
+<font size=2>ICCV 2021.</font>
+<a href='https://arxiv.org/pdf/2103.14030.pdf'>[paper]</a> <a href='https://github.com/microsoft/Swin-Transformer'>[code]</a> 
+<br>
+<font size=3>解读者：沈豪，复旦大学博士，Datawhale成员</font>
+<br>
+</p>
 
 ## 前言
 
@@ -13,11 +23,11 @@
 
 针对上述两个问题，论文中提出了一种基于**滑动窗口机制，具有层级设计（下采样层）** 的 Swin Transformer。
 
-其中**滑窗操作**包括**不重叠的 local window，和重叠的 cross-window**。将注意力计算限制在一个窗口（window size固定）中，**一方面能引入 CNN 卷积操作的局部性，另一方面能大幅度节省计算量**，它只和窗口数量成线性关系。
-
-通过**下采样**的层级设计，能够逐渐增大感受野，从而使得注意力机制也能够注意到**全局**的特征。
+其中**滑窗操作**包括**不重叠的 local window，和重叠的 cross-window**。将注意力计算限制在一个窗口（window size固定）中，**一方面能引入 CNN 卷积操作的局部性，另一方面能大幅度节省计算量**，它只和窗口数量成线性关系。通过**下采样**的层级设计，能够逐渐增大感受野，从而使得注意力机制也能够注意到**全局**的特征。
 
 <img src="./figures/Swin-T&ViT.png" alt="Swin-T&ViT" style="zoom:50%;" />
+
+在论文的最后，作者也通过大量的实验证明Swin Transformer相较于以前的SOTA模型均有提高，尤其是在ADE20K数据和COCO数据集上的表现。也证明了Swin Transformer可以作为一种通用骨干网络被使用。
 
 ## 模型结构
 
@@ -97,7 +107,7 @@ class SwinTransformer(nn.Module):
 
 这里可以通过二维卷积层，**将 stride，kernel_size 设置为 window_size 大小**。设定输出通道来确定嵌入向量的大小。最后将 H,W 维度展开，并移动到第一维度。
 
-> 论文中输出通道设置为48，但是代码中为96，一下我们均以代码为准。
+> 论文中输出通道设置为48，但是代码中为96，以下我们均以代码为准。
 >
 > Batch_size=128
 
@@ -208,9 +218,8 @@ def window_reverse(windows, window_size, H, W):
 
 ## Window Attention
 
-这传统的 Transformer 都是**基于全局来计算注意力的**，因此计算复杂度十分高。而 Swin Transformer 则将**注意力的计算限制在每个窗口内**，进而减少了计算量。
+传统的 Transformer 都是**基于全局来计算注意力的**，因此计算复杂度十分高。而 Swin Transformer 则将**注意力的计算限制在每个窗口内**，进而减少了计算量。我们先简单看下公式
 
-我们先简单看下公式
 $$
 Attention(Q,K,V)=Softmax(\frac{{QK}^T}{\sqrt d}+B)V
 $$
@@ -396,9 +405,8 @@ def forward(self, x, mask=None):
 
 <img src="./figures/Shifted_Window.png" alt="Shifted_Window" style="zoom:67%;" />
 
-左边是没有重叠的 Window Attention，而右边则是将窗口进行移位的 Shift Window Attention。可以看到移位后的窗口包含了原本相邻窗口的元素。但这也引入了一个新问题，即 **window 的个数翻倍了**，由原本四个窗口变成了 9 个窗口。
+左边是没有重叠的 Window Attention，而右边则是将窗口进行移位的 Shift Window Attention。可以看到移位后的窗口包含了原本相邻窗口的元素。但这也引入了一个新问题，即 **window 的个数翻倍了**，由原本四个窗口变成了 9 个窗口。在实际代码里，我们是**通过对特征图移位，并给 Attention 设置 mask 来间接实现的**。能在**保持原有的 window 个数下**，最后的计算结果等价。 
 
-在实际代码里，我们是**通过对特征图移位，并给 Attention 设置 mask 来间接实现的**。能在**保持原有的 window 个数下**，最后的计算结果等价。 
 <p align=center><img src="./figures/W-MSA.png" alt="W-MSA" style="zoom:50%;" /></p>
 
 ### 特征图移位操作 
@@ -419,15 +427,11 @@ def forward(self, x, mask=None):
 
 
 
-我们希望在计算 Attention 的时候，**让具有相同 index QK 进行计算，而忽略不同 index QK 计算结果**。
-
-最后正确的结果如下图所示
+我们希望在计算 Attention 的时候，**让具有相同 index QK 进行计算，而忽略不同 index QK 计算结果**。最后正确的结果如下图所示
 
 <img src="./figures/Mask.png" alt="Mask" style="zoom:50%;" />
 
-而要想在原始四个窗口下得到正确的结果，我们就必须给 Attention 的结果加入一个 mask（如上图最右边所示）
-
-相关代码如下：
+而要想在原始四个窗口下得到正确的结果，我们就必须给 Attention 的结果加入一个 mask（如上图最右边所示）相关代码如下：
 
 ```python
 if self.shift_size > 0:
@@ -493,7 +497,7 @@ else:
     attn = self.softmax(attn)
 ```
 
-将 mask 加到 attention 的计算结果，并进行 softmax。mask 的值设置为 - 100，softmax 后就会忽略掉对应的值。
+将 mask 加到 attention 的计算结果，并进行 softmax。mask 的值设置为 - 100，softmax 后就会忽略掉对应的值。关于Mask，我们发现在官方代码库中的issue38也进行了讨论:-->[The Question about the mask of window attention #38](https://github.com/microsoft/Swin-Transformer/issues/38#issuecomment-823806591)
 
 ## W-MSA和MSA的复杂度对比
 

@@ -15,8 +15,11 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 
 《深入浅出PyTorch》是一个系列，一共有三个部分。已经上线的是本系列的第一、二部分，后续会不断更新《深入浅出PyTorch》（下），给出更贴合实际应用的实战案例。
 
-## 二、内容设置（已上线部分）
+## 二、内容简介
 - 第零章：前置知识补充(推进中)
+  - 人工智能简史
+  - 相关评价指标
+  - 常用包的学习
   - Jupyter相关操作
 - 第一章：PyTorch的简介和安装
   - PyTorch简介
@@ -65,21 +68,28 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 - 第十章：常见网络代码的解读(推进中)
   - 计算机视觉
     - 图像分类
+      - ResNet源码解读
+      - Swin Transformer源码解读
+      - Vision Transformer源码解读
     - 目标检测
+      - YOLO系列解读（与MMYOLO合作）
     - 图像分割
   - 自然语言处理
+    - RNN源码解读
   - 音频处理
   - 视频处理
   - 其他
+  - 
 
 ## 三、人员安排
 
+
 | 成员&nbsp; | 个人简介                                            | 个人主页                                           |
 | --------------- | --------------------------------------------------- | -------------------------------------------------- |
-|   牛志康   | DataWhale成员，西安电子科技大学本科生 | https://www.zhihu.com/people/obeah-82 |
-|   李嘉骐   | DataWhale成员，清华大学研究生 | https://www.zhihu.com/people/li-jia-qi-16-9/posts |
-|    刘洋    | Datawhale成员，中国科学院数学与系统科学研究所研究生 | https://www.zhihu.com/people/ming-ren-19-34/asks   |
-|   陈安东   | DataWhale成员，中央民族大学研究生                   | https://andongblue.github.io/chenandong.github.io/ |
+|   牛志康   | DataWhale成员，西安电子科技大学本科生 | [[知乎](https://www.zhihu.com/people/obeah-82)][[个人主页](https://nofish-528.github.io/)] |
+|   李嘉骐   | DataWhale成员，清华大学研究生 | [[知乎](https://www.zhihu.com/people/li-jia-qi-16-9/posts)] |
+|    刘洋    | Datawhale成员，中国科学院数学与系统科学研究所研究生 | [[知乎](https://www.zhihu.com/people/ming-ren-19-34/asks)]   |
+|   陈安东   | DataWhale成员，中央民族大学研究生                   | [[个人主页](https://andongblue.github.io/chenandong.github.io/)] |
 
 教程贡献情况（已上线课程内容）：
 
@@ -91,7 +101,8 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
 
 陈安东：第二章；第三章；第七章
 
-## 四、 课程编排与使用方法
+## 四、 课程编排与配套视频
+<details>
 
 部分章节直播讲解请观看B站回放（持续更新）：https://www.bilibili.com/video/BV1L44y1472Z
 
@@ -107,18 +118,18 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   第一部分：第一章到第四章，学习周期：10天；
 
   第二部分：第五章到第八章，学习周期：11天
-  
+
+</details>
 ## 五、关于贡献
+<details> 
 
-本项目使用`Forking`工作流，具体参考[atlassian文档](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
-
-大致步骤如下：
+本项目使用`Forking`工作流，具体参考[atlassian文档](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)大致步骤如下：
 
 1. 在GitHub上Fork本仓库
-1. Clone Fork后的个人仓库
-1. 设置`upstream`仓库地址，并禁用`push`
-1. 使用分支开发，课程分支名为`lecture{#NO}`，`#NO`保持两位，如`lecture07`，对应课程目录
-1. PR之前保持与原始仓库的同步，之后发起PR请求
+2. Clone Fork后的个人仓库
+3. 设置`upstream`仓库地址，并禁用`push`
+4. 使用分支开发，课程分支名为`lecture{#NO}`，`#NO`保持两位，如`lecture07`，对应课程目录
+5. PR之前保持与原始仓库的同步，之后发起PR请求
 
 命令示例：
 
@@ -165,48 +176,48 @@ git push -f
 ```
 
 `others`包括非课程相关的改动，如本`README.md`中的变动，`.gitignore`的调整等。
+</details>
 
 ## 六、更新计划
+<details>
 | 内容 | 更新时间 |内容|
 | :---- | :---- |:----:|
-|模型初始化| &#x2705; |`torch.nn.init`的使用|
-|Jupyter相关操作|&#x2705;|Jupyter guideline|
-|visdom可视化| 2022.4.5 |`Visdom`的使用|
-|apex| 2022.5.4 |apex的简介和使用|
-|超参数的保存 |  &#x2705; |使用argparse进行参数的修改|
-|onnx| &#x2705; |将模型导出为onnx并使用onnxruntime进行推理|
+|visdom可视化|  |`Visdom`的使用|
+|apex|  |apex的简介和使用|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|
-|数据增强| &#x2705;|imgaug的使用|
 |并行训练| |并行训练 |
 |模型预训练 - torchhub| 2022.4.16  |torchhub的简介和使用方法|
-|模型预训练 - timm|  &#x2705;|timm预训练模型的使用方法|
-|模型预训练 - openmmlab| 2022.4.27|openmmlab系列的使用|
-|目标检测 - yolo系列|  |Yolo系列介绍与trick实现|
 |目标检测 - SSD|  |SSD的简介和实现|
 |目标检测 - RCNN系列|  |Fast-RCNN & Mask-RCNN|
 |目标检测 - DETR|  |DETR的实现|
-|图像分类 - GoogLeNet| 2022.5.11 |GoogLeNet的介绍与实现|
-|图像分类 - Vision transformer| 2022.5.18 |Vit介绍与实现|
-|图像分类 - Swin-transformer| &#x2705; |Swin-T解读|
-|图像分类 - MobileNet系列|  2022.4月|MobileNet系列介绍与实现|
-|图像分类 - GhostNet| 2022.4月 |GhostNet代码讲解|
-|生成式对抗网络 - 生成手写数字实战| 2022.5.25 |生成数字并可视化|
+|图像分类 - GoogLeNet|  |GoogLeNet的介绍与实现|
+|图像分类 - MobileNet系列|  |MobileNet系列介绍与实现|
+|图像分类 - GhostNet|  |GhostNet代码讲解|
+|生成式对抗网络 - 生成手写数字实战|  |生成数字并可视化|
 |生成式对抗网络 - DCGAN|  ||
 |风格迁移 - StyleGAN|  ||
 |生成网络 - VAE|  ||
 |图像分割 Deeplab系列|  |Deeplab系列代码讲解|
 |自然语言处理 LSTM|  |LSTM情感分析实战|
-|自然语言处理 RNN|  |RNN名字分类|
 |自然语言处理 Transformer|  ||
 |自然语言处理 BERT|  ||
 |视频| | 待定|
 |音频| | 待定|
 |自定义CUDA扩展和算子|||
+</details>
 ## 七、鸣谢与反馈
 
 - 非常感谢DataWhale成员 叶前坤 @[PureBuckwheat](https://github.com/PureBuckwheat) 和 胡锐锋 @[Relph1119](https://github.com/Relph1119) 对文档的细致校对！
 - 如果有任何想法可以联系我们DataWhale也欢迎大家多多提出issue。
+- 特别感谢以下为教程做出贡献的同学！并特别感谢MMYOL的贡献者们！
+
+
+<a href="https://github.com/datawhalechina/thorough-pytorch/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=datawhalechina/thorough-pytorch" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 
 ## 八、关注我们

@@ -208,7 +208,7 @@ git push -f
 ## 七、鸣谢与反馈
 - 非常感谢DataWhale成员 叶前坤 @[PureBuckwheat](https://github.com/PureBuckwheat) 和 胡锐锋 @[Relph1119](https://github.com/Relph1119) 对文档的细致校对！
 - 如果有任何想法可以联系我们DataWhale也欢迎大家多多提出issue。
-- 特别感谢以下为教程做出贡献的同学！并特别感谢MMYOL的贡献者们！
+- 特别感谢以下为教程做出贡献的同学！并特别感谢MMYOLO的贡献者们！
 
 
 <a href="https://github.com/datawhalechina/thorough-pytorch/graphs/contributors">

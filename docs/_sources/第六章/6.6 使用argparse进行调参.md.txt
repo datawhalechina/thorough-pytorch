@@ -1,5 +1,4 @@
 # 6.6 使用argparse进行调参
-## 引言
 在深度学习中时，超参数的修改和保存是非常重要的一步，尤其是当我们在服务器上跑我们的模型时，如何更方便的修改超参数是我们需要考虑的一个问题。这时候，要是有一个库或者函数可以解析我们输入的命令行参数再传入模型的超参数中该多好。到底有没有这样的一种方法呢？答案是肯定的，这个就是 Python 标准库的一部分：Argparse。那么下面让我们看看他是多么方便。通过本节课，您将会收获以下内容
 - argparse的简介
 - argparse的使用
@@ -151,6 +150,6 @@ if __name__ == '__main__':
 
 ```
 ## 总结
-argparse给我们提供了一种新的更加便捷的方式，在后面我们将结合其他Python标准库（pickle，json，logging）实现参数的保存和模型输出的记录。如果大家还想进一步的了解argparse的使用，大家可以点击下面提供的连接进行更深的学习和了解。
+argparse给我们提供了一种新的更加便捷的方式，而在一些大型的深度学习库中人们也会使用json、dict、yaml等文件格式去保存超参数进行训练。如果大家还想进一步的了解argparse的使用，大家可以点击下面提供的连接进行更深的学习和了解。
 1. [Python argparse 教程](https://geek-docs.com/python/python-tutorial/python-argparse.html)
 2. [argparse 官方教程](https://docs.python.org/3/library/argparse.html)

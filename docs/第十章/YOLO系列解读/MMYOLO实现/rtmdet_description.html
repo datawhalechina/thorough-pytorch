@@ -1,0 +1,1790 @@
+
+<!DOCTYPE html>
+
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>RTMDet 原理和实现全解析 &#8212; 深入浅出PyTorch</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">深入浅出PyTorch</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  目录
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/index.html">
+   第零章：前置知识
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.1%20%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%AE%80%E5%8F%B2.html">
+     人工智能简史
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.2%20%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87.html">
+     模型评价指标
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.3%20%E5%B8%B8%E7%94%A8%E5%8C%85%E7%9A%84%E5%AD%A6%E4%B9%A0.html">
+     常用包的学习
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.4%20Jupyter%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C.html">
+     Jupyter notebook/Lab 简述
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/index.html">
+   第一章：PyTorch的简介和安装
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.1%20PyTorch%E7%AE%80%E4%BB%8B.html">
+     1.1 PyTorch简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.2%20PyTorch%E7%9A%84%E5%AE%89%E8%A3%85.html">
+     1.2 PyTorch的安装
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.3%20PyTorch%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90.html">
+     1.3 PyTorch相关资源
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/index.html">
+   第二章：PyTorch基础知识
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.1%20%E5%BC%A0%E9%87%8F.html">
+     2.1 张量
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.2%20%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC.html">
+     2.2 自动求导
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.3%20%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%AE%80%E4%BB%8B.html">
+     2.3 并行计算简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20%E5%85%B6%E4%BB%96%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
+     AI硬件加速设备
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/index.html">
+   第三章：PyTorch的主要组成模块
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.1%20%E6%80%9D%E8%80%83%EF%BC%9A%E5%AE%8C%E6%88%90%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%BF%85%E8%A6%81%E9%83%A8%E5%88%86.html">
+     3.1 思考：完成深度学习的必要部分
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.2%20%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE.html">
+     3.2 基本配置
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.3%20%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%85%A5.html">
+     3.3 数据读入
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.4%20%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA.html">
+     3.4 模型构建
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     3.5 模型初始化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.6 损失函数
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.7%20%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0.html">
+     3.7 训练和评估
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
+     3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.9 Pytorch优化器
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%9B%9B%E7%AB%A0/index.html">
+   第四章：PyTorch基础实战
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+     基础实战——FashionMNIST时装分类
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/index.html">
+   第五章：PyTorch模型定义
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.1%20PyTorch%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89%E7%9A%84%E6%96%B9%E5%BC%8F.html">
+     5.1 PyTorch模型定义的方式
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.2%20%E5%88%A9%E7%94%A8%E6%A8%A1%E5%9E%8B%E5%9D%97%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%A4%8D%E6%9D%82%E7%BD%91%E7%BB%9C.html">
+     5.2 利用模型块快速搭建复杂网络
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.3%20PyTorch%E4%BF%AE%E6%94%B9%E6%A8%A1%E5%9E%8B.html">
+     5.3 PyTorch修改模型
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.4%20PyTorh%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E4%B8%8E%E8%AF%BB%E5%8F%96.html">
+     5.4 PyTorch模型保存与读取
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/index.html">
+   第六章：PyTorch进阶训练技巧
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.1%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     6.1 自定义损失函数
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html">
+     6.2 动态调整学习率
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html">
+     6.4 半精度训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.5%20%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA-imgaug.html">
+     6.5 数据增强-imgaug
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.6%20%E4%BD%BF%E7%94%A8argparse%E8%BF%9B%E8%A1%8C%E8%B0%83%E5%8F%82.html">
+     6.6 使用argparse进行调参
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/index.html">
+   第七章：PyTorch可视化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.1%20%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.html">
+     7.1 可视化网络结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.2%20CNN%E5%8D%B7%E7%A7%AF%E5%B1%82%E5%8F%AF%E8%A7%86%E5%8C%96.html">
+     7.2 CNN可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.3%20%E4%BD%BF%E7%94%A8TensorBoard%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.html">
+     7.3 使用TensorBoard可视化训练过程
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/index.html">
+   第八章：PyTorch生态简介
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.1%20%E6%9C%AC%E7%AB%A0%E7%AE%80%E4%BB%8B.html">
+     8.1 本章简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.2%20%E5%9B%BE%E5%83%8F%20-%20torchvision.html">
+     8.2 torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.3%20%E8%A7%86%E9%A2%91%20-%20PyTorchVideo.html">
+     8.3 PyTorchVideo简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.4%20%E6%96%87%E6%9C%AC%20-%20torchtext.html">
+     8.4 torchtext简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html">
+   第九章：PyTorch的模型部署
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html">
+     9.1 使用ONNX进行部署并推理
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../index.html">
+   第十章：常见代码解读
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
+     10.1 图像分类简介（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">
+     目标检测简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.3%20%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2.html">
+     10.3 图像分割简介（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ResNet%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB.html">
+     ResNet源码解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../RNN%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0.html">
+     文章结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
+     Swin Transformer解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ViT%E8%A7%A3%E8%AF%BB.html">
+     ViT解读
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第十章/YOLO系列解读/MMYOLO实现/rtmdet_description.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第十章/YOLO系列解读/MMYOLO实现/rtmdet_description.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/第十章/YOLO系列解读/MMYOLO实现/rtmdet_description.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   0 简介
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#v1-0-mmyolo">
+   1 v1.0 算法原理和 MMYOLO 实现解析
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1.1 数据增强模块
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cache">
+       1.1.1 为图像混合数据增强引入 Cache
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mosaic">
+       1.1.2 Mosaic
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mixup">
+       1.1.3 MixUp
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       1.1.4 强弱两阶段训练
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1.2 模型结构
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backbone">
+       1.2.1 Backbone
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cspnext-block">
+       1.2.2 CSPNeXt Block
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#stage-block">
+       1.2.3 调整检测器不同 stage 间的 block 数
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#neck">
+       1.2.4 Neck
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backbone-neck">
+       1.2.5 Backbone 与 Neck 之间的参数量和计算量的均衡
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#head">
+       1.2.6 Head
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1.3 正负样本匹配策略
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bbox">
+       1.3.1 Bbox 编解码过程
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       1.3.2 匹配策略
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loss">
+     1.4 Loss 设计
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#qualityfocalloss">
+       QualityFocalLoss
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#giouloss">
+       GIoULoss
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     1.5 优化策略和训练过程
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     1.6 推理和后处理过程
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   2 总结
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>RTMDet 原理和实现全解析</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   0 简介
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#v1-0-mmyolo">
+   1 v1.0 算法原理和 MMYOLO 实现解析
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1.1 数据增强模块
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cache">
+       1.1.1 为图像混合数据增强引入 Cache
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mosaic">
+       1.1.2 Mosaic
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mixup">
+       1.1.3 MixUp
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       1.1.4 强弱两阶段训练
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1.2 模型结构
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backbone">
+       1.2.1 Backbone
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cspnext-block">
+       1.2.2 CSPNeXt Block
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#stage-block">
+       1.2.3 调整检测器不同 stage 间的 block 数
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#neck">
+       1.2.4 Neck
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backbone-neck">
+       1.2.5 Backbone 与 Neck 之间的参数量和计算量的均衡
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#head">
+       1.2.6 Head
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1.3 正负样本匹配策略
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bbox">
+       1.3.1 Bbox 编解码过程
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       1.3.2 匹配策略
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loss">
+     1.4 Loss 设计
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#qualityfocalloss">
+       QualityFocalLoss
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#giouloss">
+       GIoULoss
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     1.5 优化策略和训练过程
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     1.6 推理和后处理过程
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   2 总结
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="rtmdet">
+<h1>RTMDet 原理和实现全解析<a class="headerlink" href="#rtmdet" title="永久链接至标题">#</a></h1>
+<section id="id1">
+<h2>0 简介<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<p>高性能，低延时的单阶段目标检测器</p>
+<div align=center>
+<img alt="RTMDet_structure_v1.2" src="https://user-images.githubusercontent.com/27466624/200001002-008ac696-e74d-4da1-9c6d-07149e2ad752.jpg"/>
+</div>
+<p>以上结构图由 RangeKing&#64;github 绘制。</p>
+<p>最近一段时间，开源界涌现出了大量的高精度目标检测项目，其中最突出的就是 YOLO 系列，OpenMMLab 也在与社区的合作下推出了 MMYOLO。
+在调研了当前 YOLO 系列的诸多改进模型后，MMDetection 核心开发者针对这些设计以及训练方式进行了经验性的总结，并进行了优化，推出了高精度、低延时的单阶段目标检测器 RTMDet, <strong>R</strong>eal-<strong>t</strong>ime <strong>M</strong>odels for Object <strong>Det</strong>ection
+(<strong>R</strong>elease <strong>t</strong>o <strong>M</strong>anufacture)</p>
+<p>RTMDet 由 tiny/s/m/l/x 一系列不同大小的模型组成，为不同的应用场景提供了不同的选择。
+其中，RTMDet-x 在 52.6 mAP 的精度下达到了 300+ FPS 的推理速度。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>注：推理速度和精度测试（不包含 NMS）是在 1 块 NVIDIA 3090 GPU 上的 <code class="docutils literal notranslate"><span class="pre">TensorRT</span> <span class="pre">8.4.3,</span> <span class="pre">cuDNN</span> <span class="pre">8.2.0,</span> <span class="pre">FP16,</span> <span class="pre">batch</span> <span class="pre">size=1</span></code> 条件里测试的。</p>
+</div>
+<p>而最轻量的模型 RTMDet-tiny，在仅有 4M 参数量的情况下也能够达到 40.9 mAP，且推理速度 &lt; 1 ms。</p>
+<div align=center>
+<img alt="RTMDet_精度图" src="https://user-images.githubusercontent.com/12907710/192182907-f9a671d6-89cb-4d73-abd8-c2b9dada3c66.png"/>
+</div>
+<p>上图中的精度是和 300 epoch 训练下的公平对比，为不使用蒸馏的结果。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>mAP</p></th>
+<th class="head"><p>Params</p></th>
+<th class="head"><p>Flops</p></th>
+<th class="head"><p>Inference speed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Baseline(YOLOX)</p></td>
+<td><p>40.2</p></td>
+<td><p>9M</p></td>
+<td><p>13.4G</p></td>
+<td><p>1.2ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>+ AdamW + Flat Cosine</p></td>
+<td><p>40.6 (+0.4)</p></td>
+<td><p>9M</p></td>
+<td><p>13.4G</p></td>
+<td><p>1.2ms</p></td>
+</tr>
+<tr class="row-even"><td><p>+ CSPNeXt backbone &amp; PAFPN</p></td>
+<td><p>41.8 (+1.2)</p></td>
+<td><p>10.07M (+1.07)</p></td>
+<td><p>14.8G (+1.4)</p></td>
+<td><p>1.22ms (+0.02)</p></td>
+</tr>
+<tr class="row-odd"><td><p>+ SepBNHead</p></td>
+<td><p>41.8 (+0)</p></td>
+<td><p>8.89M (-1.18)</p></td>
+<td><p>14.8G</p></td>
+<td><p>1.22ms</p></td>
+</tr>
+<tr class="row-even"><td><p>+ Label Assign &amp; Loss</p></td>
+<td><p>42.9 (+1.1)</p></td>
+<td><p>8.89M</p></td>
+<td><p>14.8G</p></td>
+<td><p>1.22ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>+ Cached Mosaic &amp; MixUp</p></td>
+<td><p>44.2 (+1.3)</p></td>
+<td><p>8.89M</p></td>
+<td><p>14.8G</p></td>
+<td><p>1.22ms</p></td>
+</tr>
+<tr class="row-even"><td><p>+ RSB-pretrained backbone</p></td>
+<td><p><strong>44.5 (+0.3)</strong></p></td>
+<td><p>8.89M</p></td>
+<td><p>14.8G</p></td>
+<td><p>1.22ms</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>官方开源地址： https://github.com/open-mmlab/mmdetection/blob/3.x/configs/rtmdet/README.md</p></li>
+<li><p>MMYOLO 开源地址： https://github.com/open-mmlab/mmyolo/blob/main/configs/rtmdet/README.md</p></li>
+</ul>
+</section>
+<section id="v1-0-mmyolo">
+<h2>1 v1.0 算法原理和 MMYOLO 实现解析<a class="headerlink" href="#v1-0-mmyolo" title="永久链接至标题">#</a></h2>
+<section id="id2">
+<h3>1.1 数据增强模块<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h3>
+<p>RTMDet 采用了多种数据增强的方式来增加模型的性能，主要包括单图数据增强:</p>
+<ul class="simple">
+<li><p><strong>RandomResize 随机尺度变换</strong></p></li>
+<li><p><strong>RandomCrop 随机裁剪</strong></p></li>
+<li><p><strong>HSVRandomAug 颜色空间增强</strong></p></li>
+<li><p><strong>RandomFlip 随机水平翻转</strong></p></li>
+</ul>
+<p>以及混合类数据增强：</p>
+<ul class="simple">
+<li><p><strong>Mosaic 马赛克</strong></p></li>
+<li><p><strong>MixUp 图像混合</strong></p></li>
+</ul>
+<p>数据增强流程如下：</p>
+<div align=center>
+<img alt="image" src="https://user-images.githubusercontent.com/33799979/192956011-78f89d89-ac9f-4a40-b4f1-056b49b704ef.png" width=800 />
+</div>
+<p>其中 RandomResize 超参在大模型 M,L,X 和小模型 S, Tiny 上是不一样的，大模型由于参数较多，可以使用 large scale jitter 策略即参数为 (0.1,2.0)，而小模型采用 stand scale jitter 策略即 (0.5, 2.0) 策略。
+MMDetection 开源库中已经对单图数据增强进行了封装，用户通过简单的修改配置即可使用库中提供的任何数据增强功能，且都是属于比较常规的数据增强，不需要特殊介绍。下面将具体介绍混合类数据增强的具体实现。</p>
+<p>与 YOLOv5 不同的是，YOLOv5 认为在 S 和 Nano 模型上使用 MixUp 是过剩的，小模型不需要这么强的数据增强。而 RTMDet 在 S 和 Tiny 上也使用了 MixUp，这是因为 RTMDet 在最后 20 epoch 会切换为正常的 aug， 并通过训练证明这个操作是有效的。 并且 RTMDet 为混合类数据增强引入了 Cache 方案，有效地减少了图像处理的时间, 和引入了可调超参 <code class="docutils literal notranslate"><span class="pre">max_cached_images</span></code> ，当使用较小的 cache 时，其效果类似 <code class="docutils literal notranslate"><span class="pre">repeated</span> <span class="pre">augmentation</span></code>。具体介绍如下：</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Use cache</p></th>
+<th class="head"><p>ms / 100 imgs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mosaic</p></td>
+<td><p></p></td>
+<td><p>87.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mosaic</p></td>
+<td><p>√</p></td>
+<td><p><strong>24.0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>MixUp</p></td>
+<td><p></p></td>
+<td><p>19.3</p></td>
+</tr>
+<tr class="row-odd"><td><p>MixUp</p></td>
+<td><p>√</p></td>
+<td><p><strong>12.4</strong></p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>RTMDet-s</p></th>
+<th class="head"><p>RTMDet-l</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mosaic + MixUp + 20e finetune</p></td>
+<td><p>43.9</p></td>
+<td><p><strong>51.3</strong></p></td>
+</tr>
+</tbody>
+</table>
+<section id="cache">
+<h4>1.1.1 为图像混合数据增强引入 Cache<a class="headerlink" href="#cache" title="永久链接至标题">#</a></h4>
+<p>Mosaic&amp;MixUp 涉及到多张图片的混合，它们的耗时会是普通数据增强的 K 倍(K 为混入图片的数量)。 如在 YOLOv5 中，每次做 Mosaic 时， 4 张图片的信息都需要从硬盘中重新加载。 而 RTMDet 只需要重新载入当前的一张图片，其余参与混合增强的图片则从缓存队列中获取，通过牺牲一定内存空间的方式大幅提升了效率。 另外通过调整 cache 的大小以及 pop 的方式，也可以调整增强的强度。</p>
+<div align=center>
+<img alt="data cache" src="https://user-images.githubusercontent.com/33799979/192730011-90e2a28d-e163-4399-bf87-d3012007d8c3.png" width=800 />
+</div>
+<p>如图所示，cache 队列中预先储存了 N 张已加载的图像与标签数据，每一个训练 step 中只需加载一张新的图片及其标签数据并更新到 cache 队列中(cache 队列中的图像可重复，如图中出现两次 img3)，同时如果 cache 队列长度超过预设长度，则随机 pop 一张图（为了 Tiny 模型训练更稳定，在 Tiny 模型中不采用随机 pop 的方式, 而是移除最先加入的图片），当需要进行混合数据增强时，只需要从 cache 中随机选择需要的图像进行拼接等处理，而不需要全部从硬盘中加载，节省了图像加载的时间。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>cache 队列的最大长度 N 为可调整参数，根据经验性的原则，当为每一张需要混合的图片提供十个缓存时，可以认为提供了足够的随机性，而 Mosaic 增强是四张图混合，因此 cache 数量默认 N=40， 同理 MixUp 的 cache 数量默认为20， tiny 模型需要更稳定的训练条件，因此其 cache 数量也为其余规格模型的一半（ MixUp 为10，Mosaic 为20）</p>
+</div>
+<p>在具体实现中，MMYOLO 设计了 <code class="docutils literal notranslate"><span class="pre">BaseMiximageTransform</span></code> 类来支持多张图像混合数据增强：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cached</span><span class="p">:</span>
+    <span class="c1"># Be careful: deep copying can be very time-consuming</span>
+    <span class="c1"># if results includes dataset.</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">results_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>  <span class="c1"># 将当前加载的图片数据缓存到 cache 中</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_cache</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cached_images</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_pop</span><span class="p">:</span> <span class="c1"># 除了tiny模型，self.random_pop=True</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_cache</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_cache</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">results</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="s1">&#39;dataset&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+    <span class="c1"># Be careful: deep copying can be very time-consuming</span>
+    <span class="c1"># if results includes dataset.</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="mosaic">
+<h4>1.1.2 Mosaic<a class="headerlink" href="#mosaic" title="永久链接至标题">#</a></h4>
+<p>Mosaic 是将 4 张图拼接为 1 张大图，相当于变相的增加了 batch size，具体步骤为：</p>
+<ol class="simple">
+<li><p>根据索引随机从自定义数据集中再采样3个图像，可能重复</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">BaseDataset</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Call function to collect indexes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (:obj:`Dataset` or list): The dataset or cached list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: indexes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">indexes</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>随机选出 4 幅图像相交的中点。</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># mosaic center x, y</span>
+<span class="n">center_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">center_ratio_range</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">center_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">center_ratio_range</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">center_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>根据采样的 index 读取图片并拼接, 拼接前会先进行 <code class="docutils literal notranslate"><span class="pre">keep-ratio</span></code> 的 resize 图片(即为最大边一定是 640)。</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># keep_ratio resize</span>
+<span class="n">scale_ratio_i</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">h_i</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">w_i</span><span class="p">)</span>
+<span class="n">img_i</span> <span class="o">=</span> <span class="n">mmcv</span><span class="o">.</span><span class="n">imresize</span><span class="p">(</span>
+    <span class="n">img_i</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w_i</span> <span class="o">*</span> <span class="n">scale_ratio_i</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h_i</span> <span class="o">*</span> <span class="n">scale_ratio_i</span><span class="p">)))</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>拼接后，把 bbox 和 label 全部拼接起来，然后对 bbox 进行裁剪但是不过滤(可能出现一些无效框)</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mosaic_bboxes</span><span class="o">.</span><span class="n">clip_</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>更多的关于 Mosaic 原理的详情可以参考 <a class="reference internal" href="yolov5_description.html"><span class="doc std std-doc">YOLOv5 原理和实现全解析</span></a> 中的 Mosaic 原理分析。</p>
+</section>
+<section id="mixup">
+<h4>1.1.3 MixUp<a class="headerlink" href="#mixup" title="永久链接至标题">#</a></h4>
+<p>RTMDet 的 MixUp 实现方式与 YOLOX 中一样，只不过增加了类似上文中提到的 cache 功能。</p>
+<p>更多的关于 MixUp 原理的详情也可以参考 <a class="reference internal" href="yolov5_description.html"><span class="doc std std-doc">YOLOv5 原理和实现全解析</span></a> 中的 MixUp 原理分析。</p>
+</section>
+<section id="id3">
+<h4>1.1.4 强弱两阶段训练<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h4>
+<p>Mosaic+MixUp 失真度比较高，持续用太强的数据增强对模型并不一定有益。YOLOX 中率先使用了强弱两阶段的训川练方式，但由于引入了旋转，切片导致 box 标注产生误差，需要在第二阶段引入额外的 L1oss 来纠正回归分支的性能。</p>
+<p>为了使数据增强的方式更为通用，RTMDet 在前 280 epoch 使用不带旋转的 Mosaic+MixUp, 且通过混入 8 张图片来提升强度以及正样本数。后 20 epoch 使用比较小的学习率在比较弱的增强下进行微调，同时在 EMA 的作用下将参数缓慢更新至模型，能够得到比较大的提升。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>RTMDet-s</p></th>
+<th class="head"><p>RTMDet-l</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LSJ + rand crop</p></td>
+<td><p>42.3</p></td>
+<td><p>46.7</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mosaic+MixUp</p></td>
+<td><p>41.9</p></td>
+<td><p>49.8</p></td>
+</tr>
+<tr class="row-even"><td><p>Mosaic + MixUp + 20e finetune</p></td>
+<td><p>43.9</p></td>
+<td><p><strong>51.3</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="id4">
+<h3>1.2 模型结构<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
+<p>RTMDet 模型整体结构和 <a class="reference external" href="https://arxiv.org/abs/2107.08430">YOLOX</a> 几乎一致，由 <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span></code> + <code class="docutils literal notranslate"><span class="pre">CSPNeXtPAFPN</span></code> + <code class="docutils literal notranslate"><span class="pre">共享卷积权重但分别计算</span> <span class="pre">BN</span> <span class="pre">的</span> <span class="pre">SepBNHead</span></code> 构成。内部核心模块也是 <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code>，但对其中的  <code class="docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Block</span></code> 进行了改进，提出了 <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span> <span class="pre">Block</span></code>。</p>
+<section id="backbone">
+<h4>1.2.1 Backbone<a class="headerlink" href="#backbone" title="永久链接至标题">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">CSPNeXt</span></code> 整体以 <code class="docutils literal notranslate"><span class="pre">CSPDarknet</span></code> 为基础，共 5 层结构，包含 1 个 <code class="docutils literal notranslate"><span class="pre">Stem</span> <span class="pre">Layer</span></code> 和 4 个 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code>：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Stem</span> <span class="pre">Layer</span></code> 是 3 层 3x3 kernel 的 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> ，不同于之前的 <code class="docutils literal notranslate"><span class="pre">Focus</span></code> 模块或者 1 层 6x6 kernel 的 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> 。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code> 总体结构与已有模型类似，前 3 个 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code> 由 1 个 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> 和 1 个 <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code>  组成。第 4 个 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code> 在 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code>  和  <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code> 中间增加了 <code class="docutils literal notranslate"><span class="pre">SPPF</span></code> 模块（MMDetection 版本为 <code class="docutils literal notranslate"><span class="pre">SPP</span></code> 模块）。</p></li>
+<li><p>如模型图 Details 部分所示，<code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code> 由 3 个 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> + n 个 <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span> <span class="pre">Block</span></code>(带残差连接) + 1 个  <code class="docutils literal notranslate"><span class="pre">Channel</span> <span class="pre">Attention</span></code> 模块组成。<code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> 为 1 层 3x3 <code class="docutils literal notranslate"><span class="pre">Conv2d</span></code> + <code class="docutils literal notranslate"><span class="pre">BatchNorm</span></code> + <code class="docutils literal notranslate"><span class="pre">SiLU</span></code> 激活函数。<code class="docutils literal notranslate"><span class="pre">Channel</span> <span class="pre">Attention</span></code> 模块为 1 层 <code class="docutils literal notranslate"><span class="pre">AdaptiveAvgPool2d</span></code> + 1 层 1x1 <code class="docutils literal notranslate"><span class="pre">Conv2d</span></code> + <code class="docutils literal notranslate"><span class="pre">Hardsigmoid</span></code> 激活函数。<code class="docutils literal notranslate"><span class="pre">CSPNeXt</span> <span class="pre">Block</span></code> 模块在下节详细讲述。</p></li>
+<li><p>如果想阅读 Backbone - <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span></code> 的源码，可以 <a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/mmyolo/models/backbones/cspnext.py#L16-L171"><strong>点此</strong></a> 跳转。</p></li>
+</ul>
+</section>
+<section id="cspnext-block">
+<h4>1.2.2 CSPNeXt Block<a class="headerlink" href="#cspnext-block" title="永久链接至标题">#</a></h4>
+<p>Darknet （图 a）使用 1x1 与 3x3 卷积的 <code class="docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Block</span></code>。<a class="reference external" href="https://arxiv.org/abs/2209.02976">YOLOv6</a> 、<a class="reference external" href="https://arxiv.org/abs/2207.02696">YOLOv7</a> 、<a class="reference external" href="https://arxiv.org/abs/2203.16250">PPYOLO-E</a> （图 b &amp; c）使用了重参数化 Block。但重参数化的训练代价高，且不易量化，需要其他方式来弥补量化误差。
+RTMDet 则借鉴了最近比较热门的 <a class="reference external" href="https://arxiv.org/abs/2201.03545">ConvNeXt</a> 、<a class="reference external" href="https://arxiv.org/abs/2203.06717">RepLKNet</a> 的做法，为 <code class="docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Block</span></code> 加入了大 kernel 的 <code class="docutils literal notranslate"><span class="pre">depth-wise</span></code> 卷积（图 d），并将其命名为 <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span> <span class="pre">Block</span></code>。</p>
+<div align=center>
+<img alt="BasicBlock" src="https://user-images.githubusercontent.com/27466624/192752976-4c20f944-1ef0-4746-892e-ba814cdcda20.png"/>
+</div>
+<p>关于不同 kernel 大小的实验结果，如下表所示。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kernel  size</p></th>
+<th class="head"><p>params</p></th>
+<th class="head"><p>flops</p></th>
+<th class="head"><p>latency-bs1-TRT-FP16 / ms</p></th>
+<th class="head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>3x3</p></td>
+<td><p>50.8</p></td>
+<td><p>79.61G</p></td>
+<td><p>2.1</p></td>
+<td><p>50.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>5x5</strong></p></td>
+<td><p><strong>50.92M</strong></p></td>
+<td><p><strong>79.7G</strong></p></td>
+<td><p><strong>2.11</strong></p></td>
+<td><p><strong>50.9</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>7x7</p></td>
+<td><p>51.1</p></td>
+<td><p>80.34G</p></td>
+<td><p>2.73</p></td>
+<td><p>51.1</p></td>
+</tr>
+</tbody>
+</table>
+<p>如果想阅读 <code class="docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Block</span></code> 和 <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span> <span class="pre">Block</span></code> 源码，可以<a class="reference external" href="https://github.com/open-mmlab/mmdetection/blob/3.x/mmdet/models/layers/csp_layer.py#L79-L146"><strong>点此</strong></a>跳转。</p>
+</section>
+<section id="stage-block">
+<h4>1.2.3 调整检测器不同 stage 间的 block 数<a class="headerlink" href="#stage-block" title="永久链接至标题">#</a></h4>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">CSPNeXt</span> <span class="pre">Block</span></code> 内使用了 <code class="docutils literal notranslate"><span class="pre">depth-wise</span></code> 卷积，单个 block 内的层数增多。如果保持原有的 stage 内的 block 数，则会导致模型的推理速度大幅降低。</p>
+<p>RTMDet 重新调整了不同 stage 间的 block 数，并调整了通道的超参，在保证了精度的情况下提升了推理速度。</p>
+<p>关于不同 block 数的实验结果，如下表所示。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Num  blocks</p></th>
+<th class="head"><p>params</p></th>
+<th class="head"><p>flops</p></th>
+<th class="head"><p>latency-bs1-TRT-FP16 / ms</p></th>
+<th class="head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>L+3-9-9-3</p></td>
+<td><p>53.4</p></td>
+<td><p>86.28</p></td>
+<td><p>2.6</p></td>
+<td><p>51.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>L+3-6-6-3</p></td>
+<td><p>50.92M</p></td>
+<td><p>79.7G</p></td>
+<td><p>2.11</p></td>
+<td><p>50.9</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>L+3-6-6-3  + channel attention</strong></p></td>
+<td><p><strong>52.3M</strong></p></td>
+<td><p><strong>79.9G</strong></p></td>
+<td><p><strong>2.4</strong></p></td>
+<td><p><strong>51.3</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>最后不同大小模型的 block 数设置，可以参见<a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/mmyolo/models/backbones/cspnext.py#L50-L56">源码</a> 。</p>
+</section>
+<section id="neck">
+<h4>1.2.4 Neck<a class="headerlink" href="#neck" title="永久链接至标题">#</a></h4>
+<p>Neck 模型结构和 YOLOX 几乎一样，只不过内部的 block 进行了替换。</p>
+</section>
+<section id="backbone-neck">
+<h4>1.2.5 Backbone 与 Neck 之间的参数量和计算量的均衡<a class="headerlink" href="#backbone-neck" title="永久链接至标题">#</a></h4>
+<p><a class="reference external" href="https://arxiv.org/abs/1911.09070">EfficientDet</a> 、<a class="reference external" href="https://arxiv.org/abs/1904.07392">NASFPN</a> 等工作在改进 Neck 时往往聚焦于如何修改特征融合的方式。 但引入过多的连接会增加检测器的延时，并增加内存开销。</p>
+<p>所以 RTMDet 选择不引入额外的连接，而是改变 Backbone 与 Neck 间参数量的配比。该配比是通过手动调整 Backbone 和 Neck 的 <code class="docutils literal notranslate"><span class="pre">expand_ratio</span></code> 参数来实现的，其数值在 Backbone 和 Neck 中都为 0.5。<code class="docutils literal notranslate"><span class="pre">expand_ratio</span></code>  实际上是改变  <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code>  中各层通道数的参数（具体可见模型图 <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code> 部分）。如果想进行不同配比的实验，可以通过调整配置文件中的 <a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/configs/rtmdet/rtmdet_l_8xb32-300e_coco.py#L32">backbone {expand_ratio}</a> 和 <a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/configs/rtmdet/rtmdet_l_8xb32-300e_coco.py#L45">neck {expand_ratio}</a> 参数完成。</p>
+<p>实验发现，当 Neck 在整个模型中的参数量占比更高时，延时更低，且对精度的影响很小。作者在直播答疑时回复，RTMDet 在 Neck 这一部分的实验参考了 <a class="reference external" href="https://arxiv.org/abs/2202.04256">GiraffeDet</a> 的做法，但没有像 GiraffeDet 一样引入额外连接（详细可参见 <a class="reference external" href="https://www.bilibili.com/video/BV1e841147GD">RTMDet 发布视频</a> 31分40秒左右的内容）。</p>
+<p>关于不同参数量配比的实验结果，如下表所示。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Model  size</p></th>
+<th class="head"><p>Backbone</p></th>
+<th class="head"><p>Neck</p></th>
+<th class="head"><p>params</p></th>
+<th class="head"><p>flops</p></th>
+<th class="head"><p>latency  / ms</p></th>
+<th class="head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>S</strong></p></td>
+<td><p><strong>47%</strong></p></td>
+<td><p><strong>45%</strong></p></td>
+<td><p><strong>8.54M</strong></p></td>
+<td><p><strong>15.76G</strong></p></td>
+<td><p><strong>1.21</strong></p></td>
+<td><p><strong>43.9</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>S</p></td>
+<td><p>63%</p></td>
+<td><p>29%</p></td>
+<td><p>9.01M</p></td>
+<td><p>15.85G</p></td>
+<td><p>1.37</p></td>
+<td><p>43.7</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>L</strong></p></td>
+<td><p><strong>47%</strong></p></td>
+<td><p><strong>45%</strong></p></td>
+<td><p><strong>50.92M</strong></p></td>
+<td><p><strong>79.7G</strong></p></td>
+<td><p><strong>2.11</strong></p></td>
+<td><p><strong>50.9</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>L</p></td>
+<td><p>63%</p></td>
+<td><p>29%</p></td>
+<td><p>57.43M</p></td>
+<td><p>93.73</p></td>
+<td><p>2.57</p></td>
+<td><p>51.0</p></td>
+</tr>
+</tbody>
+</table>
+<p>如果想阅读 Neck - <code class="docutils literal notranslate"><span class="pre">CSPNeXtPAFPN</span></code> 的源码，可以<a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/mmyolo/models/necks/cspnext_pafpn.py#L15-L201"><strong>点此</strong></a> 跳转。</p>
+</section>
+<section id="head">
+<h4>1.2.6 Head<a class="headerlink" href="#head" title="永久链接至标题">#</a></h4>
+<p>传统的 YOLO 系列都使用同一 Head 进行分类和回归。YOLOX 则将分类和回归分支解耦，PPYOLO-E 和 YOLOv6 则引入了 <a class="reference external" href="https://arxiv.org/abs/2108.07755">TOOD</a> 中的结构。它们在不同特征层级之间都使用独立的 Head，因此 Head 在模型中也占有较多的参数量。</p>
+<p>RTMDet 参考了 <a class="reference external" href="https://arxiv.org/abs/1904.07392">NAS-FPN</a> 中的做法，使用了 <code class="docutils literal notranslate"><span class="pre">SepBNHead</span></code>，在不同层之间共享卷积权重，但是独立计算 BN（BatchNorm） 的统计量。</p>
+<p>关于不同结构 Head 的实验结果，如下表所示。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Head  type</p></th>
+<th class="head"><p>params</p></th>
+<th class="head"><p>flops</p></th>
+<th class="head"><p>latency  / ms</p></th>
+<th class="head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fully-shared  head</p></td>
+<td><p>52.32</p></td>
+<td><p>80.23</p></td>
+<td><p>2.44</p></td>
+<td><p>48.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Separated  head</p></td>
+<td><p>57.03</p></td>
+<td><p>80.23</p></td>
+<td><p>2.44</p></td>
+<td><p>51.2</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>SepBN</strong> <strong>head</strong></p></td>
+<td><p><strong>52.32</strong></p></td>
+<td><p><strong>80.23</strong></p></td>
+<td><p><strong>2.44</strong></p></td>
+<td><p><strong>51.3</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>同时，RTMDet 也延续了作者之前在 <a class="reference external" href="https://zhuanlan.zhihu.com/p/306530300">NanoDet</a> 中的思想，使用 <a class="reference external" href="https://arxiv.org/abs/2011.12885">Quality Focal Loss</a> ，并去掉 Objectness 分支，进一步将 Head 轻量化。</p>
+<p>如果想阅读 Head 中 <code class="docutils literal notranslate"><span class="pre">RTMDetSepBNHeadModule</span></code> 的源码，可以<a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/mmyolo/models/dense_heads/rtmdet_head.py#L24-L189"><strong>点此</strong></a> 跳转。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>注：MMYOLO 和 MMDetection 中 Neck 和 Head 的具体实现稍有不同。</p>
+</div>
+</section>
+</section>
+<section id="id5">
+<h3>1.3 正负样本匹配策略<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h3>
+<p>正负样本匹配策略或者称为标签匹配策略 <code class="docutils literal notranslate"><span class="pre">Label</span> <span class="pre">Assignment</span></code> 是目标检测模型训练中最核心的问题之一, 更好的标签匹配策略往往能够使得网络更好学习到物体的特征以提高检测能力。</p>
+<p>早期的样本标签匹配策略一般都是基于 <code class="docutils literal notranslate"><span class="pre">空间以及尺度信息的先验</span></code> 来决定样本的选取。 典型案例如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FCOS</span></code> 中先限定网格中心点在 <code class="docutils literal notranslate"><span class="pre">GT</span></code> 内筛选后然后再通过不同特征层限制尺寸来决定正负样本</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RetinaNet</span></code> 则是通过 <code class="docutils literal notranslate"><span class="pre">Anchor</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GT</span></code> 的最大 <code class="docutils literal notranslate"><span class="pre">IOU</span></code> 匹配来划分正负样本</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">YOLOV5</span></code> 的正负样本则是通过样本的宽高比先筛选一部分, 然后通过位置信息选取 <code class="docutils literal notranslate"><span class="pre">GT</span></code> 中心落在的 <code class="docutils literal notranslate"><span class="pre">Grid</span></code> 以及临近的两个作为正样本</p></li>
+</ul>
+<p>但是上述方法都是属于基于 <code class="docutils literal notranslate"><span class="pre">先验</span></code> 的静态匹配策略, 就是样本的选取方式是根据人的经验规定的。 不会随着网络的优化而进行自动优化选取到更好的样本, 近些年涌现了许多优秀的动态标签匹配策略：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">OTA</span></code> 提出使用 <code class="docutils literal notranslate"><span class="pre">Sinkhorn</span></code> 迭代求解匹配中的最优传输问题</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">YOLOX</span></code> 中使用 <code class="docutils literal notranslate"><span class="pre">OTA</span></code> 的近似算法 <code class="docutils literal notranslate"><span class="pre">SimOTA</span></code> , <code class="docutils literal notranslate"><span class="pre">TOOD</span></code> 将分类分数以及 <code class="docutils literal notranslate"><span class="pre">IOU</span></code> 相乘计算 <code class="docutils literal notranslate"><span class="pre">Cost</span></code> 矩阵进行标签匹配等等</p></li>
+</ul>
+<p>这些算法将 <code class="docutils literal notranslate"><span class="pre">预测的</span> <span class="pre">Bboxes</span> <span class="pre">与</span> <span class="pre">GT</span> <span class="pre">的</span> <span class="pre">IOU</span> </code> 和 <code class="docutils literal notranslate"><span class="pre">分类分数</span></code> 或者是对应 <code class="docutils literal notranslate"><span class="pre">分类</span> <span class="pre">Loss</span></code> 和 <code class="docutils literal notranslate"><span class="pre">回归</span> <span class="pre">Loss</span></code> 拿来计算 <code class="docutils literal notranslate"><span class="pre">Matching</span> <span class="pre">Cost</span></code> 矩阵再通过 <code class="docutils literal notranslate"><span class="pre">top-k</span></code> 的方式动态决定样本选取以及样本个数。通过这种方式,
+在网络优化的过程中会自动选取对分类或者回归更加敏感有效的位置的样本, 它不再只依赖先验的静态的信息, 而是使用当前的预测结果去动态寻找最优的匹配, 只要模型的预测越准确, 匹配算法求得的结果也会更优秀。但是在网络训练的初期, 网络的分类以及回归是随机初始化, 这个时候还是需要 <code class="docutils literal notranslate"><span class="pre">先验</span></code> 来约束, 以达到 <code class="docutils literal notranslate"><span class="pre">冷启动</span></code> 的效果。</p>
+<p><code class="docutils literal notranslate"><span class="pre">RTMDet</span></code> 作者也是采用了动态的 <code class="docutils literal notranslate"><span class="pre">SimOTA</span></code> 做法，不过其对动态的正负样本分配策略进行了改进。 之前的动态匹配策略（ <code class="docutils literal notranslate"><span class="pre">HungarianAssigner</span></code> 、<code class="docutils literal notranslate"><span class="pre">OTA</span></code> ）往往使用与 <code class="docutils literal notranslate"><span class="pre">Loss</span></code> 完全一致的代价函数作为匹配的依据，但我们经过实验发现这并不一定时最优的。 使用更多 <code class="docutils literal notranslate"><span class="pre">Soften</span></code> 的 <code class="docutils literal notranslate"><span class="pre">Cost</span></code> 以及先验，能够提升性能。</p>
+<section id="bbox">
+<h4>1.3.1 Bbox 编解码过程<a class="headerlink" href="#bbox" title="永久链接至标题">#</a></h4>
+<p>RTMDet 的 BBox Coder 采用的是 <code class="docutils literal notranslate"><span class="pre">mmdet.DistancePointBBoxCoder</span></code>。</p>
+<p>该类的 docstring 为 <code class="docutils literal notranslate"><span class="pre">This</span> <span class="pre">coder</span> <span class="pre">encodes</span> <span class="pre">gt</span> <span class="pre">bboxes</span> <span class="pre">(x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2)</span> <span class="pre">into</span> <span class="pre">(top,</span> <span class="pre">bottom,</span> <span class="pre">left,</span> <span class="pre">right)</span> <span class="pre">and</span> <span class="pre">decode</span> <span class="pre">it</span> <span class="pre">back</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">original.</span></code></p>
+<p>编码器将 gt bboxes (x1, y1, x2, y2) 编码为 (top, bottom, left, right)，并且解码至原图像上。</p>
+<p>MMDet 编码的核心源码：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bbox2distance</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        points (Tensor): 相当于 scale 值 stride ，且每个预测点仅为一个正方形 anchor 的 anchor point [x, y]，Shape (n, 2) or (b, n, 2).</span>
+<span class="sd">        bbox (Tensor): Bbox 为乘上 stride 的网络预测值，格式为 xyxy，Shape (n, 4) or (b, n, 4).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 计算点距离四边的距离</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">bbox</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">bottom</span> <span class="o">=</span> <span class="n">bbox</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="o">...</span>
+
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>MMDetection 解码的核心源码：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">distance2bbox</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">distance</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        通过距离反算 bbox 的 xyxy</span>
+<span class="sd">        points (Tensor): 正方形的预测 anchor 的 anchor point [x, y]，Shape (B, N, 2) or (N, 2).</span>
+<span class="sd">        distance (Tensor): 距离四边的距离。(left, top, right, bottom). Shape (B, N, 4) or (N, 4)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 反算 bbox xyxy</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+    <span class="n">bboxes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="o">...</span>
+
+    <span class="k">return</span> <span class="n">bboxes</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h4>1.3.2 匹配策略<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">RTMDet</span></code> 提出了 <code class="docutils literal notranslate"><span class="pre">Dynamic</span> <span class="pre">Soft</span> <span class="pre">Label</span> <span class="pre">Assigner</span></code> 来实现标签的动态匹配策略, 该方法主要包括使用 <strong>位置先验信息损失</strong> , <strong>样本回归损失</strong> , <strong>样本分类损失</strong> , 同时对三个损失进行了 <code class="docutils literal notranslate"><span class="pre">Soft</span></code> 处理进行参数调优, 以达到最佳的动态匹配效果。</p>
+<p>该方法 Matching Cost 矩阵由如下损失构成：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cost_matrix</span> <span class="o">=</span> <span class="n">soft_cls_cost</span> <span class="o">+</span> <span class="n">iou_cost</span> <span class="o">+</span> <span class="n">soft_center_prior</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Soft_Center_Prior</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}C\_{center} = \\alpha^{|x\_{pred}-x\_{gt}|-\\beta}\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># valid_prior Tensor[N,4] 表示anchor point</span>
+<span class="c1"># 4分别表示 x, y, 以及对应的特征层的 stride, stride</span>
+<span class="n">gt_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">gt_bboxes</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">gt_bboxes</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:])</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="n">valid_prior</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">]</span>
+<span class="n">strides</span> <span class="o">=</span> <span class="n">valid_prior</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="c1"># 计算gt与anchor point的中心距离并转换到特征图尺度</span>
+<span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">valid_prior</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">gt_center</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span> <span class="o">/</span> <span class="n">strides</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="c1"># 以10为底计算位置的软化损失,限定在gt的6个单元格以内</span>
+<span class="n">soft_center_prior</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">distance</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>IOU_Cost</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[C\_{reg} = -log(IOU)\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 计算回归 bboxes 和 gts 的 iou</span>
+<span class="n">pairwise_ious</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iou_calculator</span><span class="p">(</span><span class="n">valid_decoded_bbox</span><span class="p">,</span> <span class="n">gt_bboxes</span><span class="p">)</span>
+<span class="c1"># 将 iou 使用 log 进行 soft , iou 越小 cost 更小</span>
+<span class="n">iou_cost</span> <span class="o">=</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pairwise_ious</span> <span class="o">+</span> <span class="n">EPS</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Soft_Cls_Cost</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[C\_{cls} = CE(P,Y\_{soft}) \*(Y\_{soft}-P)^2\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 生成分类标签</span>
+ <span class="n">gt_onehot_label</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">gt_labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int64</span><span class="p">),</span>
+              <span class="n">pred_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span>
+                  <span class="n">num_valid</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">valid_pred_scores</span> <span class="o">=</span> <span class="n">valid_pred_scores</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_gt</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># 不单单将分类标签为01,而是换成与 gt 的 iou</span>
+<span class="n">soft_label</span> <span class="o">=</span> <span class="n">gt_onehot_label</span> <span class="o">*</span> <span class="n">pairwise_ious</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="c1"># 使用 quality focal loss 计算分类损失 cost ,与实际的分类损失计算保持一致</span>
+<span class="n">scale_factor</span> <span class="o">=</span> <span class="n">soft_label</span> <span class="o">-</span> <span class="n">valid_pred_scores</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+<span class="n">soft_cls_cost</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy_with_logits</span><span class="p">(</span>
+    <span class="n">valid_pred_scores</span><span class="p">,</span> <span class="n">soft_label</span><span class="p">,</span>
+    <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">soft_cls_cost</span> <span class="o">=</span> <span class="n">soft_cls_cost</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>通过计算上述三个损失的和得到最终的 <code class="docutils literal notranslate"><span class="pre">cost_matrix</span></code> 后, 再使用 <code class="docutils literal notranslate"><span class="pre">SimOTA</span></code> 决定每一个 <code class="docutils literal notranslate"><span class="pre">GT</span></code> 匹配的样本的个数并决定最终的样本。具体操作如下所示：</p>
+<ol class="simple">
+<li><p>首先通过自适应计算每一个 <code class="docutils literal notranslate"><span class="pre">gt</span></code> 要选取的样本数量： 取每一个 <code class="docutils literal notranslate"><span class="pre">gt</span></code> 与所有 <code class="docutils literal notranslate"><span class="pre">bboxes</span></code> 前 <code class="docutils literal notranslate"><span class="pre">13</span></code> 大的 <code class="docutils literal notranslate"><span class="pre">iou</span></code>, 得到它们的和取整后作为这个 <code class="docutils literal notranslate"><span class="pre">gt</span></code> 的 <code class="docutils literal notranslate"><span class="pre">样本数目</span></code> , 最少为 <code class="docutils literal notranslate"><span class="pre">1</span></code> 个, 记为 <code class="docutils literal notranslate"><span class="pre">dynamic_ks</span></code>。</p></li>
+<li><p>对于每一个 <code class="docutils literal notranslate"><span class="pre">gt</span></code> , 将其 <code class="docutils literal notranslate"><span class="pre">cost_matrix</span></code> 矩阵前 <code class="docutils literal notranslate"><span class="pre">dynamic_ks</span></code> 小的位置作为该 <code class="docutils literal notranslate"><span class="pre">gt</span></code> 的正样本。</p></li>
+<li><p>对于某一个 <code class="docutils literal notranslate"><span class="pre">bbox</span></code>, 如果被匹配到多个 <code class="docutils literal notranslate"><span class="pre">gt</span></code> 就将与这些 <code class="docutils literal notranslate"><span class="pre">gts</span></code> 的 <code class="docutils literal notranslate"><span class="pre">cost_marix</span></code> 中最小的那个作为其 <code class="docutils literal notranslate"><span class="pre">label</span></code>。</p></li>
+</ol>
+<p>在网络训练初期，因参数初始化，回归和分类的损失值 <code class="docutils literal notranslate"><span class="pre">Cost</span></code> 往往较大, 这时候 <code class="docutils literal notranslate"><span class="pre">IOU</span></code> 比较小， 选取的样本较少，主要起作用的是 <code class="docutils literal notranslate"><span class="pre">Soft_center_prior</span></code> 也就是位置信息，优先选取位置距离 <code class="docutils literal notranslate"><span class="pre">GT</span></code> 比较近的样本作为正样本，这也符合人们的理解，在网络前期给少量并且有足够质量的样本，以达到冷启动。
+当网络进行训练一段时间过后，分类分支和回归分支都进行了一定的优化后，这时 <code class="docutils literal notranslate"><span class="pre">IOU</span></code> 变大， 选取的样本也逐渐增多，这时网络也有能力学习到更多的样本，同时因为 <code class="docutils literal notranslate"><span class="pre">IOU_Cost</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">Soft_Cls_Cost</span></code> 变小，网络也会动态的找到更有利优化分类以及回归的样本点。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">Resnet50-1x</span></code> 的三种损失的消融实验：</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:left head"><p>Soft_cls_cost</p></th>
+<th class="text-align:left head"><p>Soft_center_prior</p></th>
+<th class="text-align:left head"><p>Log_IoU_cost</p></th>
+<th class="text-align:left head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:left"><p>×</p></td>
+<td class="text-align:left"><p>×</p></td>
+<td class="text-align:left"><p>×</p></td>
+<td class="text-align:left"><p>39.9</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:left"><p>√</p></td>
+<td class="text-align:left"><p>×</p></td>
+<td class="text-align:left"><p>×</p></td>
+<td class="text-align:left"><p>40.3</p></td>
+</tr>
+<tr class="row-even"><td class="text-align:left"><p>√</p></td>
+<td class="text-align:left"><p>√</p></td>
+<td class="text-align:left"><p>×</p></td>
+<td class="text-align:left"><p>40.8</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:left"><p>√</p></td>
+<td class="text-align:left"><p>√</p></td>
+<td class="text-align:left"><p>√</p></td>
+<td class="text-align:left"><p>41.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>与其他主流 <code class="docutils literal notranslate"><span class="pre">Assign</span></code> 方法在 <code class="docutils literal notranslate"><span class="pre">Resnet50-1x</span></code> 的对比实验：</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:center head"><p>method</p></th>
+<th class="text-align:left head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:center"><p>ATSS</p></td>
+<td class="text-align:left"><p>39.2</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>PAA</p></td>
+<td class="text-align:left"><p>40.4</p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>OTA</p></td>
+<td class="text-align:left"><p>40.7</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>TOOD(w/o TAH)</p></td>
+<td class="text-align:left"><p>40.7</p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>Ours</p></td>
+<td class="text-align:left"><p>41.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>无论是 <code class="docutils literal notranslate"><span class="pre">Resnet50-1x</span></code> 还是标准的设置下，还是在<code class="docutils literal notranslate"><span class="pre">300epoch</span></code> + <code class="docutils literal notranslate"><span class="pre">havy</span> <span class="pre">augmentation</span></code>,  相比于 <code class="docutils literal notranslate"><span class="pre">SimOTA</span></code> 、 <code class="docutils literal notranslate"><span class="pre">OTA</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">TOOD</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">TAL</span></code> 均有提升。</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:left head"><p>300e + Mosaic &amp; MixUP</p></th>
+<th class="text-align:left head"><p>mAP</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:left"><p>RTMDet-s + SimOTA</p></td>
+<td class="text-align:left"><p>43.2</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:left"><p>RTMDet-s + DSLA</p></td>
+<td class="text-align:left"><p>44.5</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="loss">
+<h3>1.4 Loss 设计<a class="headerlink" href="#loss" title="永久链接至标题">#</a></h3>
+<p>参与 Loss 计算的共有两个值：<code class="docutils literal notranslate"><span class="pre">loss_cls</span></code> 和 <code class="docutils literal notranslate"><span class="pre">loss_bbox</span></code>，其各自使用的 Loss 方法如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_cls</span></code>：<code class="docutils literal notranslate"><span class="pre">mmdet.QualityFocalLoss</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_bbox</span></code>：<code class="docutils literal notranslate"><span class="pre">mmdet.GIoULoss</span></code></p></li>
+</ul>
+<p>权重比例是：<code class="docutils literal notranslate"><span class="pre">loss_cls</span></code> : <code class="docutils literal notranslate"><span class="pre">loss_bbox</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">:</span> <span class="pre">2</span></code></p>
+<section id="qualityfocalloss">
+<h4>QualityFocalLoss<a class="headerlink" href="#qualityfocalloss" title="永久链接至标题">#</a></h4>
+<p>Quality Focal Loss (QFL) 是 <a class="reference external" href="https://arxiv.org/abs/2006.04388">Generalized Focal Loss: Learning Qualified and Distributed Bounding Boxes for Dense Object Detection</a> 的一部分。</p>
+<div align=center>
+<img src="https://user-images.githubusercontent.com/25873202/192767279-4e69f935-1685-4089-82a3-0add201f98cc.png" alt="image"/>
+</div>
+<p>普通的 Focal Loss 公式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}{FL}(p) = -(1-p_t)^\gamma\log(p_t),p_t = \begin{cases}
+p, &amp; {when} \ y = 1 \\
+1 - p, &amp; {when} \ y = 0
+\end{cases}\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(y\in{1,0}\)</span> 指定真实类，<span class="math notranslate nohighlight">\(p\in[0,1]\)</span> 表示标签 <span class="math notranslate nohighlight">\(y = 1\)</span> 的类估计概率。<span class="math notranslate nohighlight">\(\gamma\)</span> 是可调聚焦参数。具体来说，FL 由标准交叉熵部分 <span class="math notranslate nohighlight">\(-\log(p_t)\)</span> 和动态比例因子部分 <span class="math notranslate nohighlight">\(-(1-p_t)^\gamma\)</span> 组成，其中比例因子 <span class="math notranslate nohighlight">\(-(1-p_t)^\gamma\)</span> 在训练期间自动降低简单类对于 loss 的比重，并且迅速将模型集中在困难类上。</p>
+<p>首先 <span class="math notranslate nohighlight">\(y = 0\)</span> 表示质量得分为 0 的负样本，<span class="math notranslate nohighlight">\(0 &lt; y \leq 1\)</span> 表示目标 IoU 得分为 y 的正样本。为了针对连续的标签，扩展 FL 的两个部分：</p>
+<ol class="simple">
+<li><p>交叉熵部分 <span class="math notranslate nohighlight">\(-\log(p_t)\)</span> 扩展为完整版本 <span class="math notranslate nohighlight">\(-((1-y)\log(1-\sigma)+y\log(\sigma))\)</span></p></li>
+<li><p>比例因子部分 <span class="math notranslate nohighlight">\(-(1-p_t)^\gamma\)</span> 被泛化为估计 <span class="math notranslate nohighlight">\(\gamma\)</span> 与其连续标签 <span class="math notranslate nohighlight">\(y\)</span> 的绝对距离，即 <span class="math notranslate nohighlight">\(|y-\sigma|^\beta (\beta \geq 0)\)</span> 。</p></li>
+</ol>
+<p>结合上面两个部分之后，我们得出 QFL 的公式：</p>
+<div class="math notranslate nohighlight">
+\[{QFL}(\sigma) = -|y-\sigma|^\beta((1-y)\log(1-\sigma)+y\log(\sigma))\]</div>
+<p>具体作用是：可以将离散标签的 <code class="docutils literal notranslate"><span class="pre">focal</span> <span class="pre">loss</span></code> 泛化到连续标签上，将 bboxes 与 gt 的 IoU 的作为分类分数的标签，使得分类分数为表征回归质量的分数。</p>
+<p>MMDetection 实现源码的核心部分：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@weighted_loss</span>
+<span class="k">def</span> <span class="nf">quality_focal_loss</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        pred (torch.Tensor): 用形状（N，C）联合表示预测分类和质量（IoU），C是类的数量。</span>
+<span class="sd">        target (tuple([torch.Tensor])): 目标类别标签的形状为（N，），目标质量标签的形状是（N，，）。</span>
+<span class="sd">        beta (float): 计算比例因子的 β 参数.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+    <span class="c1"># label表示类别id，score表示质量分数</span>
+    <span class="n">label</span><span class="p">,</span> <span class="n">score</span> <span class="o">=</span> <span class="n">target</span>
+
+    <span class="c1"># 负样本质量分数0来进行监督</span>
+    <span class="n">pred_sigmoid</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+    <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">pred_sigmoid</span>
+    <span class="n">zerolabel</span> <span class="o">=</span> <span class="n">scale_factor</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># 计算交叉熵部分的值</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy_with_logits</span><span class="p">(</span>
+        <span class="n">pred</span><span class="p">,</span> <span class="n">zerolabel</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+
+    <span class="c1"># 得出 IoU 在区间 (0,1] 的 bbox</span>
+    <span class="c1"># FG cat_id: [0, num_classes -1], BG cat_id: num_classes</span>
+    <span class="n">bg_class_ind</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">((</span><span class="n">label</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">label</span> <span class="o">&lt;</span> <span class="n">bg_class_ind</span><span class="p">))</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pos_label</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+
+    <span class="c1"># 正样本由 IoU 范围在 (0,1] 的 bbox 来监督</span>
+    <span class="c1"># 计算动态比例因子</span>
+    <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">score</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">-</span> <span class="n">pred_sigmoid</span><span class="p">[</span><span class="n">pos</span><span class="p">,</span> <span class="n">pos_label</span><span class="p">]</span>
+
+    <span class="c1"># 计算两部分的 loss</span>
+    <span class="n">loss</span><span class="p">[</span><span class="n">pos</span><span class="p">,</span> <span class="n">pos_label</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy_with_logits</span><span class="p">(</span>
+        <span class="n">pred</span><span class="p">[</span><span class="n">pos</span><span class="p">,</span> <span class="n">pos_label</span><span class="p">],</span> <span class="n">score</span><span class="p">[</span><span class="n">pos</span><span class="p">],</span>
+        <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+
+    <span class="c1"># 得出最终 loss</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">loss</span>
+</pre></div>
+</div>
+</section>
+<section id="giouloss">
+<h4>GIoULoss<a class="headerlink" href="#giouloss" title="永久链接至标题">#</a></h4>
+<p>论文：<a class="reference external" href="https://arxiv.org/abs/1902.09630">Generalized Intersection over Union: A Metric and A Loss for Bounding Box Regression</a></p>
+<p>GIoU Loss 用于计算两个框重叠区域的关系，重叠区域越大，损失越小，反之越大。而且 GIoU 是在 [0,2] 之间，因为其值被限制在了一个较小的范围内，所以网络不会出现剧烈的波动，证明了其具有比较好的稳定性。</p>
+<p>下图是基本的实现流程图：</p>
+<div align=center>
+<img src="https://user-images.githubusercontent.com/25873202/192568784-3884b677-d8e1-439c-8bd2-20943fcedd93.png" alt="image"/>
+</div>
+<p>MMDetection 实现源码的核心部分：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bbox_overlaps</span><span class="p">(</span><span class="n">bboxes1</span><span class="p">,</span> <span class="n">bboxes2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;iou&#39;</span><span class="p">,</span> <span class="n">is_aligned</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="c1"># 求两个区域的面积</span>
+    <span class="n">area1</span> <span class="o">=</span> <span class="p">(</span><span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">area2</span> <span class="o">=</span> <span class="p">(</span><span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">is_aligned</span><span class="p">:</span>
+        <span class="c1"># 得出两个 bbox 重合的左上角 lt 和右下角 rb</span>
+        <span class="n">lt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># [B, rows, 2]</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">:],</span> <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">:])</span>  <span class="c1"># [B, rows, 2]</span>
+
+        <span class="c1"># 求重合面积</span>
+        <span class="n">wh</span> <span class="o">=</span> <span class="n">fp16_clamp</span><span class="p">(</span><span class="n">rb</span> <span class="o">-</span> <span class="n">lt</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="n">wh</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">wh</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;iou&#39;</span><span class="p">,</span> <span class="s1">&#39;giou&#39;</span><span class="p">]:</span>
+            <span class="o">...</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">union</span> <span class="o">=</span> <span class="n">area1</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;giou&#39;</span><span class="p">:</span>
+            <span class="c1"># 得出两个 bbox 最小凸闭合框的左上角 lt 和右下角 rb</span>
+            <span class="n">enclosed_lt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">enclosed_rb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bboxes1</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">:],</span> <span class="n">bboxes2</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="o">...</span>
+
+    <span class="c1"># 求重合面积 / gt bbox 面积 的比率，即 IoU</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">union</span><span class="o">.</span><span class="n">new_tensor</span><span class="p">([</span><span class="n">eps</span><span class="p">])</span>
+    <span class="n">union</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">union</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">ious</span> <span class="o">=</span> <span class="n">overlap</span> <span class="o">/</span> <span class="n">union</span>
+
+    <span class="o">...</span>
+
+    <span class="c1"># 求最小凸闭合框面积</span>
+    <span class="n">enclose_wh</span> <span class="o">=</span> <span class="n">fp16_clamp</span><span class="p">(</span><span class="n">enclosed_rb</span> <span class="o">-</span> <span class="n">enclosed_lt</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">enclose_area</span> <span class="o">=</span> <span class="n">enclose_wh</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">enclose_wh</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">enclose_area</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">enclose_area</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+
+    <span class="c1"># 计算 giou</span>
+    <span class="n">gious</span> <span class="o">=</span> <span class="n">ious</span> <span class="o">-</span> <span class="p">(</span><span class="n">enclose_area</span> <span class="o">-</span> <span class="n">union</span><span class="p">)</span> <span class="o">/</span> <span class="n">enclose_area</span>
+    <span class="k">return</span> <span class="n">gious</span>
+
+<span class="nd">@weighted_loss</span>
+<span class="k">def</span> <span class="nf">giou_loss</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
+    <span class="n">gious</span> <span class="o">=</span> <span class="n">bbox_overlaps</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;giou&#39;</span><span class="p">,</span> <span class="n">is_aligned</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">gious</span>
+    <span class="k">return</span> <span class="n">loss</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id7">
+<h3>1.5 优化策略和训练过程<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h3>
+<div align=center>
+<img src="https://user-images.githubusercontent.com/89863442/192943607-74952731-4eb7-45f5-b86d-2dad46732614.png" width="800"/>
+</div>
+</section>
+<section id="id8">
+<h3>1.6 推理和后处理过程<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h3>
+<div align=center>
+<img src="https://user-images.githubusercontent.com/89863442/192943600-98c3a8f9-e42c-47ea-8e12-d20f686e9318.png" width="800"/>
+</div>
+<p><strong>(1) 特征图输入</strong></p>
+<p>预测的图片输入大小为 640 x 640, 通道数为 3 ,经过 CSPNeXt, CSPNeXtPAFPN 层的 8 倍、16 倍、32 倍下采样得到 80 x 80, 40 x 40, 20 x 20 三个尺寸的特征图。以 rtmdet-l 模型为例，此时三层通道数都为 256，经过 <code class="docutils literal notranslate"><span class="pre">bbox_head</span></code> 层得到两个分支，分别为 <code class="docutils literal notranslate"><span class="pre">rtm_cls</span></code> 类别预测分支，将通道数从 256 变为 80，80 对应所有类别数量; <code class="docutils literal notranslate"><span class="pre">rtm_reg</span></code> 边框回归分支将通道数从 256 变为 4，4 代表框的坐标。</p>
+<p><strong>(2) 初始化网格</strong></p>
+<p>根据特征图尺寸初始化三个网格，大小分别为 6400 (80 x 80)、1600 (40 x 40)、400 (20 x 20)，如第一个层 shape 为 torch.Size([ 6400, 2 ])，最后一个维度是 2，为网格点的横纵坐标，而 6400 表示当前特征层的网格点数量。</p>
+<p><strong>(3) 维度变换</strong></p>
+<p>经过 <code class="docutils literal notranslate"><span class="pre">_predict_by_feat_single</span></code> 函数，将从 head 提取的单一图像的特征转换为 bbox 结果输入，得到三个列表 <code class="docutils literal notranslate"><span class="pre">cls_score_list</span></code>，<code class="docutils literal notranslate"><span class="pre">bbox_pred_list</span></code>，<code class="docutils literal notranslate"><span class="pre">mlvl_priors</span></code>，详细大小如图所示。之后分别遍历三个特征层，分别对 class 类别预测分支、bbox 回归分支进行处理。以第一层为例，对 bbox 预测分支 [ 4，80，80 ] 维度变换为 [ 6400，4 ]，对类别预测分支 [ 80，80，80 ] 变化为 [ 6400，80 ]，并对其做归一化，确保类别置信度在 0 - 1 之间。</p>
+<p><strong>(4) 阈值过滤</strong></p>
+<p>先使用一个 <code class="docutils literal notranslate"><span class="pre">nms_pre</span></code> 操作，先过滤大部分置信度比较低的预测结果（比如 <code class="docutils literal notranslate"><span class="pre">score_thr</span></code> 阈值设置为 0.05，则去除当前预测置信度低于 0.05 的结果），然后得到 bbox 坐标、所在网格的坐标、置信度、标签的信息。经过三个特征层遍历之后，分别整合这三个层得到的的四个信息放入 results 列表中。</p>
+<p><strong>(5) 还原到原图尺度</strong></p>
+<p>最后将网络的预测结果映射到整图当中，得到 bbox 在整图中的坐标值</p>
+<p><strong>(6) NMS</strong></p>
+<p>进行 nms 操作，最终预测得到的返回值为经过后处理的每张图片的检测结果，包含分类置信度，框的 labels，框的四个坐标</p>
+</section>
+</section>
+<section id="id9">
+<h2>2 总结<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h2>
+<p>本文对 RTMDet 原理和在 MMYOLO 实现进行了详细解析，希望能帮助用户理解算法实现过程。同时请注意：由于 RTMDet 本身也在不断更新，
+本开源库也会不断迭代，请及时阅读和同步最新版本。</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By ZhikangNiu<br/>
+  
+      &copy; Copyright 2022, ZhikangNiu.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

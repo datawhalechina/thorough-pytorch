@@ -1,0 +1,1518 @@
+
+<!DOCTYPE html>
+
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>YOLOv5 原理和实现全解析 &#8212; 深入浅出PyTorch</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">深入浅出PyTorch</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  目录
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/index.html">
+   第零章：前置知识
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.1%20%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%AE%80%E5%8F%B2.html">
+     人工智能简史
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.2%20%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87.html">
+     模型评价指标
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.3%20%E5%B8%B8%E7%94%A8%E5%8C%85%E7%9A%84%E5%AD%A6%E4%B9%A0.html">
+     常用包的学习
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.4%20Jupyter%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C.html">
+     Jupyter notebook/Lab 简述
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/index.html">
+   第一章：PyTorch的简介和安装
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.1%20PyTorch%E7%AE%80%E4%BB%8B.html">
+     1.1 PyTorch简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.2%20PyTorch%E7%9A%84%E5%AE%89%E8%A3%85.html">
+     1.2 PyTorch的安装
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.3%20PyTorch%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90.html">
+     1.3 PyTorch相关资源
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/index.html">
+   第二章：PyTorch基础知识
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.1%20%E5%BC%A0%E9%87%8F.html">
+     2.1 张量
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.2%20%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC.html">
+     2.2 自动求导
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.3%20%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%AE%80%E4%BB%8B.html">
+     2.3 并行计算简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20%E5%85%B6%E4%BB%96%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
+     AI硬件加速设备
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/index.html">
+   第三章：PyTorch的主要组成模块
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.1%20%E6%80%9D%E8%80%83%EF%BC%9A%E5%AE%8C%E6%88%90%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%BF%85%E8%A6%81%E9%83%A8%E5%88%86.html">
+     3.1 思考：完成深度学习的必要部分
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.2%20%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE.html">
+     3.2 基本配置
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.3%20%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%85%A5.html">
+     3.3 数据读入
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.4%20%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA.html">
+     3.4 模型构建
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     3.5 模型初始化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.6 损失函数
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.7%20%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0.html">
+     3.7 训练和评估
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
+     3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.9 Pytorch优化器
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%9B%9B%E7%AB%A0/index.html">
+   第四章：PyTorch基础实战
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+     基础实战——FashionMNIST时装分类
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/index.html">
+   第五章：PyTorch模型定义
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.1%20PyTorch%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89%E7%9A%84%E6%96%B9%E5%BC%8F.html">
+     5.1 PyTorch模型定义的方式
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.2%20%E5%88%A9%E7%94%A8%E6%A8%A1%E5%9E%8B%E5%9D%97%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%A4%8D%E6%9D%82%E7%BD%91%E7%BB%9C.html">
+     5.2 利用模型块快速搭建复杂网络
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.3%20PyTorch%E4%BF%AE%E6%94%B9%E6%A8%A1%E5%9E%8B.html">
+     5.3 PyTorch修改模型
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.4%20PyTorh%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E4%B8%8E%E8%AF%BB%E5%8F%96.html">
+     5.4 PyTorch模型保存与读取
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/index.html">
+   第六章：PyTorch进阶训练技巧
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.1%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     6.1 自定义损失函数
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html">
+     6.2 动态调整学习率
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html">
+     6.4 半精度训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.5%20%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA-imgaug.html">
+     6.5 数据增强-imgaug
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.6%20%E4%BD%BF%E7%94%A8argparse%E8%BF%9B%E8%A1%8C%E8%B0%83%E5%8F%82.html">
+     6.6 使用argparse进行调参
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/index.html">
+   第七章：PyTorch可视化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.1%20%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.html">
+     7.1 可视化网络结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.2%20CNN%E5%8D%B7%E7%A7%AF%E5%B1%82%E5%8F%AF%E8%A7%86%E5%8C%96.html">
+     7.2 CNN可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.3%20%E4%BD%BF%E7%94%A8TensorBoard%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.html">
+     7.3 使用TensorBoard可视化训练过程
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/index.html">
+   第八章：PyTorch生态简介
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.1%20%E6%9C%AC%E7%AB%A0%E7%AE%80%E4%BB%8B.html">
+     8.1 本章简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.2%20%E5%9B%BE%E5%83%8F%20-%20torchvision.html">
+     8.2 torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.3%20%E8%A7%86%E9%A2%91%20-%20PyTorchVideo.html">
+     8.3 PyTorchVideo简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.4%20%E6%96%87%E6%9C%AC%20-%20torchtext.html">
+     8.4 torchtext简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html">
+   第九章：PyTorch的模型部署
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html">
+     9.1 使用ONNX进行部署并推理
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../index.html">
+   第十章：常见代码解读
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
+     10.1 图像分类简介（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">
+     目标检测简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.3%20%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2.html">
+     10.3 图像分割简介（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ResNet%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB.html">
+     ResNet源码解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../RNN%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0.html">
+     文章结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
+     Swin Transformer解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ViT%E8%A7%A3%E8%AF%BB.html">
+     ViT解读
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第十章/YOLO系列解读/MMYOLO实现/yolov5_description.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第十章/YOLO系列解读/MMYOLO实现/yolov5_description.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/第十章/YOLO系列解读/MMYOLO实现/yolov5_description.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   0 简介
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#v6-1-mmyolo">
+   1 v6.1 算法原理和 MMYOLO 实现解析
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1.1 数据增强模块
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mosaic">
+       1.1.1 Mosaic 马赛克
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#randomaffine">
+       1.1.2 RandomAffine 随机仿射变换
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mixup">
+       1.1.3 MixUp
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       1.1.4 图像模糊和其他数据增强策略
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mmyolo">
+       1.1.5 MMYOLO 实现解析
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1.2 网络结构
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backbone">
+       1.2.1 Backbone
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#neck">
+       1.2.2 Neck
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#head">
+       1.2.3 Head
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1.3 正负样本匹配策略
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#anchor">
+       1.3.1 Anchor 设置
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bbox">
+       1.3.2 Bbox 编解码过程
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       1.3.3 匹配策略
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loss">
+     1.4 Loss 设计
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     1.5 优化策略和训练过程
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       1.5.1 优化器分组
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#weight-decay">
+       1.5.2 weight decay 参数自适应
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id9">
+       1.5.3 梯度累加
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     1.6 推理和后处理过程
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id11">
+       1.6.1 核心控制参数
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#batch-shape">
+       1.6.2 batch shape 策略
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id12">
+   2 总结
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>YOLOv5 原理和实现全解析</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   0 简介
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#v6-1-mmyolo">
+   1 v6.1 算法原理和 MMYOLO 实现解析
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1.1 数据增强模块
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mosaic">
+       1.1.1 Mosaic 马赛克
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#randomaffine">
+       1.1.2 RandomAffine 随机仿射变换
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mixup">
+       1.1.3 MixUp
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       1.1.4 图像模糊和其他数据增强策略
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mmyolo">
+       1.1.5 MMYOLO 实现解析
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1.2 网络结构
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backbone">
+       1.2.1 Backbone
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#neck">
+       1.2.2 Neck
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#head">
+       1.2.3 Head
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     1.3 正负样本匹配策略
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#anchor">
+       1.3.1 Anchor 设置
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bbox">
+       1.3.2 Bbox 编解码过程
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id6">
+       1.3.3 匹配策略
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loss">
+     1.4 Loss 设计
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     1.5 优化策略和训练过程
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       1.5.1 优化器分组
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#weight-decay">
+       1.5.2 weight decay 参数自适应
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id9">
+       1.5.3 梯度累加
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     1.6 推理和后处理过程
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id11">
+       1.6.1 核心控制参数
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#batch-shape">
+       1.6.2 batch shape 策略
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id12">
+   2 总结
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="yolov5">
+<h1>YOLOv5 原理和实现全解析<a class="headerlink" href="#yolov5" title="永久链接至标题">#</a></h1>
+<section id="id1">
+<h2>0 简介<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h2>
+<div align=center >
+<img alt="YOLOv5_structure_v3.4" src="https://user-images.githubusercontent.com/27466624/200000324-70ae078f-cea7-4189-8baa-440656797dad.jpg"/>
+</div>
+<p>以上结构图由 RangeKing&#64;github 绘制。</p>
+<p>YOLOv5 是一个面向实时工业应用而开源的目标检测算法，受到了广泛关注。我们认为让 YOLOv5 爆火的原因不单纯在于 YOLOv5 算法本身的优异性，更多的在于开源库的实用和鲁棒性。简单来说 YOLOv5 开源库的主要特点为：</p>
+<ol class="simple">
+<li><p><strong>友好和完善的部署支持</strong></p></li>
+<li><p><strong>算法训练速度极快</strong>，在 300 epoch 情况下训练时长和大部分 one-stage 算法如 RetinaNet、ATSS 和 two-stage 算法如 Faster R-CNN 在 12 epoch 的训练时间接近</p></li>
+<li><p>框架进行了<strong>非常多的 corner case 优化</strong>，功能和文档也比较丰富</p></li>
+</ol>
+<p>本文将从 YOLOv5 算法本身原理讲起，然后重点分析 MMYOLO 中的实现。关于 YOLOv5 的使用指南和速度等对比请阅读本文的后续内容。</p>
+<p>希望本文能够成为你入门和掌握 YOLOv5 的核心文档。由于 YOLOv5 本身也在不断迭代更新，我们也会不断的更新本文档。请注意阅读最新版本。</p>
+<p>MMYOLO 实现配置：https://github.com/open-mmlab/mmyolo/blob/main/configs/yolov5/</p>
+<p>YOLOv5 官方开源库地址：https://github.com/ultralytics/yolov5</p>
+</section>
+<section id="v6-1-mmyolo">
+<h2>1 v6.1 算法原理和 MMYOLO 实现解析<a class="headerlink" href="#v6-1-mmyolo" title="永久链接至标题">#</a></h2>
+<p>YOLOv5 官方 release 地址：https://github.com/ultralytics/yolov5/releases/tag/v6.1</p>
+<div align=center >
+<img alt="YOLOv5精度图" src="https://user-images.githubusercontent.com/40284075/190542120-29d46b7e-ce3c-436a-9933-cfc9f86787bf.png"/>
+</div>
+<div align=center >
+<img alt="YOLOv5精度速度图" src="https://user-images.githubusercontent.com/40284075/190542279-37734629-2b59-4bd8-a9bf-757875a93eed.png"/>
+</div>
+<p>性能如上表所示。YOLOv5 有 P5 和 P6 两个不同训练输入尺度的模型，P6 即为 1280x1280 输入的大模型，通常用的是 P5 常规模型，输入尺寸是 640x640 。本文解读的也是 P5 模型结构。</p>
+<p>通常来说，目标检测算法都可以分成数据增强、模型结构、loss 计算等组件，YOLOv5 也一样，如下所示：</p>
+<div align=center >
+<img alt="训练测试策略" src="https://user-images.githubusercontent.com/40284075/190542423-f6b20d8e-c82a-4a34-9065-c161c5e29e7c.png"/>
+</div>
+<p>下面将从原理和结合 MMYOLO 的具体实现方面进行简要分析。</p>
+<section id="id2">
+<h3>1.1 数据增强模块<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h3>
+<p>YOLOv5 目标检测算法中使用的数据增强比较多，包括：</p>
+<ul class="simple">
+<li><p><strong>Mosaic 马赛克</strong></p></li>
+<li><p><strong>RandomAffine 随机仿射变换</strong></p></li>
+<li><p><strong>MixUp</strong></p></li>
+<li><p><strong>图像模糊等采用 Albu 库实现的变换</strong></p></li>
+<li><p><strong>HSV 颜色空间增强</strong></p></li>
+<li><p><strong>随机水平翻转</strong></p></li>
+</ul>
+<p>其中 Mosaic 数据增强概率为 1，表示一定会触发，而对于 small 和 nano 两个版本的模型不使用 MixUp，其他的 l/m/x 系列模型则采用了 0.1 的概率触发 MixUp。小模型能力有限，一般不会采用 MixUp 等强数据增强策略。</p>
+<p>其核心的 Mosaic + RandomAffine + MixUp 过程简要绘制如下：</p>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190542598-bbf4a159-cc9d-4bac-892c-46ef99267994.png"/>
+</div>
+<p>下面对其进行简要分析。</p>
+<section id="mosaic">
+<h4>1.1.1 Mosaic 马赛克<a class="headerlink" href="#mosaic" title="永久链接至标题">#</a></h4>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190542619-d777894f-8928-4244-b39a-158eea416ccd.png"/>
+</div>
+<p>Mosaic 属于混合类数据增强，因为它在运行时候需要 4 张图片拼接，变相的相当于增加了训练的 batch size。其运行过程简要概况为：</p>
+<ol class="simple">
+<li><p>随机生成拼接后 4 张图的交接中心点坐标，此时就相当于确定了 4 张拼接图片的交接点</p></li>
+<li><p>随机选出另外 3 张图片的索引以及读取对应的标注</p></li>
+<li><p>对每张图片采用保持宽高比的 resize 操作将其缩放到指定大小</p></li>
+<li><p>按照上下左右规则，计算每张图片在待输出图片中应该放置的位置，因为图片可能出界故还需要计算裁剪坐标</p></li>
+<li><p>利用裁剪坐标将缩放后的图片裁剪，然后贴到前面计算出的位置，其余位置全部补 114 像素值</p></li>
+<li><p>对每张图片的标注也进行相应处理</p></li>
+</ol>
+<p>注意：由于拼接了 4 张图，所以输出图片面积会扩大 4 倍，从 640x640 变成 1280x1280，因此要想恢复为 640x640，
+必须要再接一个 <strong>RandomAffine 随机仿射变换，否则图片面积就一直是扩大 4 倍的</strong>。</p>
+</section>
+<section id="randomaffine">
+<h4>1.1.2 RandomAffine 随机仿射变换<a class="headerlink" href="#randomaffine" title="永久链接至标题">#</a></h4>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190542871-14e91a42-329f-4084-aec5-b3e412e5364b.png"/>
+</div>
+<p>随机仿射变换有两个目的：</p>
+<ol class="simple">
+<li><p>对图片进行随机几何仿射变换</p></li>
+<li><p>将 Mosaic 输出的扩大 4 倍的图片还原为 640x640 尺寸</p></li>
+</ol>
+<p>随机仿射变换包括平移、旋转、缩放、错切等几何增强操作，同时由于 Mosaic 和 RandomAffine 属于比较强的增强操作，会引入较大噪声，因此需要对增强后的标注进行处理，过滤规则为：</p>
+<ol class="simple">
+<li><p>增强后的 gt bbox 宽高要大于 wh_thr</p></li>
+<li><p>增强后的 gt bbox 面积和增强前的 gt bbox 面积比要大于 ar_thr，防止增强太严重</p></li>
+<li><p>最大宽高比要小于 area_thr，防止宽高比改变太多</p></li>
+</ol>
+<p>由于旋转后标注框会变大导致不准确，因此目标检测里面很少会使用旋转数据增强。</p>
+</section>
+<section id="mixup">
+<h4>1.1.3 MixUp<a class="headerlink" href="#mixup" title="永久链接至标题">#</a></h4>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190543076-db60e4b2-0552-4cf4-ab45-259d1ccbd5a6.png"/>
+</div>
+<p>MixUp 和 Mosaic 类似也属于混合图片类增强方法。随机选出另外一张图后将两图再随机混合。具体实现方法有多种，常见的做法是要么将 label 直接拼接起来，要么将 label 也采用 alpha 方法混合。原作者的做法非常简单，对 label 即直接拼接，而图片通过分布采样混合。</p>
+<p>需要特别注意的是：
+<strong>YOLOv5 实现的 MixUp 中，随机出来的另一张图也需要经过 Mosaic 马赛克 + RandomAffine 随机仿射变换 的增强后才能混合。这个和其他开源库实现可能不太一样</strong>。</p>
+</section>
+<section id="id3">
+<h4>1.1.4 图像模糊和其他数据增强策略<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h4>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190543533-8b9ece51-676b-4a7d-a7d0-597e2dd1d42e.png"/>
+</div>
+<p>剩下的数据增强包括</p>
+<ul class="simple">
+<li><p><strong>图像模糊等采用 Albu 库实现的变换</strong></p></li>
+<li><p><strong>HSV 颜色空间增强</strong></p></li>
+<li><p><strong>随机水平翻转</strong></p></li>
+</ul>
+<p>MMDetection 开源库中已经对 Albu 第三方数据增强库进行了封装，使用户可以简单的通过配置即可使用 Albu 库中提供的任何数据增强功能。而 HSV 颜色空间增强和随机水平翻转都是属于比较常规的数据增强，不需要特殊介绍。</p>
+</section>
+<section id="mmyolo">
+<h4>1.1.5 MMYOLO 实现解析<a class="headerlink" href="#mmyolo" title="永久链接至标题">#</a></h4>
+<p>常规的单图数据增强例如随机翻转等比较容易实现，而 Mosaic 类的混合数据增强则不太容易。在 MMDetection 复现的 YOLOX 算法中提出了 MultiImageMixDataset 数据集包装器的概念，其实现过程如下：</p>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190543666-d5a22ed7-46a0-4696-990a-12ebde7f8907.png"/>
+</div>
+<p>对于 Mosaic 等混合类数据增强策略，会需要额外实现一个 <code class="docutils literal notranslate"><span class="pre">get_indexes</span></code> 方法来获取其他图片索引，然后用得到的 4 张图片信息就可以进行 Mosaic 增强了。
+以 MMDetection 中实现的 YOLOX 为例，其配置文件写法如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">train_pipeline</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Mosaic&#39;</span><span class="p">,</span> <span class="n">img_scale</span><span class="o">=</span><span class="n">img_scale</span><span class="p">,</span> <span class="n">pad_val</span><span class="o">=</span><span class="mf">114.0</span><span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;RandomAffine&#39;</span><span class="p">,</span>
+        <span class="n">scaling_ratio_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">border</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;MixUp&#39;</span><span class="p">,</span>
+        <span class="n">img_scale</span><span class="o">=</span><span class="n">img_scale</span><span class="p">,</span>
+        <span class="n">ratio_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">),</span>
+        <span class="n">pad_val</span><span class="o">=</span><span class="mf">114.0</span><span class="p">),</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+
+<span class="n">train_dataset</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="c1"># use MultiImageMixDataset wrapper to support mosaic and mixup</span>
+    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;MultiImageMixDataset&#39;</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;CocoDataset&#39;</span><span class="p">,</span>
+        <span class="n">pipeline</span><span class="o">=</span><span class="p">[</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;LoadImageFromFile&#39;</span><span class="p">),</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;LoadAnnotations&#39;</span><span class="p">,</span> <span class="n">with_bbox</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">]),</span>
+    <span class="n">pipeline</span><span class="o">=</span><span class="n">train_pipeline</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>MultiImageMixDataset 数据集包装器传入一个包括 Mosaic 和 RandAffine 等数据增强，而 CocoDataset 中也需要传入一个包括图片和标注加载的 pipeline。通过这种方式就可以快速的实现混合类数据增强。</p>
+<p>但是上述实现有一个缺点：
+<strong>对于不熟悉 MMDetection 的用户来说，其经常会忘记 Mosaic 必须要和 MultiImageMixDataset 配合使用，否则会报错，而且这样会加大复杂度和理解难度</strong>。</p>
+<p>为了解决这个问题，在 MMYOLO 中我们进一步进行了简化。直接让 pipeline 能够获取到 dataset 对象，此时就可以将 Mosaic 等混合类数据增强的实现和使用变成和随机翻转一样。
+此时在 MMYOLO 中 YOLOX 的配置写法变成如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pre_transform</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;LoadImageFromFile&#39;</span><span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;LoadAnnotations&#39;</span><span class="p">,</span> <span class="n">with_bbox</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">train_pipeline</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">*</span><span class="n">pre_transform</span><span class="p">,</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Mosaic&#39;</span><span class="p">,</span>
+        <span class="n">img_scale</span><span class="o">=</span><span class="n">img_scale</span><span class="p">,</span>
+        <span class="n">pad_val</span><span class="o">=</span><span class="mf">114.0</span><span class="p">,</span>
+        <span class="n">pre_transform</span><span class="o">=</span><span class="n">pre_transform</span><span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;mmdet.RandomAffine&#39;</span><span class="p">,</span>
+        <span class="n">scaling_ratio_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">border</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;YOLOXMixUp&#39;</span><span class="p">,</span>
+        <span class="n">img_scale</span><span class="o">=</span><span class="n">img_scale</span><span class="p">,</span>
+        <span class="n">ratio_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">),</span>
+        <span class="n">pad_val</span><span class="o">=</span><span class="mf">114.0</span><span class="p">,</span>
+        <span class="n">pre_transform</span><span class="o">=</span><span class="n">pre_transform</span><span class="p">),</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>这样就不再需要 MultiImageMixDataset 了，使用和理解上会更加简单。</p>
+<p>回到 YOLOv5 配置上，因为 YOLOv5 实现的 MixUp 中，随机选出来的另一张图也需要经过 Mosaic 马赛克+RandomAffine 随机仿射变换 增强后才能混合，故YOLOv5-m 数据增强配置如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pre_transform</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;LoadImageFromFile&#39;</span><span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;LoadAnnotations&#39;</span><span class="p">,</span> <span class="n">with_bbox</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">mosaic_transform</span><span class="o">=</span> <span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Mosaic&#39;</span><span class="p">,</span>
+        <span class="n">img_scale</span><span class="o">=</span><span class="n">img_scale</span><span class="p">,</span>
+        <span class="n">pad_val</span><span class="o">=</span><span class="mf">114.0</span><span class="p">,</span>
+        <span class="n">pre_transform</span><span class="o">=</span><span class="n">pre_transform</span><span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;YOLOv5RandomAffine&#39;</span><span class="p">,</span>
+        <span class="n">max_rotate_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">max_shear_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">scaling_ratio_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">),</span>  <span class="c1"># scale = 0.9</span>
+        <span class="n">border</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">img_scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">border_val</span><span class="o">=</span><span class="p">(</span><span class="mi">114</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">114</span><span class="p">))</span>
+<span class="p">]</span>
+
+<span class="n">train_pipeline</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">*</span><span class="n">pre_transform</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">mosaic_transform</span><span class="p">,</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;YOLOv5MixUp&#39;</span><span class="p">,</span>
+        <span class="n">prob</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">pre_transform</span><span class="o">=</span><span class="p">[</span>
+            <span class="o">*</span><span class="n">pre_transform</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">mosaic_transform</span>
+        <span class="p">]),</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id4">
+<h3>1.2 网络结构<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h3>
+<p>本小结由 RangeKing&#64;github 撰写，非常感谢！！！</p>
+<p>YOLOv5 网络结构是标准的 <code class="docutils literal notranslate"><span class="pre">CSPDarknet</span></code> + <code class="docutils literal notranslate"><span class="pre">PAFPN</span></code> + <code class="docutils literal notranslate"><span class="pre">非解耦</span> <span class="pre">Head</span></code>。</p>
+<p>YOLOv5 网络结构大小由 <code class="docutils literal notranslate"><span class="pre">deepen_factor</span></code> 和 <code class="docutils literal notranslate"><span class="pre">widen_factor</span></code> 两个参数决定。其中 <code class="docutils literal notranslate"><span class="pre">deepen_factor</span></code> 控制网络结构深度，即 <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code> 中 <code class="docutils literal notranslate"><span class="pre">DarknetBottleneck</span></code> 模块堆叠的数量；<code class="docutils literal notranslate"><span class="pre">widen_factor</span></code> 控制网络结构宽度，即模块输出特征图的通道数。以 YOLOv5-l 为例，其 <code class="docutils literal notranslate"><span class="pre">deepen_factor</span> <span class="pre">=</span> <span class="pre">widen_factor</span> <span class="pre">=</span> <span class="pre">1.0</span></code> ，整体结构图如上所示。</p>
+<p>图的上半部分为模型总览；下半部分为具体网络结构，其中的模块均标有序号，方便用户与 YOLOv5 官方仓库的配置文件对应；中间部分为各子模块的具体构成。</p>
+<p>如果想使用 netron 可视化网络结构图细节，可以直接在 netron 中将 MMDeploy 导出的 ONNX 文件格式文件打开。</p>
+<section id="backbone">
+<h4>1.2.1 Backbone<a class="headerlink" href="#backbone" title="永久链接至标题">#</a></h4>
+<p>在 MMYOLO 中 <code class="docutils literal notranslate"><span class="pre">CSPDarknet</span></code> 继承自 <code class="docutils literal notranslate"><span class="pre">BaseBackbone</span></code>，整体结构和 <code class="docutils literal notranslate"><span class="pre">ResNet</span></code> 类似，共 5 层结构，包含 1 个 <code class="docutils literal notranslate"><span class="pre">Stem</span> <span class="pre">Layer</span></code> 和 4 个 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code>：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Stem</span> <span class="pre">Layer</span></code> 是 1 个 6x6 kernel 的 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code>，相较于 v6.1 版本之前的 <code class="docutils literal notranslate"><span class="pre">Focus</span></code> 模块更加高效。</p></li>
+<li><p>前 3 个 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code> 均由 1 个 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> 和 1 个 <code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code> 组成。如上图 Details 部分所示。
+其中 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> 为 3x3的 <code class="docutils literal notranslate"><span class="pre">Conv2d</span></code> + <code class="docutils literal notranslate"><span class="pre">BatchNorm</span></code> + <code class="docutils literal notranslate"><span class="pre">SiLU</span> <span class="pre">激活函数</span></code>。<code class="docutils literal notranslate"><span class="pre">CSPLayer</span></code> 即 YOLOv5 官方仓库中的 C3 模块，由 3 个 <code class="docutils literal notranslate"><span class="pre">ConvModule</span></code> + n 个 <code class="docutils literal notranslate"><span class="pre">DarknetBottleneck</span></code>(带残差连接) 组成。</p></li>
+<li><p>第 4 个 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code> 在最后增加了 <code class="docutils literal notranslate"><span class="pre">SPPF</span></code> 模块。<code class="docutils literal notranslate"><span class="pre">SPPF</span></code> 模块是将输入串行通过多个 5x5 大小的 <code class="docutils literal notranslate"><span class="pre">MaxPool2d</span></code> 层，与 <code class="docutils literal notranslate"><span class="pre">SPP</span></code>  模块效果相同，但速度更快。</p></li>
+<li><p>P5 模型结构会在 <code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">Layer</span></code> 2-4 之后分别输出一个特征图进入 <code class="docutils literal notranslate"><span class="pre">Neck</span></code> 结构。以 640x640 输入图片为例，其输出特征为 (B,256,80,80)、 (B,512,40,40) 和 (B,1024,20,20)，对应的 stride 分别为 8/16/32。</p></li>
+</ul>
+</section>
+<section id="neck">
+<h4>1.2.2 Neck<a class="headerlink" href="#neck" title="永久链接至标题">#</a></h4>
+<p>YOLOv5 官方仓库的配置文件中并没有 Neck 部分，为方便用户与其他目标检测网络结构相对应，我们将官方仓库的 <code class="docutils literal notranslate"><span class="pre">Head</span></code> 拆分成 <code class="docutils literal notranslate"><span class="pre">PAFPN</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Head</span></code> 两部分。</p>
+<p>基于 <code class="docutils literal notranslate"><span class="pre">BaseYOLONeck</span></code> 结构，YOLOv5 <code class="docutils literal notranslate"><span class="pre">Neck</span></code> 也是遵循同一套构建流程，对于不存在的模块，我们采用 <code class="docutils literal notranslate"><span class="pre">nn.Identity</span></code> 代替。</p>
+<p>Neck 模块输出的特征图和 Backbone 完全一致即为 (B,256,80,80)、 (B,512,40,40) 和  (B,1024,20,20)。</p>
+</section>
+<section id="head">
+<h4>1.2.3 Head<a class="headerlink" href="#head" title="永久链接至标题">#</a></h4>
+<p>YOLOv5 Head 结构和 YOLOv3 完全一样，为 <code class="docutils literal notranslate"><span class="pre">非解耦</span> <span class="pre">Head</span></code>。Head 模块只包括 3 个不共享权重的卷积，用于将输入特征图进行变换而已。</p>
+<p>前面的 PAFPN 依然是输出 3 个不同尺度的特征图，shape 为 (B,256,80,80)、 (B,512,40,40) 和 (B,1024,20,20)。
+由于 YOLOv5 是非解耦输出，即分类和 bbox 检测等都是在同一个卷积的不同通道中完成。以 COCO 80 类为例，在输入为 640x640 分辨率情况下，其 Head 模块输出的 shape 分别为 (B, 3x(4+1+80),80,80), (B, 3x(4+1+80),40,40) 和 (B, 3x(4+1+80),20,20)。其中 3 表示 3 个 anchor，4 表示 bbox 预测分支，1 表示 obj 预测分支，80 表示 COCO 数据集类别预测分支。</p>
+</section>
+</section>
+<section id="id5">
+<h3>1.3 正负样本匹配策略<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h3>
+<p>正负样本匹配策略的核心是确定预测特征图的所有位置中哪些位置应该是正样本，哪些是负样本，甚至有些是忽略样本。
+匹配策略是目标检测算法的核心，一个好的匹配策略可以显著提升算法性能。</p>
+<p>YOLOV5 的匹配策略简单总结为：<strong>采用了 anchor 和 gt_bbox 的 shape 匹配度作为划分规则，同时引入跨邻域网格策略来增加正样本</strong>。
+其主要包括如下两个核心步骤：</p>
+<ol class="simple">
+<li><p>对于任何一个输出层，抛弃了常用的基于 Max IoU 匹配的规则，而是直接采用 shape 规则匹配，也就是该 GT Bbox 和当前层的 Anchor 计算宽高比，如果宽高比例大于设定阈值，则说明该 GT Bbox 和 Anchor 匹配度不够，将该 GT Bbox 暂时丢掉，在该层预测中该 GT Bbox 对应的网格内的预测位置认为是负样本</p></li>
+<li><p>对于剩下的 GT Bbox(也就是匹配上的 GT Bbox)，计算其落在哪个网格内，同时利用四舍五入规则，找出最近的两个网格，将这三个网格都认为是负责预测该 GT Bbox 的，可以粗略估计正样本数相比之前的 YOLO 系列，至少增加了三倍</p></li>
+</ol>
+<p>下面会对每个部分进行详细说明，部分描述和图示直接或间接参考自官方 <a class="reference external" href="https://github.com/ultralytics/YOLOv5/issues/6998#44">Repo</a>。</p>
+<section id="anchor">
+<h4>1.3.1 Anchor 设置<a class="headerlink" href="#anchor" title="永久链接至标题">#</a></h4>
+<p>YOLOv5 是 Anchor-based 的目标检测算法，其 Anchor size 的获取方式与 YOLOv3 类似，也是使用聚类获得，其不同之处在于聚类使用的标准不再是基于 IoU 的，而是使用形状上的宽高比作为聚类准则(即 shape-match )。</p>
+<p>在用户更换了数据集后，可以使用 MMYOLO 里带有的 Anchor 分析工具，对自己的数据集进行分析，确定合适的 Anchor size。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python tools/analysis_tools/optimize_anchors.py <span class="si">${</span><span class="nv">CONFIG</span><span class="si">}</span> --algorithm v5-k-means
+ --input-shape <span class="si">${</span><span class="nv">INPUT_SHAPE</span><span class="p"> [WIDTH HEIGHT]</span><span class="si">}</span> --output-dir <span class="si">${</span><span class="nv">OUTPUT_DIR</span><span class="si">}</span>
+</pre></div>
+</div>
+<p>然后在 <a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/main/configs/yolov5/yolov5_s-v61_syncbn_fast_8xb16-300e_coco.py">config 文件</a> 里修改默认 Anchor size:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">anchors</span> <span class="o">=</span> <span class="p">[[(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">33</span><span class="p">,</span> <span class="mi">23</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">61</span><span class="p">),</span> <span class="p">(</span><span class="mi">62</span><span class="p">,</span> <span class="mi">45</span><span class="p">),</span> <span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="mi">119</span><span class="p">)],</span>
+           <span class="p">[(</span><span class="mi">116</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span> <span class="p">(</span><span class="mi">156</span><span class="p">,</span> <span class="mi">198</span><span class="p">),</span> <span class="p">(</span><span class="mi">373</span><span class="p">,</span> <span class="mi">326</span><span class="p">)]]</span>
+</pre></div>
+</div>
+</section>
+<section id="bbox">
+<h4>1.3.2 Bbox 编解码过程<a class="headerlink" href="#bbox" title="永久链接至标题">#</a></h4>
+<p>在 Anchor-based 算法中，预测框通常会基于 Anchor 进行变换，然后预测变换量，这对应 GT Bbox 编码过程，而在预测后需要进行 Pred Bbox 解码，还原为真实尺度的 Bbox，这对应 Pred Bbox 解码过程。</p>
+<p>在 YOLOv3 中，回归公式为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}b_x=\sigma(t_x)+c_x  \\
+b_y=\sigma(t_y)+c_y  \\
+b_w=a_w\cdot e^{t_w} \\
+b_h=a_h\cdot e^{t_h} \\\end{split}\]</div>
+<p>公式中，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}a_w 代表 Anchor 的宽度 \\
+c_x 代表 Grid 所处的坐标 \\
+\sigma 代表 Sigmoid 公式。\end{split}\]</div>
+<p>而在 YOLOv5 中，回归公式为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}b_x=(2\cdot\sigma(t_x)-0.5)+c_x   \\
+b_y=(2\cdot\sigma(t_y)-0.5)+c_y   \\
+b_w=a_w\cdot(2\cdot\sigma(t_w))^2   \\
+b_h=a_h\cdot(2\cdot\sigma(t_h))^2\end{split}\]</div>
+<p>改进之处主要有以下两点：</p>
+<ul class="simple">
+<li><p>中心点坐标范围从 (0, 1) 调整至 (-0.5, 1.5)</p></li>
+<li><p>宽高范围从</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[(0，+\infty)\]</div>
+<p>调整至</p>
+<div class="math notranslate nohighlight">
+\[(0，4a_{wh})\]</div>
+<p>这个改进具有以下好处：</p>
+<ul class="simple">
+<li><p><strong>新的中心点设置能更好的预测到 0 和 1</strong>。这有助于更精准回归出 box 坐标。</p></li>
+</ul>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190546778-83001bac-4e71-4b9a-8de8-bd41146495af.png"/>
+</div>
+<ul class="simple">
+<li><p>宽高回归公式中 exp(x) 是无界的，这会导致<strong>梯度失去控制</strong>，造成训练不稳定。YOLOv5 中改进后的宽高回归公式优化了此问题。</p></li>
+</ul>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190546793-5364d6d3-7891-4af3-98e3-9f06970f3163.png"/>
+</div>
+</section>
+<section id="id6">
+<h4>1.3.3 匹配策略<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h4>
+<p>在 MMYOLO 设计中，无论网络是 Anchor-based 还是 Anchor-free，<strong>我们统一使用 prior 称呼 Anchor</strong>。</p>
+<p>正样本匹配包含以下两步：</p>
+<p><strong>(1) “比例”比较</strong></p>
+<p>将 GT Bbox 的 WH 与 Prior 的 WH 进行“比例”比较。</p>
+<p>比较流程：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}r_w = w\_{gt} / w\_{pt}    \\
+r_h = h\_{gt} / h\_{pt}    \\
+r_w^{max}=max(r_w, 1/r_w)  \\
+r_h^{max}=max(r_h, 1/r_h)  \\
+r^{max}=max(r_w^{max}, r_h^{max})   \\
+if\ \ r_{max} &lt; prior\_match\_thr:   match!\end{split}\]</div>
+<p>此处我们用一个 GT Bbox 与 P3 特征图的 Prior 进行匹配的案例进行讲解和图示：</p>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190547195-60d6cd7a-b12a-4c6f-9cc8-13f48c8ab1e0.png"/>
+</div>
+<p>prior1 匹配失败的原因是</p>
+<div class="math notranslate nohighlight">
+\[h\_{gt}\ /\ h\_{prior}\ =\ 4.8\ &gt;\ prior\_match\_thr\]</div>
+<p><strong>(2) 为步骤 1 中 match 的 GT 分配对应的正样本</strong></p>
+<p>依然沿用上面的例子：</p>
+<p>GT Bbox (cx, cy, w, h) 值为 (26, 37, 36, 24)，</p>
+<p>Prior WH 值为 [(15, 5), (24, 16), (16, 24)]，在 P3 特征图上，stride 为 8。通过计算，prior2 和 prior3 能够 match。</p>
+<p>计算过程如下：</p>
+<p><strong>(2.1) 将 GT Bbox 的中心点坐标对应到 P3 的 grid 上</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}GT_x^{center_grid}=26/8=3.25  \\
+GT_y^{center_grid}=37/8=4.625\end{split}\]</div>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190549304-020ec19e-6d54-4d40-8f43-f78b8d6948aa.png"/>
+</div>
+<p><strong>(2.2)</strong> 将 GT Bbox 中心点所在的 grid 分成四个象限，<strong>由于中心点落在了左下角的象限当中，那么会将物体的左、下两个 grid 也认为是正样本</strong></p>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190549310-e5da53e3-eae3-4085-bd0a-1843ac8ca653.png"/>
+</div>
+<p>下图展示中心点落到不同位置时的正样本分配情况：</p>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190549613-eb47e70a-a2c1-4729-9fb7-f5ce7007842b.png"/>
+</div>
+<p>那么 YOLOv5 的 Assign 方式具体带来了哪些改进？</p>
+<ul class="simple">
+<li><p>一个 GT Bbox 能够匹配多个 Prior</p></li>
+<li><p>一个 GT Bbox 和一个Prior 匹配时，能分配 1-3 个正样本</p></li>
+<li><p>以上策略能<strong>适度缓解目标检测中常见的正负样本不均衡问题</strong>。</p></li>
+</ul>
+<p>而 YOLOv5 中的回归方式，和 Assign 方式是相互呼应的：</p>
+<ol class="simple">
+<li><p>中心点回归方式：</p></li>
+</ol>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190549684-21776c33-9ef8-4818-9530-14f750a18d63.png"/>
+</div>
+<ol class="simple">
+<li><p>WH 回归方式：</p></li>
+</ol>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/40284075/190549696-3da08c06-753a-4108-be47-64495ea480f2.png"/>
+</div>
+</section>
+</section>
+<section id="loss">
+<h3>1.4 Loss 设计<a class="headerlink" href="#loss" title="永久链接至标题">#</a></h3>
+<p>YOLOv5 中总共包含 3 个 Loss，分别为：</p>
+<ul class="simple">
+<li><p>Classes loss：使用的是 BCE loss</p></li>
+<li><p>Objectness loss：使用的是 BCE loss</p></li>
+<li><p>Location loss：使用的是 CIoU loss</p></li>
+</ul>
+<p>三个 loss 按照一定比例汇总：</p>
+<div class="math notranslate nohighlight">
+\[Loss=\lambda_1L_{cls}+\lambda_2L_{obj}+\lambda_3L_{loc}\]</div>
+<p>P3、P4、P5 层对应的 Objectness loss 按照不同权重进行相加，默认的设置是</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">obj_level_weights</span><span class="o">=</span><span class="p">[</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[L_{obj}=4.0\cdot L_{obj}^{small}+1.0\cdot L_{obj}^{medium}+0.4\cdot L_{obj}^{large}\]</div>
+<p>在复现中我们发现 YOLOv5 中使用的 CIoU 与目前最新官方 CIoU 存在一定的差距，差距体现在 alpha 参数的计算。</p>
+<p>官方版本：</p>
+<p>参考资料：https://github.com/Zzh-tju/CIoU/blob/master/layers/modules/multibox_loss.py#L53-L55</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">ious</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">*</span> <span class="n">v</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ious</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>YOLOv5 版本：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">ious</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>这是一个有趣的细节，后续需要测试不同 alpha 计算方式情况下带来的精度差距。</p>
+</section>
+<section id="id7">
+<h3>1.5 优化策略和训练过程<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h3>
+<p>YOLOv5 对每个优化器的参数组进行非常精细的控制，简单来说包括如下部分。</p>
+<section id="id8">
+<h4>1.5.1 优化器分组<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h4>
+<p>将优化参数分成 Conv/Bias/BN 三组，在 WarmUp 阶段，不同组采用不同的 lr 以及 momentum 更新曲线。
+同时在 WarmUp 阶段采用的是 iter-based 更新策略，而在非 WarmUp 阶段则变成 epoch-based 更新策略，可谓是 trick 十足。</p>
+<p>MMYOLO 中是采用 YOLOv5OptimizerConstructor 优化器构造器实现优化器参数分组。优化器构造器的作用就是对一些特殊的参数组初始化过程进行精细化控制，因此可以很好的满足需求。</p>
+<p>而不同的参数组采用不同的调度曲线功能则是通过 YOLOv5ParamSchedulerHook 实现。而不同的参数组采用不同的调度曲线功能则是通过 YOLOv5ParamSchedulerHook 实现。</p>
+</section>
+<section id="weight-decay">
+<h4>1.5.2 weight decay 参数自适应<a class="headerlink" href="#weight-decay" title="永久链接至标题">#</a></h4>
+<p>作者针对不同的 batch size 采用了不同的 weight decay 策略，具体来说为：</p>
+<ol class="simple">
+<li><p>当训练 batch size &lt;= 64 时，weight decay 不变</p></li>
+<li><p>当训练 batch size &gt; 64 时，weight decay 会根据总 batch size 进行线性缩放</p></li>
+</ol>
+<p>MMYOLO 也是通过 YOLOv5OptimizerConstructor 实现。</p>
+</section>
+<section id="id9">
+<h4>1.5.3 梯度累加<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h4>
+<p>为了最大化不同 batch size 情况下的性能，作者设置总 batch size 小于 64 时候会自动开启梯度累加功能。</p>
+<p>训练过程和大部分 YOLO 类似，包括如下策略：</p>
+<ol class="simple">
+<li><p>没有使用预训练权重</p></li>
+<li><p>没有采用多尺度训练策略，同时可以开启 cudnn.benchmark 进一步加速训练</p></li>
+<li><p>使用了 EMA 策略平滑模型</p></li>
+<li><p>默认采用 AMP 自动混合精度训练</p></li>
+</ol>
+<p>需要特意说明的是：YOLOv5 官方对于 small 模型是采用单卡 v100 训练，bs 为 128，而 m/l/x 等是采用不同数目的多卡实现的，
+这种训练策略不太规范，<strong>为此在 MMYOLO 中全部采用了 8 卡，每卡 16 bs 的设置，同时为了避免性能差异，训练时候开启了 SyncBN</strong>。</p>
+</section>
+</section>
+<section id="id10">
+<h3>1.6 推理和后处理过程<a class="headerlink" href="#id10" title="永久链接至标题">#</a></h3>
+<p>YOLOv5 后处理过程和 YOLOv3 非常类似，实际上 YOLO 系列的后处理逻辑都是类似的。</p>
+<section id="id11">
+<h4>1.6.1 核心控制参数<a class="headerlink" href="#id11" title="永久链接至标题">#</a></h4>
+<ol class="simple">
+<li><p><strong>multi_label</strong></p></li>
+</ol>
+<p>对于多类别预测来说需要考虑是否是多标签任务，也就是同一个预测位置会预测的多个类别概率，和是否当作单类处理。因为 YOLOv5 采用 sigmoid 预测模式，在考虑多标签情况下可能会出现一个物体检测出两个不同类别的框，这有助于评估指标 mAP，但是不利于实际应用。
+因此在需要算评估指标时候 multi_label 是 True，而推理或者实际应用时候是 False</p>
+<ol class="simple">
+<li><p><strong>score_thr 和 nms_thr</strong></p></li>
+</ol>
+<p>score_thr 阈值用于过滤类别分值，低于分值的检测框当做背景处理，nms_thr 是 nms 时阈值。同样的，在计算评估指标 mAP 阶段可以将 score_thr 设置的非常低，这通常能够提高召回率，从而提升 mAP，但是对于实际应用来说没有意义，且会导致推理过程极慢。为此在测试和推理阶段会设置不同的阈值</p>
+<ol class="simple">
+<li><p><strong>nms_pre 和 max_per_img</strong></p></li>
+</ol>
+<p>nms_pre 表示 nms 前的最大保留检测框数目，这通常是为了防止 nms 运行时候输入框过多导致速度过慢问题，默认值是 30000。
+max_per_img 表示最终保留的最大检测框数目，通常设置为 300。</p>
+<p>以 COCO 80 类为例，假设输入图片大小为 640x640</p>
+<div align=center >
+<img alt="image" src="https://user-images.githubusercontent.com/17425982/192942249-96b0fcfb-059f-48fe-862f-7d526a3a06d7.png"/>
+</div>
+<p>其推理和后处理过程为：</p>
+<p><strong>(1) 维度变换</strong></p>
+<p>YOLOv5 输出特征图尺度为 80x80、40x40 和 20x20 的三个特征图，每个位置共 3 个 anchor，因此输出特征图通道为 3x(5+80)=255。
+YOLOv5 是非解耦输出头，而其他大部分算法都是解耦输出头，为了统一后处理逻辑，我们提前将其进行解耦，分成了类别预测分支、bbox 预测分支和 obj 预测分支。</p>
+<p>将三个不同尺度的类别预测分支、bbox 预测分支和 obj 预测分支进行拼接，并进行维度变换。为了后续方便处理，会将原先的通道维度置换到最后，类别预测分支、bbox 预测分支和 obj 预测分支的 shape 分别为 (b, 3x80x80+3x40x40+3x20x20, 80)=(b,25200,80)，(b,25200,4)，(b,25200,1)。</p>
+<p><strong>(2) 解码还原到原图尺度</strong></p>
+<p>分类预测分支和 obj 分支需要进行 sigmoid 计算，而 bbox 预测分支需要进行解码，还原为真实的原图解码后 xyxy 格式</p>
+<p><strong>(3) 第一次阈值过滤</strong></p>
+<p>遍历 batch 中的每张图，然后用 score_thr 对类别预测分值进行阈值过滤，去掉低于 score_thr 的预测结果</p>
+<p><strong>(4) 第二次阈值过滤</strong></p>
+<p>将 obj 预测分值和过滤后的类别预测分值相乘，然后依然采用 score_thr 进行阈值过滤。
+在这过程中还需要考虑 <strong>multi_label 和 nms_pre，确保过滤后的检测框数目不会多于 nms_pre</strong>。</p>
+<p><strong>(5) 还原到原图尺度和 nms</strong></p>
+<p>基于前处理过程，将剩下的检测框还原到网络输出前的原图尺度，然后进行 nms 即可。最终输出的检测框不能多于 <strong>max_per_img</strong>。</p>
+</section>
+<section id="batch-shape">
+<h4>1.6.2 batch shape 策略<a class="headerlink" href="#batch-shape" title="永久链接至标题">#</a></h4>
+<p>为了加速验证集的推理过程，作者提出了 batch shape 策略，其核心原则是：<strong>确保在 batch 推理过程中同一个 batch 内的图片 pad 像素最少，不要求整个验证过程中所有 batch 的图片尺度一样</strong>。</p>
+<p>其大概流程是：将整个测试或者验证数据的宽高比进行排序，然后依据 batch 设置将排序后的图片组成一个 batch，
+同时计算这个 batch 内最佳的 batch shape，防止 pad 像素过多。最佳 batch shape 计算原则为在保持宽高比的情况下进行 pad，不追求正方形图片输出。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">image_shapes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data_info</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
+            <span class="n">image_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_info</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="n">data_info</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]))</span>
+
+        <span class="n">image_shapes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image_shapes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_shapes</span><span class="p">)</span>  <span class="c1"># number of images</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>  <span class="c1"># batch index</span>
+        <span class="n">number_of_batches</span> <span class="o">=</span> <span class="n">batch_index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># number of batches</span>
+
+        <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">image_shapes</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">image_shapes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># aspect ratio</span>
+        <span class="n">irect</span> <span class="o">=</span> <span class="n">aspect_ratio</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+
+        <span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">irect</span><span class="p">]</span>
+
+        <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">aspect_ratio</span><span class="p">[</span><span class="n">irect</span><span class="p">]</span>
+        <span class="c1"># Set training image shapes</span>
+        <span class="n">shapes</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">number_of_batches</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_batches</span><span class="p">):</span>
+            <span class="n">aspect_ratio_index</span> <span class="o">=</span> <span class="n">aspect_ratio</span><span class="p">[</span><span class="n">batch_index</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">min_index</span><span class="p">,</span> <span class="n">max_index</span> <span class="o">=</span> <span class="n">aspect_ratio_index</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+            <span class="p">),</span> <span class="n">aspect_ratio_index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">max_index</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">max_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">min_index</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">min_index</span><span class="p">]</span>
+
+        <span class="n">batch_shapes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shapes</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_divisor</span> <span class="o">+</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pad</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_divisor</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_list</span><span class="p">):</span>
+            <span class="n">data_info</span><span class="p">[</span><span class="s1">&#39;batch_shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_shapes</span><span class="p">[</span><span class="n">batch_index</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="id12">
+<h2>2 总结<a class="headerlink" href="#id12" title="永久链接至标题">#</a></h2>
+<p>本文对 YOLOv5 原理和在 MMYOLO 实现进行了详细解析，希望能帮助用户理解算法实现过程。同时请注意：由于 YOLOv5 本身也在不断更新，本开源库也会不断迭代，请及时阅读和同步最新版本。</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By ZhikangNiu<br/>
+  
+      &copy; Copyright 2022, ZhikangNiu.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

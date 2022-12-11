@@ -13,14 +13,14 @@ PyTorch的安装是我们学习PyTorch的第一步，也是经常出错的一步
 在数据科学和最近很火的深度学习中，要用到大量成熟的package。我们一个个安装 package 很麻烦，而且很容易出现包之间的依赖不适配的问题。而 Anaconda/miniconda的出现很好的解决了我们的问题，它集成了常用于科学分析（机器学习， 深度学习）的大量package，并且借助于conda我们可以实现对虚拟Python环境的管理。
 
 ### Step 1：安装Anaconda/miniconda
-登陆[Anaconda | Individual Edition](https://www.anaconda.com/products/individual)，选择相应系统DownLoad，此处以Windows为例（Linux可以点击[链接](https://docs.conda.io/en/latest/miniconda.html)选择合适的版本进行下载或者通过官方提供的脚本进行下载）：
+登陆[Anaconda | Individual Edition](https://www.anaconda.com/products/individual)，选择相应系统DownLoad，此处以Windows为例（Linux可以点击[链接](https://docs.conda.io/en/latest/miniconda.html)选择合适的版本进行下载或者通过官方提供的shell脚本进行下载）：
 
-![](figures/Anaconda.png)
+![anaconda](figures/Anaconda.png)
 
 ### Step 2：检验是否安装成功
 在开始页找到Anaconda Prompt，一般在Anaconda3的文件夹下,( Linux在终端下就行了）
 
-![](figures/prompt.png)
+![prompt](figures/prompt.png)
 
 ### Step 3：创建虚拟环境
 
@@ -30,7 +30,7 @@ Linux在终端(`Ctrl`+`Alt`+`T`)进行，Windows在`Anaconda Prompt`进行
 查看已经安装好的虚拟环境，可以看到我们这里已经有两个环境存在了
 
 ```bash
-conda env list  
+conda env list 
 ```
 
 ![env_list](figures/env_list.png)
@@ -38,7 +38,8 @@ conda env list
 #### 创建虚拟环境
 在深度学习和机器学习中，我们经常会创建不同版本的虚拟环境来满足我们的一些需求。下面我们介绍创建虚拟环境的命令。
 ```bash
-conda create -n env_name python==version
+conda create -n env_name python==version 
+# 注：将env_name 替换成你的环境的名称，version替换成对应的版本号，eg：3.8
 ```
 
 ![](figures/install.png)
@@ -49,11 +50,13 @@ conda create -n env_name python==version
 
 #### 安装包
 ```bash
-conda install package_name
+conda install package_name 
+# 注：package_name 替换成对应的包的名称，eg: pandas
 ```
 #### 卸载包
 ```bash
 conda remove package_name
+# 注：package_name 替换成对应的包的名称，eg: pandas
 ```
 #### 显示所有安装的包
 ```bash
@@ -62,13 +65,15 @@ conda list
 #### 删除虚拟环境命令
 
 ```bash
-conda remove -n env_name --all
+conda remove -n env_name --all 
+# 注：env_name 替换成对应的环境的名称
 ```
 
 #### 激活环境命令
 
 ```bash
 conda activate env_name
+# 注：env_name 替换成对应的环境的名称
 ```
 #### 退出当前环境
 ```bash
@@ -77,7 +82,7 @@ conda deactivate
 关于更多的命令，我们可以查看Anaconda/miniconda官方提供的命令，官网链接：[点击这里](https://docs.conda.io/projects/conda/en/latest/commands.html#conda-general-commands)
 ### Step 4：换源
 
-在安装package时，我们经常会使用`pip install package_name`和`conda install package_name` 的命令，但是一些package下载速度会很慢，因此我们需要进行换源，换成国内源，加快我们的下载速度。以下便是两种对应方式的换源
+在安装package时，我们经常会使用`pip install package_name`和`conda install package_name` 的命令，但是一些package下载速度会很慢，因此我们需要进行换源，换成国内源，加快我们的下载速度。以下便是两种对应方式的永久换源。如果我们仅仅想为单次下载换源可以使用`pip install package_name -i https://pypi.tuna.tsinghua.edu.cn/simple`进行下载。
 
 #### pip换源
 
@@ -192,7 +197,7 @@ vi .condarc
 ### Step 3：选择命令
 我们需要结合自己情况选择命令并复制下来，然后使用conda下载或者pip下载（建议conda安装）
 
-打开`Terminal`，输入`conda activate env_name`，激活环境并切换到环境下面，我们就可以进行PyTorch的安装了。
+打开`Terminal`，输入`conda activate env_name`(env_name 为你对应的环境名称)，切换到对应的环境下面，我们就可以进行PyTorch的安装了。
 
 ![](figures/choose_envs.png)
 
@@ -261,7 +266,7 @@ False
 
 ![](figures/check_linux.png)
 
-PyTorch的安装绝对是一个容易上火的过程，而且网络上的教程很可能对应早期的版本，或是会出现一些奇奇怪怪的问题，但是别担心，多装几次多遇到点奇奇怪怪的问题就好了，加油！
+PyTorch的安装绝对是一个容易上火的过程，而且网络上的教程很可能对应早期的版本，或是会出现一些奇奇怪怪的问题，但是别担心，多装几次多遇到点奇奇怪怪的问题就好了！
 
 ##  1.2.4 PyCharm安装（可选操作）
 

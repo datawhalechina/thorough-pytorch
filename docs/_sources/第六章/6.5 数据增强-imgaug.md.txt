@@ -1,5 +1,5 @@
 # 6.5 数据增强-imgaug
-深度学习最重要的是数据。我们需要大量数据才能避免模型的过度拟合。但是我们在许多场景无法获得大量数据，例如医学图像分析。数据增强技术的存在是为了解决这个问题，这是针对有限数据问题的解决方案。数据增强一套技术，可提高训练数据集的大小和质量，以便我们可以使用它们来构建更好的深度学习模型。
+在机器学习/深度学习中，我们经常会遇到模型过拟合的问题，为了解决过拟合问题，我们可以通过加入正则项或者减少模型学习参数来解决，但是最简单的避免过拟合的方法是增加数据，但是在许多场景我们无法获得大量数据，例如医学图像分析。数据增强技术的存在是为了解决这个问题，这是针对有限数据问题的解决方案。数据增强一套技术，可提高训练数据集的大小和质量，以便我们可以使用它们来构建更好的深度学习模型。
 在计算视觉领域，生成增强图像相对容易。即使引入噪声或裁剪图像的一部分，模型仍可以对图像进行分类，数据增强有一系列简单有效的方法可供选择，有一些机器学习库来进行计算视觉领域的数据增强，比如：imgaug [官网](https://github.com/aleju/imgaug)它封装了很多数据增强算法，给开发者提供了方便。通过本章内容，您将学会以下内容：
 - imgaug的简介和安装
 - 使用imgaug对数据进行增强
@@ -89,7 +89,7 @@ ia.imshow(image_aug)
 ### 对批次图片进行处理
 在实际使用中，我们通常需要处理更多份的图像数据。此时，可以将图形数据按照NHWC的形式或者由列表组成的HWC的形式对批量的图像进行处理。主要分为以下两部分，对批次的图片以同一种方式处理和对批次的图片进行分部分处理。
 #### 对批次的图片以同一种方式处理
-对一批次的图片进行处理时，我们只需要将待处理的图片放在一个`list`中，并将image改为image即可进行数据增强操作，具体实际操作如下：
+对一批次的图片进行处理时，我们只需要将待处理的图片放在一个`list`中，并将函数的image改为images即可进行数据增强操作，具体实际操作如下：
 ```python
 images = [img,img,img,img,]
 images_aug = rotate(images=images)
@@ -212,7 +212,7 @@ custom_dl = DataLoader(custom_ds, batch_size=64,
 ## 6.5.4 总结
 数据扩充是我们需要掌握的基本技能，除了imgaug以外，我们还可以去学习其他的数据增强库，包括但不局限于Albumentations，Augmentor。除去imgaug以外，我还强烈建议大家学下Albumentations，因为Albumentations跟imgaug都有着丰富的教程资源，大家可以有需求访问[Albumentations教程](https://albumentations.ai/docs/examples/pytorch_classification/)。
 
-## 扩展资料
+## 参考资料
 1. [kaggle-data-augmentation-packages-overview](https://www.kaggle.com/code/aleksandradeis/data-augmentation-packages-overview/notebook)
 2. [how to use imgaug with pytorch](https://github.com/aleju/imgaug/issues/406)
 3. [Kaggle知识点：数据扩增方法](https://mp.weixin.qq.com/s/tdNlCxmz_s1Wwls2qoQXDQ)

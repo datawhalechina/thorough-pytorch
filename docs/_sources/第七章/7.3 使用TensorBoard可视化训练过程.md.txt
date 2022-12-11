@@ -262,7 +262,7 @@ writer.close()
 	3. 按照下方图进行选择，其中目标主机代表的是服务器，源主机代表的是本地，端口的选择根据实际情况而定。
 	![xhell_set](./figures/xshell_set.png)
 	4. 启动tensorboard，在本地127.0.0.1:6006 或者 localhost:6006进行访问。
-- SSL
+- SSH
 	1. 该方法是将服务器的6006端口重定向到自己机器上来，我们可以在本地的终端里输入以下代码：其中16006代表映射到本地的端口，6006代表的是服务器上的端口。
 	```shell
       ssh -L 16006:127.0.0.1:6006 username@remote_server_ip
@@ -283,9 +283,9 @@ writer.close()
 
 其实TensorBoard的逻辑还是很简单的，它的**基本逻辑就是文件的读写逻辑**，写入想要可视化的数据，然后TensorBoard自己会读出来。
 
-## 本节参考
+## 参考资料
 
-【1】https://blog.csdn.net/Python_Ai_Road/article/details/107704530
+1. https://blog.csdn.net/Python_Ai_Road/article/details/107704530
 
 
 

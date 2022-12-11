@@ -1,0 +1,1080 @@
+
+<!DOCTYPE html>
+
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>简介 &#8212; 深入浅出PyTorch</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="zh">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">深入浅出PyTorch</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  目录
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/index.html">
+   第零章：前置知识
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.1%20%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%AE%80%E5%8F%B2.html">
+     人工智能简史
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.2%20%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87.html">
+     模型评价指标
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.3%20%E5%B8%B8%E7%94%A8%E5%8C%85%E7%9A%84%E5%AD%A6%E4%B9%A0.html">
+     常用包的学习
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.4%20Jupyter%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C.html">
+     Jupyter notebook/Lab 简述
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/index.html">
+   第一章：PyTorch的简介和安装
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.1%20PyTorch%E7%AE%80%E4%BB%8B.html">
+     1.1 PyTorch简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.2%20PyTorch%E7%9A%84%E5%AE%89%E8%A3%85.html">
+     1.2 PyTorch的安装
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%80%E7%AB%A0/1.3%20PyTorch%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90.html">
+     1.3 PyTorch相关资源
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/index.html">
+   第二章：PyTorch基础知识
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.1%20%E5%BC%A0%E9%87%8F.html">
+     2.1 张量
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.2%20%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC.html">
+     2.2 自动求导
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.3%20%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%AE%80%E4%BB%8B.html">
+     2.3 并行计算简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20%E5%85%B6%E4%BB%96%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
+     AI硬件加速设备
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/index.html">
+   第三章：PyTorch的主要组成模块
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.1%20%E6%80%9D%E8%80%83%EF%BC%9A%E5%AE%8C%E6%88%90%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%BF%85%E8%A6%81%E9%83%A8%E5%88%86.html">
+     3.1 思考：完成深度学习的必要部分
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.2%20%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE.html">
+     3.2 基本配置
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.3%20%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%85%A5.html">
+     3.3 数据读入
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.4%20%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA.html">
+     3.4 模型构建
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.5%20%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96.html">
+     3.5 模型初始化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.6%20%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     3.6 损失函数
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.7%20%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0.html">
+     3.7 训练和评估
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.8%20%E5%8F%AF%E8%A7%86%E5%8C%96.html">
+     3.8 可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
+     3.9 Pytorch优化器
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%9B%9B%E7%AB%A0/index.html">
+   第四章：PyTorch基础实战
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+     基础实战——FashionMNIST时装分类
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/index.html">
+   第五章：PyTorch模型定义
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.1%20PyTorch%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89%E7%9A%84%E6%96%B9%E5%BC%8F.html">
+     5.1 PyTorch模型定义的方式
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.2%20%E5%88%A9%E7%94%A8%E6%A8%A1%E5%9E%8B%E5%9D%97%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E5%A4%8D%E6%9D%82%E7%BD%91%E7%BB%9C.html">
+     5.2 利用模型块快速搭建复杂网络
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.3%20PyTorch%E4%BF%AE%E6%94%B9%E6%A8%A1%E5%9E%8B.html">
+     5.3 PyTorch修改模型
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%BA%94%E7%AB%A0/5.4%20PyTorh%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E4%B8%8E%E8%AF%BB%E5%8F%96.html">
+     5.4 PyTorch模型保存与读取
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/index.html">
+   第六章：PyTorch进阶训练技巧
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.1%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.html">
+     6.1 自定义损失函数
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.2%20%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87.html">
+     6.2 动态调整学习率
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-torchvision.html">
+     6.3 模型微调-torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.3%20%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-timm.html">
+     6.3 模型微调 - timm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.4%20%E5%8D%8A%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83.html">
+     6.4 半精度训练
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.5%20%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA-imgaug.html">
+     6.5 数据增强-imgaug
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AD%E7%AB%A0/6.6%20%E4%BD%BF%E7%94%A8argparse%E8%BF%9B%E8%A1%8C%E8%B0%83%E5%8F%82.html">
+     6.6 使用argparse进行调参
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/index.html">
+   第七章：PyTorch可视化
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.1%20%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.html">
+     7.1 可视化网络结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.2%20CNN%E5%8D%B7%E7%A7%AF%E5%B1%82%E5%8F%AF%E8%A7%86%E5%8C%96.html">
+     7.2 CNN可视化
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.3%20%E4%BD%BF%E7%94%A8TensorBoard%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.html">
+     7.3 使用TensorBoard可视化训练过程
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/index.html">
+   第八章：PyTorch生态简介
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.1%20%E6%9C%AC%E7%AB%A0%E7%AE%80%E4%BB%8B.html">
+     8.1 本章简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.2%20%E5%9B%BE%E5%83%8F%20-%20torchvision.html">
+     8.2 torchvision
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.3%20%E8%A7%86%E9%A2%91%20-%20PyTorchVideo.html">
+     8.3 PyTorchVideo简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.4%20%E6%96%87%E6%9C%AC%20-%20torchtext.html">
+     8.4 torchtext简介
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../%E7%AC%AC%E4%B9%9D%E7%AB%A0/index.html">
+   第九章：PyTorch的模型部署
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html">
+     9.1 使用ONNX进行部署并推理
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../index.html">
+   第十章：常见代码解读
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.1%20%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
+     10.1 图像分类简介（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.2%20%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.html">
+     目标检测简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../10.3%20%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2.html">
+     10.3 图像分割简介（补充中）
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ResNet%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB.html">
+     ResNet源码解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../RNN%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0.html">
+     文章结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
+     Swin Transformer解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../ViT%E8%A7%A3%E8%AF%BB.html">
+     ViT解读
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch/issues/new?title=Issue%20on%20page%20%2F第十章/YOLO系列解读/MMYOLO实现/README.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/datawhalechina/thorough-pytorch/edit/master/第十章/YOLO系列解读/MMYOLO实现/README.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/第十章/YOLO系列解读/MMYOLO实现/README.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   简介
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   教程
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   基准测试和模型库
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   常见问题
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   贡献指南
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   致谢
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   引用
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id8">
+   开源许可证
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#openmmlab">
+   OpenMMLab 的其他项目
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   欢迎加入 OpenMMLab 社区
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>简介</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   简介
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   教程
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   基准测试和模型库
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   常见问题
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   贡献指南
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   致谢
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id7">
+   引用
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id8">
+   开源许可证
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#openmmlab">
+   OpenMMLab 的其他项目
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   欢迎加入 OpenMMLab 社区
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <div align="center">
+  <img src="resources/mmyolo-logo.png" width="600"/>
+  <div>&nbsp;</div>
+  <div align="center">
+    <b><font size="5">OpenMMLab 官网</font></b>
+    <sup>
+      <a href="https://openmmlab.com">
+        <i><font size="4">HOT</font></i>
+      </a>
+    </sup>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <b><font size="5">OpenMMLab 开放平台</font></b>
+    <sup>
+      <a href="https://platform.openmmlab.com">
+        <i><font size="4">TRY IT OUT</font></i>
+      </a>
+    </sup>
+  </div>
+  <div>&nbsp;</div>
+<p><a class="reference external" href="https://pypi.org/project/mmyolo"><img alt="PyPI" src="https://img.shields.io/pypi/v/mmyolo" /></a>
+<a class="reference external" href="https://mmyolo.readthedocs.io/en/latest/"><img alt="docs" src="https://img.shields.io/badge/docs-latest-blue" /></a>
+<a class="reference external" href="https://github.com/open-mmlab/mmyolo/actions"><img alt="deploy" src="https://github.com/open-mmlab/mmyolo/workflows/deploy/badge.svg" /></a>
+<a class="reference external" href="https://codecov.io/gh/open-mmlab/mmyolo"><img alt="codecov" src="https://codecov.io/gh/open-mmlab/mmyolo/branch/master/graph/badge.svg" /></a>
+<a class="reference external" href="https://github.com/open-mmlab/mmyolo/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/open-mmlab/mmyolo.svg" /></a>
+<a class="reference external" href="https://github.com/open-mmlab/mmyolo/issues"><img alt="open issues" src="https://isitmaintained.com/badge/open/open-mmlab/mmyolo.svg" /></a>
+<a class="reference external" href="https://github.com/open-mmlab/mmyolo/issues"><img alt="issue resolution" src="https://isitmaintained.com/badge/resolution/open-mmlab/mmyolo.svg" /></a></p>
+<p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/">📘使用文档</a> |
+<a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/get_started.html">🛠️安装教程</a> |
+<a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/model_zoo.html">👀模型库</a> |
+<a class="reference external" href="https://mmyolo.readthedocs.io/en/latest/notes/changelog.html">🆕更新日志</a> |
+<a class="reference external" href="https://github.com/open-mmlab/mmyolo/issues/new/choose">🤔报告问题</a></p>
+</div>
+<div align="center">
+<p><a class="reference internal" href="#"><span class="doc std std-doc">English</span></a> | 简体中文</p>
+</div>
+<section id="id1">
+<h1>简介<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
+<p>MMYOLO 是一个基于 PyTorch 和 MMDetection 的 YOLO 系列算法开源工具箱。它是 <a class="reference external" href="https://openmmlab.com/">OpenMMLab</a> 项目的一部分。</p>
+<p>主分支代码目前支持 PyTorch 1.6 以上的版本。
+<img src="https://user-images.githubusercontent.com/45811724/190993591-bd3f1f11-1c30-4b93-b5f4-05c9ff64ff7f.gif"/></p>
+<details open>
+<summary>主要特性</summary>
+<ul>
+<li><p><strong>统一便捷的算法评测</strong></p>
+<p>MMYOLO 统一了各类 YOLO 算法模块的实现, 并提供了统一的评测流程，用户可以公平便捷地进行对比分析。</p>
+</li>
+<li><p><strong>丰富的入门和进阶文档</strong></p>
+<p>MMYOLO 提供了从入门到部署到进阶和算法解析等一系列文档，方便不同用户快速上手和扩展。</p>
+</li>
+<li><p><strong>模块化设计</strong></p>
+<p>MMYOLO 将框架解耦成不同的模块组件，通过组合不同的模块和训练测试策略，用户可以便捷地构建自定义模型。</p>
+</li>
+</ul>
+<img src="https://user-images.githubusercontent.com/27466624/199999337-0544a4cb-3cbd-4f3e-be26-bcd9e74db7ff.jpg" alt="基类"/>
+  图为 RangeKing@GitHub 提供，非常感谢！
+</details>
+</section>
+<section id="id2">
+<h1>教程<a class="headerlink" href="#id2" title="永久链接至标题">#</a></h1>
+<p>MMYOLO 基于 MMDetection 开源库，并且采用相同的代码组织和设计方式。为了更好的使用本开源库，请先阅读 <a class="reference external" href="https://mmdetection.readthedocs.io/zh_CN/latest/get_started.html">MMDetection 概述</a> 对 MMDetection 进行初步地了解。</p>
+<p>MMYOLO 用法和 MMDetection 几乎一致，所有教程都是通用的，你也可以了解 <a class="reference external" href="https://mmdetection.readthedocs.io/zh_CN/3.x/">MMDetection 用户指南和进阶指南</a> 。</p>
+<p>针对和 MMDetection 不同的部分，我们也准备了用户指南和进阶指南，请阅读我们的 <a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/">文档</a> 。</p>
+<ul class="simple">
+<li><p>算法解读</p>
+<ul>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/algorithm_descriptions/index.html#%E5%9F%BA%E7%A1%80%E5%86%85%E5%AE%B9">必备基础</a></p>
+<ul>
+<li><p><span class="xref myst">模型设计相关说明</span></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/algorithm_descriptions/index.html#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0%E5%85%A8%E8%A7%A3%E6%9E%90">算法原理和实现全解析</a></p>
+<ul>
+<li><p><a class="reference internal" href="yolov5_description.html"><span class="doc std std-doc">YOLOv5 原理和实现全解析</span></a></p></li>
+<li><p><a class="reference internal" href="rtmdet_description.html"><span class="doc std std-doc">RTMDet 原理和实现全解析</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>用户指南</p>
+<ul>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/user_guides/index.html#%E8%AE%AD%E7%BB%83-%E6%B5%8B%E8%AF%95">训练 &amp; 测试</a></p>
+<ul>
+<li><p><span class="xref myst">学习 YOLOv5 配置文件</span></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/user_guides/index.html#%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B">从入门到部署全流程</a></p>
+<ul>
+<li><p><span class="xref myst">YOLOv5 从入门到部署全流程</span></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/user_guides/index.html#%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7">实用工具</a></p>
+<ul>
+<li><p><span class="xref myst">可视化教程</span></p></li>
+<li><p><span class="xref myst">实用工具</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>算法部署</p>
+<ul>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/algorithm_descriptions/index.html#%E9%83%A8%E7%BD%B2%E5%BF%85%E5%A4%87%E6%95%99%E7%A8%8B">部署必备教程</a></p>
+<ul>
+<li><p><span class="xref myst">部署必备教程</span></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://mmyolo.readthedocs.io/zh_CN/latest/algorithm_descriptions/index.html#%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%E8%AF%B4%E6%98%8E">部署全流程说明</a></p>
+<ul>
+<li><p><span class="xref myst">YOLOv5 部署全流程说明</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>进阶指南</p>
+<ul>
+<li><p><span class="xref myst">数据流</span></p></li>
+<li><p><span class="xref myst">How to</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">解读文章和资源汇总</span></p></li>
+</ul>
+</section>
+<section id="id3">
+<h1>基准测试和模型库<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h1>
+<p>测试结果和模型可以在 <span class="xref myst">模型库</span> 中找到。</p>
+<details open>
+<summary><b>支持的算法</b></summary>
+<ul class="simple">
+<li><p>[x] <span class="xref myst">YOLOv5</span></p></li>
+<li><p>[x] <span class="xref myst">YOLOX</span></p></li>
+<li><p>[x] <span class="xref myst">RTMDet</span></p></li>
+<li><p>[x] <span class="xref myst">YOLOv6</span></p></li>
+<li><p>[ ] <span class="xref myst">PPYOLOE</span>(仅推理)</p></li>
+<li><p>[ ] <span class="xref myst">YOLOv7</span>(仅推理)</p></li>
+</ul>
+</details>
+<details open>
+<div align="center">
+  <b>模块组件</b>
+</div>
+<table align="center">
+  <tbody>
+    <tr align="center" valign="bottom">
+      <td>
+        <b>Backbones</b>
+      </td>
+      <td>
+        <b>Necks</b>
+      </td>
+      <td>
+        <b>Loss</b>
+      </td>
+      <td>
+        <b>Common</b>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+      <ul>
+        <li>YOLOv5CSPDarknet</li>
+        <li>YOLOXCSPDarknet</li>
+        <li>EfficientRep</li>
+        <li>CSPNeXt</li>
+      </ul>
+      </td>
+      <td>
+      <ul>
+        <li>YOLOv5PAFPN</li>
+        <li>YOLOv6RepPAFPN</li>
+        <li>YOLOXPAFPN</li>
+        <li>CSPNeXtPAFPN</li>
+      </ul>
+      </td>
+      <td>
+        <ul>
+          <li>IoULoss</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+        </ul>
+      </td>
+    </tr>
+</td>
+    </tr>
+  </tbody>
+</table>
+</details>
+</section>
+<section id="id4">
+<h1>常见问题<a class="headerlink" href="#id4" title="永久链接至标题">#</a></h1>
+<p>请参考 <span class="xref myst">FAQ</span> 了解其他用户的常见问题。</p>
+</section>
+<section id="id5">
+<h1>贡献指南<a class="headerlink" href="#id5" title="永久链接至标题">#</a></h1>
+<p>我们感谢所有的贡献者为改进和提升 MMYOLO 所作出的努力。我们将正在进行中的项目添加进了<a class="reference external" href="https://github.com/open-mmlab/mmyolo/projects">GitHub Projects</a>页面，非常欢迎社区用户能参与进这些项目中来。请参考<span class="xref myst">贡献指南</span>来了解参与项目贡献的相关指引。</p>
+</section>
+<section id="id6">
+<h1>致谢<a class="headerlink" href="#id6" title="永久链接至标题">#</a></h1>
+<p>MMYOLO 是一款由来自不同高校和企业的研发人员共同参与贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望这个工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现已有算法并开发自己的新模型，从而不断为开源社区提供贡献。</p>
+</section>
+<section id="id7">
+<h1>引用<a class="headerlink" href="#id7" title="永久链接至标题">#</a></h1>
+<p>如果你觉得本项目对你的研究工作有所帮助，请参考如下 bibtex 引用 MMYOLO</p>
+<div class="highlight-latex notranslate"><div class="highlight"><pre><span></span>@misc<span class="nb">{</span>mmyolo2022,
+    title=<span class="nb">{{</span>MMYOLO: OpenMMLab YOLO<span class="nb">}</span> series toolbox and benchmark<span class="nb">}</span>,
+    author=<span class="nb">{</span>MMYOLO Contributors<span class="nb">}</span>,
+    howpublished = <span class="nb">{</span><span class="k">\url</span><span class="nb">{</span>https://github.com/open-mmlab/mmyolo<span class="nb">}}</span>,
+    year=<span class="nb">{</span>2022<span class="nb">}</span>
+<span class="nb">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h1>开源许可证<a class="headerlink" href="#id8" title="永久链接至标题">#</a></h1>
+<p>该项目采用 <span class="xref myst">GPL 3.0 开源许可证</span>。</p>
+</section>
+<section id="openmmlab">
+<h1>OpenMMLab 的其他项目<a class="headerlink" href="#openmmlab" title="永久链接至标题">#</a></h1>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmengine">MMEngine</a>: OpenMMLab 深度学习模型训练基础库</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmcv">MMCV</a>: OpenMMLab 计算机视觉基础库</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mim">MIM</a>: MIM 是 OpenMMlab 项目、算法、模型的统一入口</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmclassification">MMClassification</a>: OpenMMLab 图像分类工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmdetection">MMDetection</a>: OpenMMLab 目标检测工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmdetection3d">MMDetection3D</a>: OpenMMLab 新一代通用 3D 目标检测平台</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmrotate">MMRotate</a>: OpenMMLab 旋转框检测工具箱与测试基准</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmyolo">MMYOLO</a>: OpenMMLab YOLO 系列工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmsegmentation">MMSegmentation</a>: OpenMMLab 语义分割工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmocr">MMOCR</a>: OpenMMLab 全流程文字检测识别理解工具包</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmpose">MMPose</a>: OpenMMLab 姿态估计工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmhuman3d">MMHuman3D</a>: OpenMMLab 人体参数化模型工具箱与测试基准</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmselfsup">MMSelfSup</a>: OpenMMLab 自监督学习工具箱与测试基准</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmrazor">MMRazor</a>: OpenMMLab 模型压缩工具箱与测试基准</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmfewshot">MMFewShot</a>: OpenMMLab 少样本学习工具箱与测试基准</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmaction2">MMAction2</a>: OpenMMLab 新一代视频理解工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmtracking">MMTracking</a>: OpenMMLab 一体化视频目标感知平台</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmflow">MMFlow</a>: OpenMMLab 光流估计工具箱与测试基准</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmediting">MMEditing</a>: OpenMMLab 图像视频编辑工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmgeneration">MMGeneration</a>: OpenMMLab 图片视频生成模型工具箱</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmdeploy">MMDeploy</a>: OpenMMLab 模型部署框架</p></li>
+<li><p><a class="reference external" href="https://github.com/open-mmlab/mmeval">MMEval</a>: OpenMMLab 机器学习算法评测库</p></li>
+</ul>
+</section>
+<section id="id9">
+<h1>欢迎加入 OpenMMLab 社区<a class="headerlink" href="#id9" title="永久链接至标题">#</a></h1>
+<p>扫描下方的二维码可关注 OpenMMLab 团队的 <a class="reference external" href="https://www.zhihu.com/people/openmmlab">知乎官方账号</a>，加入 OpenMMLab 团队的 <a class="reference external" href="https://jq.qq.com/?_wv=1027&amp;k=aCvMxdr3">官方交流 QQ 群</a></p>
+<div align="center">
+<img src="resources/zhihu_qrcode.jpg" height="400" />  <img src="resources/qq_group_qrcode.jpg" height="400" />
+</div>
+<p>我们会在 OpenMMLab 社区为大家</p>
+<ul class="simple">
+<li><p>📢 分享 AI 框架的前沿核心技术</p></li>
+<li><p>💻 解读 PyTorch 常用模块源码</p></li>
+<li><p>📰 发布 OpenMMLab 的相关新闻</p></li>
+<li><p>🚀 介绍 OpenMMLab 开发的前沿算法</p></li>
+<li><p>🏃 获取更高效的问题答疑和意见反馈</p></li>
+<li><p>🔥 提供与各行各业开发者充分交流的平台</p></li>
+</ul>
+<p>干货满满 📘，等你来撩 💗，OpenMMLab 社区期待您的加入 👬</p>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By ZhikangNiu<br/>
+  
+      &copy; Copyright 2022, ZhikangNiu.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

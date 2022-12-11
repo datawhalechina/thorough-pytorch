@@ -7,6 +7,7 @@
 - 并行计算的简介
 - CUDA简介
 - 并行计算的三种实现方式
+- 使用CUDA加速训练
 
 ## 2.3.1  为什么要做并行计算
 
@@ -58,3 +59,18 @@
 ![数据并行.png](./figures/data_parllel.png)
 
 这种方式可以解决之前模式遇到的通讯问题。现在的主流方式是**数据并行**的方式(Data parallelism)
+
+## 2.3.4 使用CUDA加速训练
+
+在PyTorch框架下，CUDA的使用变得非常简单，我们只需要显式的将数据和模型通过`.cuda()`方法转移到GPU上就可加速我们的训练，在此处我们仅讨论单卡的情况下，后续我们会介绍多卡训练的使用方法。
+
+```python
+model = Net()
+model.cuda() # 模型显示转移到CUDA上
+
+for image,label in dataloader:
+    # 图像和标签显示转移到CUDA上
+    image = image.cuda() 
+    label = label.cuda()
+```
+

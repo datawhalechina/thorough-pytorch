@@ -32,8 +32,8 @@
 当模型的前向计算为简单串联各个层的计算时， `Sequential` 类可以通过更加简单的方式定义模型。它可以接收一个子模块的有序字典(OrderedDict) 或者一系列子模块作为参数来逐一添加 `Module` 的实例，⽽模型的前向计算就是将这些实例按添加的顺序逐⼀计算。我们结合`Sequential`和定义方式加以理解：
 
 ```python
+from collections import OrderedDict
 class MySequential(nn.Module):
-    from collections import OrderedDict
     def __init__(self, *args):
         super(MySequential, self).__init__()
         if len(args) == 1 and isinstance(args[0], OrderedDict): # 如果传入的是一个OrderedDict

@@ -323,3 +323,16 @@ for epoch in range(1, epochs+1):
 save_path = "./FahionModel.pkl"
 torch.save(model, save_path)
 ```
+
+**作业**
+- 模型训练
+1. 在学习完6.2 动态调整学习率后尝试使用动态调整学习率的方法训练模型。
+2. 在学习完6.3 模型微调后，尝试使用预训练模型进行模型微调，观察模型的训练效果。
+3. 在学习完6.5 数据增强后，尝试使用imgaug库进行数据增强，观察模型的训练效果。
+4. 在学习完7.3 使用TensorBoard可视化训练过程后，尝试使用TensorBoard可视化训练过程，观察模型的训练效果。
+5. 使用多卡训练模型，观察模型的训练效果。
+
+- 模型推理
+1. 在学习完5.4 PyTorh模型保存与读取后，加载已经训练好的模型，进行模型推理。
+2. 使用sklearn.metrics中的classification_report函数，输出模型的分类报告。
+3. 学习完9.1 使用ONNX进行部署并推理后，将模型转换为ONNX格式，使用ONNXRuntime进行推理。

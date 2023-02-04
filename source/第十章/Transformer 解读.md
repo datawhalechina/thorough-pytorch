@@ -28,13 +28,13 @@ NIPS 2017.
 
 ​	Transformer 是针对自然语言处理的 Seq2Seq（序列到序列）任务开发的，整体上沿用了 Seq2Seq 模型的 Encoder-Decoder（编码器-解码器）结构，整体架构如下：
 
-<img src="./figures/transformer_architecture.png" alt="image-20230127193646262" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_architecture.png" alt="image-20230127193646262" style="zoom:50%;"/></div>
 
 ​	Transformer 由一个 Encoder，一个 Decoder 外加一个 Softmax 分类器与两层编码层构成。上图中左侧方框为 Encoder，右侧方框为 Decoder。
 
 ​	由于是一个 Seq2Seq 任务，在训练时，Transformer 的训练语料为若干个句对，具体子任务可以是机器翻译、阅读理解、机器对话等。在原论文中是训练了一个英语与德语的机器翻译任务。在训练时，句对会被划分为输入语料和输出语料，输入语料将从左侧通过编码层进入 Encoder，输出语料将从右侧通过编码层进入 Decoder。Encoder 的主要任务是对输入语料进行编码再输出给 Decoder，Decoder 再根据输出语料的历史信息与 Encoder 的输出进行计算，输出结果再经过一个线性层和 Softmax 分类器即可输出预测的结果概率，整体逻辑如下图：
 
-<img src="./figures/transformer_datalink.png" alt="image-20230127193646262" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_datalink.png" alt="image-20230127193646262" style="zoom:50%;"/></div>
 
 ​	模型整体实现为一个 Encoder-Decoder架构：
 
@@ -80,7 +80,7 @@ class EncoderDecoder(nn.Module):
 
 ## Encoder 
 
-<img src="./figures/transformer_Encoder.png" alt="image-20230129182417098" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_Encoder.png" alt="image-20230129182417098" style="zoom:50%;"/></div>
 
 ​	如图所示，Encoder 由 N 个（论文中取 N = 6）EncoderLayer 组成，每个 EncoderLayer 又由两个 sublayer （子层）组成。在下文的代码中，每一个 layer 是一个 EncoderLayer，代码在最后又额外加入了一个标准化层进行标准化操作：
 
@@ -146,7 +146,7 @@ class PositionwiseFeedForward(nn.Module):
 
 ## Decoder
 
-<img src="./figures/transformer_Decoder.png" alt="image-20230129183826948" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_Decoder.png" alt="image-20230129183826948" style="zoom:50%;"></div>
 
 ​	Decoder 与 Encoder 的组成非常类似，同样是由 N 个 DecoderLayer 组成，DecoderLayer 与 EncoderLayer 的区别在于：
 
@@ -276,7 +276,7 @@ def subsequent_mask(size):
 
 ​	Attention 机制的特点是通过计算查询值与键值的相关性为真值加权求和，从而拟合序列中每个词同其他词的相关关系。其大致计算过程为：
 
-<img src="./figures/transformer_attention.png" alt="image-20230129185638102" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_attention.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
 
 ​	1. 通过输入与参数矩阵，得到查询值 q，键值 k，真值 v，其中，v 与 k 的长度相等。可以理解为，q 是计算注意力的另一个句子（或词组），v 为待计算句子，k 为待计算句子中每个词（即 v 的每个词）的对应键。
 
@@ -286,7 +286,7 @@ def subsequent_mask(size):
 
 ​	其中，q，k，v 分别是由输入与三个参数矩阵做积得到的：
 
-<img src="./figures/transformer_attention_compute.png" alt="image-20230129185638102" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_attention_compute.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
 
 ​	在实际训练过程中，为提高并行计算速度，直接使用 q、k、v 拼接而成的矩阵进行一次计算即可。
 
@@ -296,7 +296,7 @@ Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
 $$
 ​	其中，dk 为模型维度，除以根号 dk 主要作用是归一化减小维度，提高训练过程中的梯度。计算示例如下图：
 
-<img src="./figures/transformer_attention_compute_2.png" alt="image-20230129185638102" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_attention_compute_2.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
 
 ​	Attention 机制的基本实现代码如下：
 
@@ -322,11 +322,11 @@ def attention(query, key, value, mask=None, dropout=None):
 
 ​	Attention 机制可以实现并行化与长期依赖关系拟合，但一次注意力计算只能拟合一种相关关系，因此 Transformer 使用了 Multi-Head attention 机制，即同时对一个语料进行多次注意力计算，每次注意力计算都能拟合不同的关系，将最后的多次结果拼接起来作为最后的输出，即可更全面深入地拟合语言信息。
 
-<img src="./figures/transformer_Multi-Head attention.png" alt="image-20230129190819407" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_Multi-Head attention.png" alt="image-20230129190819407" style="zoom:50%;"/></div>
 
 ​	Multi-Head attention 的整体计算流程如下：
 
-<img src="./figures/transformer_Multi-Head attention_compute.png" alt="image-20230129190819407" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_Multi-Head attention_compute.png" alt="image-20230129190819407" style="zoom:50%;"/></div>
 
 ​	其代码实现相对复杂，通过矩阵操作实现并行的多头计算，整体计算流程如下：
 
@@ -407,7 +407,7 @@ $$
 
 ​	编码结果示例如下：
 
-<img src="./figures/transformer_position_embedding.png" alt="image-20230129201913077" style="zoom:50%;" align="middle"/>
+<div align=center><img src="./figures/transformer_position_embedding.png" alt="image-20230129201913077" style="zoom:50%;"/></div>
 
 ​	位置编码的实现如下：
 

@@ -6,9 +6,7 @@ Ashish Vaswani，Noam Shazeer，Niki Parmar，Jakob Uszkoreit，Llion Jones，Ai
 
 NIPS 2017.
 
-[paper]: https://arxiv.org/pdf/1706.03762
-[source code]: https://github.com/tensorflow/tensor2tensor
-[code with pytorch]: https://github.com/harvardnlp/annotated-transformer
+[[paper]](https://arxiv.org/pdf/1706.03762)  [[source code]](https://github.com/tensorflow/tensor2tensor)  [[code with pytorch]](https://github.com/harvardnlp/annotated-transformer)
 
 解读者：邹雨衡，对外经济贸易大学本科生
 
@@ -18,23 +16,25 @@ NIPS 2017.
 
 ​	但是 RNN、LSTM 虽然在处理自然语言处理的序列建模任务中得天独厚，却也有着难以忽视的缺陷：
 
-​	① RNN 为单向依序计算，序列需要依次输入、串行计算，限制了计算机的并行计算能力，导致时间成本过高。
+​	1. RNN 为单向依序计算，序列需要依次输入、串行计算，限制了计算机的并行计算能力，导致时间成本过高。
 
-​	② RNN 难以捕捉长期依赖问题，即对于极长序列，RNN 难以捕捉远距离输入之间的关系。虽然 LSTM 通过门机制对此进行了一定优化，但 RNN 对长期依赖问题的捕捉能力依旧是不如人意的。
+​	2. RNN 难以捕捉长期依赖问题，即对于极长序列，RNN 难以捕捉远距离输入之间的关系。虽然 LSTM 通过门机制对此进行了一定优化，但 RNN 对长期依赖问题的捕捉能力依旧是不如人意的。
 
 ​	针对上述两个问题，2017年，Vaswani 等人发表了论文《Attention Is All You Need》，抛弃了传统的 CNN、RNN 架构，提出了一种全新的完全基于 attention 机制的模型——Transformer，解决了上述问题，在较小的时间成本下取得了多个任务的 the-state-of-art 效果，并为自然语言处理任务提供了新的思路。自此，attention 机制进入自然语言处理任务的主流架构，众多性能卓越的预训练模型都基于 Transformer 架构提出，例如 BERT、OpenAI GPT 等。
 
-​	本文将从模型原理及代码实现上讲解该模型，并着重介绍代码实现。需要注意的是，由于 Transformer 源代码使用 TensorFlow 搭建，此处选择了哈佛大学 harvardnlp 团队基于 Pytorch 框架开发的 Annotated Transformer 代码进行讲解，以帮助大家了解 Transformer 的实现细节。
+​	本文将从模型原理及代码实现上讲解该模型，并着重介绍代码实现。需要注意的是，由于 Transformer 源代码使用 TensorFlow 搭建，此处选择了哈佛大学 harvardnlp 团队基于 Pytorch 框架开发的 [Annotated Transformer](https://github.com/harvardnlp/annotated-transformer) 代码进行讲解，以帮助大家了解 Transformer 的实现细节。
 
 ## 整体架构
 
 ​	Transformer 是针对自然语言处理的 Seq2Seq（序列到序列）任务开发的，整体上沿用了 Seq2Seq 模型的 Encoder-Decoder（编码器-解码器）结构，整体架构如下：
 
-<img src="./figures/transformer_整体架构.png" alt="image-20230127193646262" style="zoom:50%;" />
+<img src="./figures/transformer_architecture.png" alt="image-20230127193646262" style="zoom:50%;" align="center"/>
 
 ​	Transformer 由一个 Encoder，一个 Decoder 外加一个 Softmax 分类器与两层编码层构成。上图中左侧方框为 Encoder，右侧方框为 Decoder。
 
-​	由于是一个 Seq2Seq 任务，在训练时，Transformer 的训练语料为若干个句对，具体子任务可以是机器翻译、阅读理解、机器对话等。在原论文中是训练了一个英语与德语的机器翻译任务。在训练时，句对会被划分为输入语料和输出语料，输入语料将从左侧通过编码层进入 Encoder，输出语料将从右侧通过编码层进入 Decoder。Encoder 的主要任务是对输入语料进行编码再输出给 Decoder，Decoder 再根据输出语料的历史信息与 Encoder 的输出进行计算，输出结果再经过一个线性层和 Softmax 分类器即可输出预测的结果概率。
+​	由于是一个 Seq2Seq 任务，在训练时，Transformer 的训练语料为若干个句对，具体子任务可以是机器翻译、阅读理解、机器对话等。在原论文中是训练了一个英语与德语的机器翻译任务。在训练时，句对会被划分为输入语料和输出语料，输入语料将从左侧通过编码层进入 Encoder，输出语料将从右侧通过编码层进入 Decoder。Encoder 的主要任务是对输入语料进行编码再输出给 Decoder，Decoder 再根据输出语料的历史信息与 Encoder 的输出进行计算，输出结果再经过一个线性层和 Softmax 分类器即可输出预测的结果概率，整体逻辑如下图：
+
+<img src="./figures/transformer_datalink.png" alt="image-20230127193646262" style="zoom:50%;" align="center"/>
 
 ​	模型整体实现为一个 Encoder-Decoder架构：
 
@@ -80,7 +80,7 @@ class EncoderDecoder(nn.Module):
 
 ## Encoder 
 
-<img src="./figures/transformer_Encoder.png" alt="image-20230129182417098" style="zoom:50%;" />
+<img src="./figures/transformer_Encoder.png" alt="image-20230129182417098" style="zoom:50%;" align="center"/>
 
 ​	如图所示，Encoder 由 N 个（论文中取 N = 6）EncoderLayer 组成，每个 EncoderLayer 又由两个 sublayer （子层）组成。在下文的代码中，每一个 layer 是一个 EncoderLayer，代码在最后又额外加入了一个标准化层进行标准化操作：
 
@@ -103,7 +103,7 @@ class Encoder(nn.Module):
         return self.norm(x)
 ```
 
-​	① 第一部分为一个多头自注意力层。Transformer 的最大特点即是抛弃了传统的 CNN、RNN 架构，完全使用 attention 机制搭建。在 EncoderLayer 中，使用了 Multi-Head self-attention（多头自注意力）层，编码输入语料的相关关系。通过 attention 机制，实现了模型的并行化与长期依赖关系的拟合。关于 Multi-Head self-attention 将在之后的板块详述其特点与实现。在通过一个多头自注意力层后，输出经过标准化层进入下一个 sublayer。
+​	1. 第一部分为一个多头自注意力层。Transformer 的最大特点即是抛弃了传统的 CNN、RNN 架构，完全使用 attention 机制搭建。在 EncoderLayer 中，使用了 Multi-Head self-attention（多头自注意力）层，编码输入语料的相关关系。通过 attention 机制，实现了模型的并行化与长期依赖关系的拟合。关于 Multi-Head self-attention 将在之后的板块详述其特点与实现。在通过一个多头自注意力层后，输出经过标准化层进入下一个 sublayer。
 
 ```python
 class EncoderLayer(nn.Module):
@@ -127,7 +127,7 @@ class EncoderLayer(nn.Module):
         return self.sublayer[1](x, self.feed_forward)
 ```
 
-​	② 第二部分为一个全连接神经网络，论文中称为“position-wise fully connected feed-forward network”，实际是一个线性层+激活函数+ dropout + 线性层的全连接网络。
+​	2. 第二部分为一个全连接神经网络，论文中称为“position-wise fully connected feed-forward network”，实际是一个线性层+激活函数+ dropout + 线性层的全连接网络。
 
 ```python
 class PositionwiseFeedForward(nn.Module):
@@ -146,13 +146,13 @@ class PositionwiseFeedForward(nn.Module):
 
 ## Decoder
 
-<img src="./figures/transformer_Decoder.png" alt="image-20230129183826948" style="zoom:50%;" />
+<img src="./figures/transformer_Decoder.png" alt="image-20230129183826948" style="zoom:50%;" align="center"/>
 
 ​	Decoder 与 Encoder 的组成非常类似，同样是由 N 个 DecoderLayer 组成，DecoderLayer 与 EncoderLayer 的区别在于：
 
-​	① EncoderLayer 由两个 sublayer 组成，分别是一个多头自注意力层与一个全连接网络层。DecoderLayer 则在 EncoderLayer 的两个 sublayer 的基础上增加了一个多头注意力层。如图，最下方的多头自注意力层同 EncoderLayer结构相同，中间则是增加的一个多头注意力层，将使用 Encoder 的输出和下方多头自注意力层的输出作为输入进行注意力计算。最上方的全连接网络也同 EncoderLayer 相同。
+​	1. EncoderLayer 由两个 sublayer 组成，分别是一个多头自注意力层与一个全连接网络层。DecoderLayer 则在 EncoderLayer 的两个 sublayer 的基础上增加了一个多头注意力层。如图，最下方的多头自注意力层同 EncoderLayer结构相同，中间则是增加的一个多头注意力层，将使用 Encoder 的输出和下方多头自注意力层的输出作为输入进行注意力计算。最上方的全连接网络也同 EncoderLayer 相同。
 
-​	② EncoderLayer 的输入仅来自于编码之后的输入语料（或上一个 EncoderLayer 的输出），DecoderLayer 的输入除来自于编码之后的输出语料外，还包括 Encoder 的输出。
+​	2. EncoderLayer 的输入仅来自于编码之后的输入语料（或上一个 EncoderLayer 的输出），DecoderLayer 的输入除来自于编码之后的输出语料外，还包括 Encoder 的输出。
 
 ​	DecoderLayer 的实现如下代码：
 
@@ -240,7 +240,9 @@ class EncoderLayer(nn.Module):
 
 ## Mask
 
-​	Transformer 是一个自回归模型，类似于语言模型，其将利用历史信息依序对输出进行预测。例如，如果语料的句对为：① BOS 我爱你 EOS；② BOS I like you EOS。则 Encoder 获取的输入将会是句①整体，并输出句①的编码信息，但 Decoder 的输入并不一开始就是句②整体，而是先输入起始符 BOS，Decoder 根据 BOS 与 Encoder 的输出预测 I，再输入 BOS I，Decoder 根据输入和 Encoder 的输出预测 like。因此，自回归模型需要对输入进行 mask（遮蔽），以保证模型不会使用未来信息预测当下。关于自回归模型与自编码模型的细节，感兴趣的读者可以下来查阅更多资料。
+​	Transformer 是一个自回归模型，类似于语言模型，其将利用历史信息依序对输出进行预测。例如，如果语料的句对为：1. (BOS) 我爱你 (EOS)；② (BOS) I like you (EOS)。则 Encoder 获取的输入将会是句 1 整体，并输出句 1 的编码信息，但 Decoder 的输入并不一开始就是句 2 整体，而是先输入起始符 (BOS)，Decoder 根据 (BOS) 与 Encoder 的输出预测 I，再输入 (BOS) I，Decoder 根据输入和 Encoder 的输出预测 like。因此，自回归模型需要对输入进行 mask（遮蔽），以保证模型不会使用未来信息预测当下。
+
+​	关于自回归模型与自编码模型的细节，感兴趣的读者可以下来查阅更多资料，在此提供部分链接供读者参考。博客：[自回归语言模型 VS 自编码语言模型](https://zhuanlan.zhihu.com/p/163455527)、[预训练语言模型整理](https://www.cnblogs.com/sandwichnlp/p/11947627.html#预训练任务简介)；论文：[基于语言模型的预训练技术研究综述](http://jcip.cipsc.org.cn/CN/abstract/abstract3187.shtml)等。
 
 ​	因此，在 Transformer 中，我们需要建立一个 mask 函数，可以根据当下预测的时间阶段对输入语料进行 mask，被 mask 的信息就不会被模型得知，从而保证了模型只使用历史信息进行预测。mask 的实现方法如下：
 
@@ -270,17 +272,21 @@ def subsequent_mask(size):
 
 ## Attention
 
-​	Attention 机制是 Transformer 的核心之一，要详细介绍 attention 机制的思想与操作需要较多的篇幅与笔墨，此处我们仅简要概述 attention 机制的思想和大致计算方法，更多细节请大家具体查阅相关资料。
+​	Attention 机制是 Transformer 的核心之一，要详细介绍 attention 机制的思想与操作需要较多的篇幅与笔墨，此处我们仅简要概述 attention 机制的思想和大致计算方法，更多细节请大家具体查阅相关资料，例如：[Understanding Attention In Deep Learning (NLP)](https://towardsdatascience.com/attaining-attention-in-deep-learning-a712f93bdb1e)、[Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)等。
 
 ​	Attention 机制的特点是通过计算查询值与键值的相关性为真值加权求和，从而拟合序列中每个词同其他词的相关关系。其大致计算过程为：
 
-<img src="./figures/transformer_attention.png" alt="image-20230129185638102" style="zoom:50%;" />
+<img src="./figures/transformer_attention.png" alt="image-20230129185638102" style="zoom:50%;" align="center"/>
 
-​	① 通过输入与参数矩阵，得到查询值 q，键值 k，真值 v，其中，v 与 k 的长度相等。可以理解为，q 是计算注意力的另一个句子（或词组），v 为待计算句子，k 为待计算句子中每个词（即 v 的每个词）的对应键。
+​	1. 通过输入与参数矩阵，得到查询值 q，键值 k，真值 v，其中，v 与 k 的长度相等。可以理解为，q 是计算注意力的另一个句子（或词组），v 为待计算句子，k 为待计算句子中每个词（即 v 的每个词）的对应键。
 
-​	② 对 q 的每个元素 qi ,对 qi 与 k 做点积并进行 softmax，得到一组向量，该向量揭示了 qi 对整个句子每一个位置的注意力大小。
+​	2. 对 q 的每个元素 qi ,对 qi 与 k 做点积并进行 softmax，得到一组向量，该向量揭示了 qi 对整个句子每一个位置的注意力大小。
 
-​	③ 以上一步输出向量作为权重，对 v 进行加权求和，将 q 的所有元素得到的加权求和结果拼接得到最后输出。	
+3. 以上一步输出向量作为权重，对 v 进行加权求和，将 q 的所有元素得到的加权求和结果拼接得到最后输出。
+
+​	其中，q，k，v 分别是由输入与三个参数矩阵做积得到的：
+
+<img src="./figures/transformer_attention_compute.png" alt="image-20230129185638102" style="zoom:50%;" align="center"/>
 
 ​	在实际训练过程中，为提高并行计算速度，直接使用 q、k、v 拼接而成的矩阵进行一次计算即可。
 
@@ -288,7 +294,9 @@ def subsequent_mask(size):
 $$
 Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
 $$
-​	其中，dk 为模型维度，除以根号 dk 主要作用是归一化减小维度，提高训练过程中的梯度。
+​	其中，dk 为模型维度，除以根号 dk 主要作用是归一化减小维度，提高训练过程中的梯度。计算示例如下图：
+
+<img src="./figures/transformer_attention_compute_2.png" alt="image-20230129185638102" style="zoom:50%;" align="center"/>
 
 ​	Attention 机制的基本实现代码如下：
 
@@ -314,9 +322,13 @@ def attention(query, key, value, mask=None, dropout=None):
 
 ​	Attention 机制可以实现并行化与长期依赖关系拟合，但一次注意力计算只能拟合一种相关关系，因此 Transformer 使用了 Multi-Head attention 机制，即同时对一个语料进行多次注意力计算，每次注意力计算都能拟合不同的关系，将最后的多次结果拼接起来作为最后的输出，即可更全面深入地拟合语言信息。
 
-<img src="./figures/transformer_Multi-Head attention.png" alt="image-20230129190819407" style="zoom:50%;" />
+<img src="./figures/transformer_Multi-Head attention.png" alt="image-20230129190819407" style="zoom:50%;" align="center"/>
 
-​	Multi-Head attention 的代码实现相对复杂，其通过矩阵操作实现并行的多头计算：
+​	Multi-Head attention 的整体计算流程如下：
+
+<img src="./figures/transformer_Multi-Head attention_compute.png" alt="image-20230129190819407" style="zoom:50%;" align="center"/>
+
+​	其代码实现相对复杂，通过矩阵操作实现并行的多头计算，整体计算流程如下：
 
 ```python
 class MultiHeadedAttention(nn.Module):
@@ -367,6 +379,17 @@ class MultiHeadedAttention(nn.Module):
         return self.linears[-1](x)
 ```
 
+​	在 Pytorch 中，其实提供了 Multi-Head Attention 机制的 API，可以通过下列代码直接构造并使用一个多头注意力层：
+
+```python
+multihead_attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout)
+# 构造一个多头注意力层
+# d_model:输出词向量长度；nhead:头数
+attn_output, attn_output_weights = multihead_attn(query, key, value)
+# 前向计算
+# query、key、value 分别是注意力计算的三个输入矩阵
+```
+
 ## 位置编码
 
 ​	attention 机制可以实现良好的并行计算，但同时，其注意力计算的方式也导致序列中相对位置的丢失。对于序列中的每一个 token，其他各个位置对其来说都是平等的。但在自然语言序列中，相对位置是一种非常重要的信息。为保留序列中的相对位置信息，Transformer 采用了位置编码机制，该机制也在之后被多种模型沿用。
@@ -376,9 +399,15 @@ $$
 PE(pos, 2i) = sin(pos/10000^{2i/d_{model}})\\
 PE(pos, 2i+1) = cos(pos/10000^{2i/d_{model}})
 $$
-​	上式中，pos 为 token 的相对位置，2i 和 2i+1 则是指示了 token 是奇数位置还是偶数位置，从上式中我们可以看出对于奇数位置的 token 和偶数位置的 token，Transformer 采用了不同的函数进行编码。作者并未在论文中详细论述为何使用该种编码方式，编码结果示例如下：
+​	上式中，pos 为 token 的相对位置，2i 和 2i+1 则是指示了 token 是奇数位置还是偶数位置，从上式中我们可以看出对于奇数位置的 token 和偶数位置的 token，Transformer 采用了不同的函数进行编码。这样的位置编码主要有两个好处：
 
-<img src="./figures/transformer_位置编码.png" alt="image-20230129201913077" style="zoom:50%;" />
+​	1. 使 PE 能够适应比训练集里面所有句子更长的句子，假设训练集里面最长的句子是有 20 个单词，突然来了一个长度为 21 的句子，则使用公式计算的方法可以计算出第 21 位的 Embedding。
+
+​	2. 可以让模型容易地计算出相对位置，对于固定长度的间距 k，PE(pos+k) 可以用 PE(pos) 计算得到。因为 Sin(A+B) = Sin(A)Cos(B) + Cos(A)Sin(B), Cos(A+B) = Cos(A)Cos(B) - Sin(A)Sin(B)。
+
+​	编码结果示例如下：
+
+<img src="./figures/transformer_position_embedding.png" alt="image-20230129201913077" style="zoom:50%;" align="center"/>
 
 ​	位置编码的实现如下：
 
@@ -449,3 +478,12 @@ def make_model(
     return model
 ```
 
+参考文献：
+
+《Attention Is All You Need》：https://arxiv.org/abs/1706.03762
+
+参考博客：
+
+https://lilianweng.github.io/posts/2018-06-24-attention/
+
+https://zhuanlan.zhihu.com/p/48508221

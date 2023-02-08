@@ -78,6 +78,166 @@ class EncoderDecoder(nn.Module):
 
 ​	接下来将逐个介绍 Transformer 的实现细节和原理。
 
+## Attention
+
+​	Attention 机制是 Transformer 的核心之一，要详细介绍 attention 机制的思想与操作需要较多的篇幅与笔墨，此处我们仅简要概述 attention 机制的思想和大致计算方法，更多细节请大家具体查阅相关资料，例如：[Understanding Attention In Deep Learning (NLP)](https://towardsdatascience.com/attaining-attention-in-deep-learning-a712f93bdb1e)、[Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)等。在下文中，我们将从何为 attention、self-attention 和 Multi-Head attention 三个方面逐步介绍 Transformer 中使用的 attention 机制。
+
+### 何为 Attention
+
+​	Attention 机制最先源于计算机视觉领域，其核心思想为当我们关注一张图片，我们往往无需看清楚全部内容而仅将注意力集中在重点部分即可。而在自然语言处理领域，我们往往也可以通过将重点注意力集中在一个或几个 token，从而取得更高效高质的计算效果。
+
+​	Attention 机制的特点是通过计算查询值与键值的相关性为真值加权求和，从而拟合序列中每个词同其他词的相关关系。其大致计算过程为：
+
+<div align=center><img src="./figures/transformer_attention.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+​	1. 通过输入与参数矩阵，得到查询值 q，键值 k，真值 v，其中，v 与 k 的长度相等。可以理解为，q 是计算注意力的另一个句子（或词组），v 为待计算句子，k 为待计算句子中每个词（即 v 的每个词）的对应键。
+
+​	2. 对 q 的每个元素 qi ,对 qi 与 k 做点积并进行 softmax，得到一组向量，该向量揭示了 qi 对整个句子每一个位置的注意力大小。
+
+3. 以上一步输出向量作为权重，对 v 进行加权求和，将 q 的所有元素得到的加权求和结果拼接得到最后输出。
+
+​	其中，q，k，v 分别是由输入与三个参数矩阵做积得到的：
+
+<div align=center><img src="./figures/transformer_attention_compute.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+​	在实际训练过程中，为提高并行计算速度，直接使用 q、k、v 拼接而成的矩阵进行一次计算即可。
+
+​	具体到 Transformer 模型中，计算公式如下：
+$$
+Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
+$$
+​	其中，dk 为模型维度，除以根号 dk 主要作用是归一化减小维度，提高训练过程中的梯度。计算示例如下图：
+
+<div align=center><img src="./figures/transformer_attention_compute_2.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+​	Attention 机制的基本实现代码如下：
+
+```python
+def attention(query, key, value, mask=None, dropout=None):
+    "Compute 'Scaled Dot Product Attention'"
+    d_k = query.size(-1)
+    # Q的长度
+    scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
+    # 计算Q与K的内积并除以根号dk
+    # 为什么使用transpose——内积的计算过程
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, -1e9)
+        # masker_fill为遮蔽，即基于一个布尔值的参数矩阵对矩阵进行遮蔽
+        # 此处同上面的subsequent_mask函数结合，此处的mask即为该函数的输出
+    p_attn = scores.softmax(dim=-1)
+    if dropout is not None:
+        p_attn = dropout(p_attn)
+        # 采样
+    return torch.matmul(p_attn, value), p_attn
+    # 根据计算结果对value进行加权求和
+```
+
+### Self-Attention
+
+​	从上对 Attention 机制原理的叙述中我们可以发现，Attention 机制的本质是对两段序列的元素依次进行相似度计算，寻找出一个序列的每个元素对另一个序列的每个元素的相关度，然后基于相关度进行加权，即分配注意力。而这两段序列即是我们计算过程中 Q、K、V 的来源。
+
+​	在经典的 Attention 机制中，Q 往往来自于一个序列，K 与 V 来自于另一个序列，都通过参数矩阵计算得到，从而可以拟合这两个序列之间的关系。例如在 Transformer 的 Decoder 结构中，Q 来自于 Encoder 的输出，K 与 V 来自于 Decoder 的输入，从而拟合了编码信息与历史信息之间的关系，便于综合这两种信息实现未来的预测。
+
+​	但在 Transformer 的 Encoder 结构中，使用的是 Attention 机制的变种—— self-attention （自注意力）机制。所谓自注意力，即是计算本身序列中每个元素都其他元素的注意力分布，即在计算过程中，Q、K、V 都由同一个输入通过不同的参数矩阵计算得到。在 Encoder 中，Q、K、V 分别是输入对参数矩阵 Wq、Wk、Wv 做积得到，从而拟合输入语句中每一个 token 对其他所有 token 的关系。
+
+​	例如，通过 Encoder 中的 self-attention 层，可以拟合下面语句中 it 对其他 token 的注意力分布如图：
+
+![transformer_selfattention](C:\Users\24825\thorough-pytorch\source\第十章\figures\transformer_selfattention.jpg)
+
+​	在代码中的实现，self-attention 机制其实是通过给 Q、K、V 的输入传入同一个参数实现的：
+
+```python
+x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, mask))
+# 传入自注意力层作为sublayer,输出自注意力层计算并进行残差连接后的结果
+```
+
+​	上述代码是 Encoder 层的部分实现，self_attn 即是注意力层，传入的三个参数都是 x，分别是 Q、K、V 的计算输入，从而 Q、K、V 均来源于同一个输入，则实现了自注意力的拟合。
+
+### Multi-Head Attention
+
+​	Attention 机制可以实现并行化与长期依赖关系拟合，但一次注意力计算只能拟合一种相关关系，单一的 Attention 机制很难全面拟合语句序列里的相关关系。因此 Transformer 使用了 Multi-Head attention 机制，即同时对一个语料进行多次注意力计算，每次注意力计算都能拟合不同的关系，将最后的多次结果拼接起来作为最后的输出，即可更全面深入地拟合语言信息。
+
+<div align=center><img src="./figures/transformer_Multi-Head attention.png" alt="image-20230129190819407" style="zoom:50%;"/></div>
+
+​	在原论文中，作者也通过实验证实，多头注意力计算中，每个不同的注意力头能够拟合语句中的不同信息，如下图：
+
+<div align=center><img src="C:\Users\24825\AppData\Roaming\Typora\typora-user-images\image-20230207203454545.png" alt="image-20230207203454545" style="zoom:50%;" />	</div>
+
+​	上层与下层分别是两个注意力头对同一段语句序列进行自注意力计算的结果，可以看到，对于不同的注意力头，能够拟合不同层次的相关信息。通过多个注意力头同时计算，能够更全面地拟合语句关系。
+
+​	Multi-Head attention 的整体计算流程如下：
+
+<div align=center><img src="./figures/transformer_Multi-Head attention_compute.png" alt="image-20230129190819407" style="zoom:50%;"/></div>
+
+​	其代码实现相对复杂，通过矩阵操作实现并行的多头计算，整体计算流程如下：
+
+```python
+class MultiHeadedAttention(nn.Module):
+    # 多头注意力操作
+    def __init__(self, h, d_model, dropout=0.1):
+        "Take in model size and number of heads."
+        super(MultiHeadedAttention, self).__init__()
+        assert d_model % h == 0
+        # 断言，控制h总是整除于d_model，如果输入参数不满足将报错
+        # We assume d_v always equals d_k
+        self.d_k = d_model // h
+        # key的长度
+        self.h = h
+        # 头数
+        self.linears = clones(nn.Linear(d_model, d_model), 4)
+        self.attn = None
+        self.dropout = nn.Dropout(p=dropout)
+
+    def forward(self, query, key, value, mask=None):
+        "Implements Figure 2"
+        if mask is not None:
+            # Same mask applied to all h heads.
+            mask = mask.unsqueeze(1)
+        nbatches = query.size(0)
+
+        # 1) Do all the linear projections in batch from d_model => h x d_k
+        query, key, value = [
+            lin(x).view(nbatches, -1, self.h, self.d_k).transpose(1, 2)
+            for lin, x in zip(self.linears, (query, key, value))
+        ]
+
+        # 2) Apply attention on all the projected vectors in batch.
+        x, self.attn = attention(
+            query, key, value, mask=mask, dropout=self.dropout
+        )
+        # x 为加权求和结果，attn为计算的注意力分数
+
+        # 3) "Concat" using a view and apply a final linear.
+        x = (
+            x.transpose(1, 2)
+            .contiguous()
+            .view(nbatches, -1, self.h * self.d_k)
+        )
+
+        del query
+        del key
+        del value
+        return self.linears[-1](x)
+```
+
+​	在 Pytorch 中，其实提供了 Multi-Head Attention 机制的 API，可以通过下列代码直接构造并使用一个多头注意力层：
+
+```python
+multihead_attn = nn.MultiheadAttention(embed_dim , num_heads)
+# 构造一个多头注意力层
+# embed_dim :输出词向量长度；num_heads :头数
+# 可选参数：
+# drop_out: 在采样层中drop_out的概率，默认为0；bias：线性层是否计算偏置
+# add_bias_kv：是否将偏置添加到 K 和 V 中；add_zero_attn：是否为 K 和 V 再添加一串为0的序列
+# kdim：K 的总共feature数；vdim：V 的总共feature数；batch_first：是否将输入调整为(batch,seq,feature)
+attn_output, attn_output_weights = multihead_attn(query, key, value)
+# 前向计算
+# 输出：
+# attn_output：形如(L,N,E)的计算结果，L为目标序列长度，N为批次大小，E为embed_dim
+# attn_output_weights：注意力计算分数，仅当need_weights=True时返回
+# query、key、value 分别是注意力计算的三个输入矩阵
+```
+
 ## Encoder 
 
 <div align=center><img src="./figures/transformer_Encoder.png" alt="image-20230129182417098" style="zoom:50%;"/></div>
@@ -270,129 +430,9 @@ def subsequent_mask(size):
     return subsequent_mask == 0
 ```
 
-## Attention
-
-​	Attention 机制是 Transformer 的核心之一，要详细介绍 attention 机制的思想与操作需要较多的篇幅与笔墨，此处我们仅简要概述 attention 机制的思想和大致计算方法，更多细节请大家具体查阅相关资料，例如：[Understanding Attention In Deep Learning (NLP)](https://towardsdatascience.com/attaining-attention-in-deep-learning-a712f93bdb1e)、[Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)等。
-
-​	Attention 机制的特点是通过计算查询值与键值的相关性为真值加权求和，从而拟合序列中每个词同其他词的相关关系。其大致计算过程为：
-
-<div align=center><img src="./figures/transformer_attention.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
-
-​	1. 通过输入与参数矩阵，得到查询值 q，键值 k，真值 v，其中，v 与 k 的长度相等。可以理解为，q 是计算注意力的另一个句子（或词组），v 为待计算句子，k 为待计算句子中每个词（即 v 的每个词）的对应键。
-
-​	2. 对 q 的每个元素 qi ,对 qi 与 k 做点积并进行 softmax，得到一组向量，该向量揭示了 qi 对整个句子每一个位置的注意力大小。
-
-3. 以上一步输出向量作为权重，对 v 进行加权求和，将 q 的所有元素得到的加权求和结果拼接得到最后输出。
-
-​	其中，q，k，v 分别是由输入与三个参数矩阵做积得到的：
-
-<div align=center><img src="./figures/transformer_attention_compute.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
-
-​	在实际训练过程中，为提高并行计算速度，直接使用 q、k、v 拼接而成的矩阵进行一次计算即可。
-
-​	具体到 Transformer 模型中，计算公式如下：
-$$
-Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
-$$
-​	其中，dk 为模型维度，除以根号 dk 主要作用是归一化减小维度，提高训练过程中的梯度。计算示例如下图：
-
-<div align=center><img src="./figures/transformer_attention_compute_2.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
-
-​	Attention 机制的基本实现代码如下：
-
-```python
-def attention(query, key, value, mask=None, dropout=None):
-    "Compute 'Scaled Dot Product Attention'"
-    d_k = query.size(-1)
-    # Q的长度
-    scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
-    # 计算Q与K的内积并除以根号dk
-    # 为什么使用transpose——内积的计算过程
-    if mask is not None:
-        scores = scores.masked_fill(mask == 0, -1e9)
-        # masker_fill为遮蔽，即基于一个布尔值的参数矩阵对矩阵进行遮蔽
-        # 此处同上面的subsequent_mask函数结合，此处的mask即为该函数的输出
-    p_attn = scores.softmax(dim=-1)
-    if dropout is not None:
-        p_attn = dropout(p_attn)
-        # 采样
-    return torch.matmul(p_attn, value), p_attn
-    # 根据计算结果对value进行加权求和
-```
-
-​	Attention 机制可以实现并行化与长期依赖关系拟合，但一次注意力计算只能拟合一种相关关系，因此 Transformer 使用了 Multi-Head attention 机制，即同时对一个语料进行多次注意力计算，每次注意力计算都能拟合不同的关系，将最后的多次结果拼接起来作为最后的输出，即可更全面深入地拟合语言信息。
-
-<div align=center><img src="./figures/transformer_Multi-Head attention.png" alt="image-20230129190819407" style="zoom:50%;"/></div>
-
-​	Multi-Head attention 的整体计算流程如下：
-
-<div align=center><img src="./figures/transformer_Multi-Head attention_compute.png" alt="image-20230129190819407" style="zoom:50%;"/></div>
-
-​	其代码实现相对复杂，通过矩阵操作实现并行的多头计算，整体计算流程如下：
-
-```python
-class MultiHeadedAttention(nn.Module):
-    # 多头注意力操作
-    def __init__(self, h, d_model, dropout=0.1):
-        "Take in model size and number of heads."
-        super(MultiHeadedAttention, self).__init__()
-        assert d_model % h == 0
-        # 断言，控制h总是整除于d_model，如果输入参数不满足将报错
-        # We assume d_v always equals d_k
-        self.d_k = d_model // h
-        # key的长度
-        self.h = h
-        # 头数
-        self.linears = clones(nn.Linear(d_model, d_model), 4)
-        self.attn = None
-        self.dropout = nn.Dropout(p=dropout)
-
-    def forward(self, query, key, value, mask=None):
-        "Implements Figure 2"
-        if mask is not None:
-            # Same mask applied to all h heads.
-            mask = mask.unsqueeze(1)
-        nbatches = query.size(0)
-
-        # 1) Do all the linear projections in batch from d_model => h x d_k
-        query, key, value = [
-            lin(x).view(nbatches, -1, self.h, self.d_k).transpose(1, 2)
-            for lin, x in zip(self.linears, (query, key, value))
-        ]
-
-        # 2) Apply attention on all the projected vectors in batch.
-        x, self.attn = attention(
-            query, key, value, mask=mask, dropout=self.dropout
-        )
-        # x 为加权求和结果，attn为计算的注意力分数
-
-        # 3) "Concat" using a view and apply a final linear.
-        x = (
-            x.transpose(1, 2)
-            .contiguous()
-            .view(nbatches, -1, self.h * self.d_k)
-        )
-
-        del query
-        del key
-        del value
-        return self.linears[-1](x)
-```
-
-​	在 Pytorch 中，其实提供了 Multi-Head Attention 机制的 API，可以通过下列代码直接构造并使用一个多头注意力层：
-
-```python
-multihead_attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout)
-# 构造一个多头注意力层
-# d_model:输出词向量长度；nhead:头数
-attn_output, attn_output_weights = multihead_attn(query, key, value)
-# 前向计算
-# query、key、value 分别是注意力计算的三个输入矩阵
-```
-
 ## 位置编码
 
-​	attention 机制可以实现良好的并行计算，但同时，其注意力计算的方式也导致序列中相对位置的丢失。对于序列中的每一个 token，其他各个位置对其来说都是平等的。但在自然语言序列中，相对位置是一种非常重要的信息。为保留序列中的相对位置信息，Transformer 采用了位置编码机制，该机制也在之后被多种模型沿用。
+​	attention 机制可以实现良好的并行计算，但同时，其注意力计算的方式也导致序列中相对位置的丢失。在 RNN、LSTM 中，输入序列会沿着语句本身的顺序被依次递归处理，因此输入序列的顺序提供了极其重要的信息，这也和自然语言的本身特性非常吻合。但从上文对 Attention 机制的分析我们可以发现，在 Attention 机制的计算过程中，对于序列中的每一个 token，其他各个位置对其来说都是平等的，即“我喜欢你”和“你喜欢我”在 Attention 机制看来是完全相同的，但无疑这是 Attention 机制存在的一个巨大问题。因此，为使用序列顺序信息，保留序列中的相对位置信息，Transformer 采用了位置编码机制，该机制也在之后被多种模型沿用。
 
 ​	位置编码，即根据序列中 token 的相对位置对其进行编码，再将位置编码加入词向量编码中。位置编码的方式有很多，Transformer 使用了正余弦函数来进行位置编码，其编码方式为：
 $$
@@ -401,9 +441,10 @@ PE(pos, 2i+1) = cos(pos/10000^{2i/d_{model}})
 $$
 ​	上式中，pos 为 token 的相对位置，2i 和 2i+1 则是指示了 token 是奇数位置还是偶数位置，从上式中我们可以看出对于奇数位置的 token 和偶数位置的 token，Transformer 采用了不同的函数进行编码。这样的位置编码主要有两个好处：
 
-​	1. 使 PE 能够适应比训练集里面所有句子更长的句子，假设训练集里面最长的句子是有 20 个单词，突然来了一个长度为 21 的句子，则使用公式计算的方法可以计算出第 21 位的 Embedding。
+	1. 使 PE 能够适应比训练集里面所有句子更长的句子，假设训练集里面最长的句子是有 20 个单词，突然来了一个长度为 21 的句子，则使用公式计算的方法可以计算出第 21 位的 Embedding。
+	1. 可以让模型容易地计算出相对位置，对于固定长度的间距 k，PE(pos+k) 可以用 PE(pos) 计算得到。因为 Sin(A+B) = Sin(A)Cos(B) + Cos(A)Sin(B), Cos(A+B) = Cos(A)Cos(B) - Sin(A)Sin(B)。
 
-​	2. 可以让模型容易地计算出相对位置，对于固定长度的间距 k，PE(pos+k) 可以用 PE(pos) 计算得到。因为 Sin(A+B) = Sin(A)Cos(B) + Cos(A)Sin(B), Cos(A+B) = Cos(A)Cos(B) - Sin(A)Sin(B)。
+​	关于位置编码，有许多学者从数学的角度证明了该编码方式相对于其他更简单、直观的编码方式的优越性与必要性，由于本文重点在于代码的解析，此处不再赘述，感兴趣的读者可以查阅相关资料，如博客：[Transformer Architecture: The Positional Encoding](https://kazemnejad.com/blog/transformer_architecture_positional_encoding/)、[A Gentle Introduction to Positional Encoding in Transformer Models](https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/) 等。
 
 ​	编码结果示例如下：
 
@@ -477,6 +518,147 @@ def make_model(
             # 初始化参数
     return model
 ```
+
+## 训练
+
+​	基于 Pytorch 实现的 Transformer 的训练大致沿用了 Pytorch 的框架，整体流程同使用 Pytorch 建立深度学习模型的流程大致相同，只不过实现了一些更底层的细节自定义。
+
+### Traning Loop
+
+​	作者并没有直接使用 Pytorch 提供的训练函数，而是自定义了一个用于记录训练过程的类：
+
+```python
+class TrainState:
+    """Track number of steps, examples, and tokens processed"""
+
+    step: int = 0  # Steps in the current epoch
+    accum_step: int = 0  # Number of gradient accumulation steps
+    samples: int = 0  # total # of examples used
+    tokens: int = 0  # total # of tokens processed
+```
+
+​	接着，基于该类的实现定义了运行函数：
+
+```python
+def run_epoch(
+    data_iter,# 数据集
+    model,# 模型
+    loss_compute,# 损失计算函数
+    optimizer,# 优化器
+    scheduler,# 调度器
+    mode="train",# 模式，训练或测试
+    accum_iter=1,# 进行优化的轮数
+    train_state=TrainState(),
+):
+    """Train a single epoch"""
+    start = time.time()
+    total_tokens = 0
+    total_loss = 0
+    tokens = 0
+    n_accum = 0
+    for i, batch in enumerate(data_iter):
+        out = model.forward(
+            batch.src, batch.tgt, batch.src_mask, batch.tgt_mask
+        )# 模型的前向计算
+        loss, loss_node = loss_compute(out, batch.tgt_y, batch.ntokens)
+        # 计算当下的模型损失
+        # loss_node = loss_node / accum_iter
+        if mode == "train" or mode == "train+log":
+            loss_node.backward()
+            # 返乡传播
+            train_state.step += 1
+            train_state.samples += batch.src.shape[0]
+            train_state.tokens += batch.ntokens
+            if i % accum_iter == 0:
+                # 每隔 accum_iter 轮优化一次
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+                n_accum += 1
+                train_state.accum_step += 1
+            scheduler.step()
+
+        total_loss += loss
+        total_tokens += batch.ntokens
+        tokens += batch.ntokens
+        if i % 40 == 1 and (mode == "train" or mode == "train+log"):
+            lr = optimizer.param_groups[0]["lr"]
+            elapsed = time.time() - start
+            print(
+                (
+                    "Epoch Step: %6d | Accumulation Step: %3d | Loss: %6.2f "
+                    + "| Tokens / Sec: %7.1f | Learning Rate: %6.1e"
+                )
+                % (i, n_accum, loss / batch.ntokens, tokens / elapsed, lr)
+            )
+            start = time.time()
+            tokens = 0
+        del loss
+        del loss_node
+    return total_loss / total_tokens, train_state
+```
+
+### 优化器
+
+​	在 Transformer 中，使用了 Adam 优化器，该优化器学习率的计算基于下式：
+$$
+lrate=d^{-0.5}_{model} * min(step\_num^{-0.5}, step\_num * warmup\_steps^{-1.5})
+$$
+​	为何选择该优化器，以及该优化器有什么优势，感兴趣的读者可以查阅相关资料如：[【Adam】优化算法浅析](https://zhuanlan.zhihu.com/p/90169812)来深入探究其内部数学原理，此处不再赘述。基于上式，其优化器实现如下：
+
+```python
+def rate(step, model_size, factor, warmup):
+    """
+    we have to default the step to 1 for LambdaLR function
+    to avoid zero raising to negative power.
+    """
+    if step == 0:
+        step = 1
+    return factor * (
+        model_size ** (-0.5) * min(step ** (-0.5), step * warmup ** (-1.5))
+    )
+```
+
+​	Pytorch 也提供了各种优化器的调用 API，也包括 Adam，在实际使用中可以直接调用。
+
+### 正则化
+
+​	在训练过程中，作者使用了标签平滑来实现正则化，从而提高模型预测的准确率。具体的，使用了 KL 散度来计算标签平滑，此处同样不再赘述标签平滑、KL 散度的原理，感兴趣的读者可以参阅下列博客：[【正则化】Label Smoothing详解](https://blog.csdn.net/Roaddd/article/details/114761023)、[Kullback-Leibler(KL)散度介绍](https://zhuanlan.zhihu.com/p/100676922)。标签平滑的代码实现如下：
+
+```python
+class LabelSmoothing(nn.Module):
+    "Implement label smoothing."
+
+    def __init__(self, size, padding_idx, smoothing=0.0):
+        super(LabelSmoothing, self).__init__()
+        self.criterion = nn.KLDivLoss(reduction="sum")# 使用 KL 散度计算
+        self.padding_idx = padding_idx # 遮掩部分index
+        self.confidence = 1.0 - smoothing
+        self.smoothing = smoothing
+        self.size = size
+        self.true_dist = None
+
+    def forward(self, x, target):
+        assert x.size(1) == self.size
+        true_dist = x.data.clone()
+        true_dist.fill_(self.smoothing / (self.size - 2))
+        true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence)
+        true_dist[:, self.padding_idx] = 0
+        mask = torch.nonzero(target.data == self.padding_idx)
+        if mask.dim() > 0:
+            true_dist.index_fill_(0, mask.squeeze(), 0.0)
+        self.true_dist = true_dist
+        return self.criterion(x, true_dist.clone().detach())
+```
+
+## 总结
+
+### 优点
+
+​	Transformer 作为 NLP 发展史上里程碑的模型，是具有较大创新性和指导性的。其创造性地抛弃了沿用了几十年的 CNN、RNN 架构，完全使用 Attention 机制来搭建网络并取得了良好的效果，帮助 Attention 机制站上了时代的舞台。而论及模型本身，Attention 机制的使用使其能够有效捕捉长距离相关性，解决了 NLP 领域棘手的长距依赖问题，同时，抛弃了 RNN 架构使其能够充分实现并行化，提升了模型计算能力。
+
+### 缺点
+
+​	不可否认，Transformer 也存在诸多缺陷。最明显的一点是，提出该模型的论文名为《Attention Is All You Need》，但事实上我们真的仅仅只需要 Attention 吗？粗暴的抛弃 CNN 与 RNN 虽然非常炫技，但也使模型丧失了捕捉局部特征的能力，RNN + CNN + Attention 也许能够带来更好的效果。其次，Attention 机制失去了位置信息，虽然 Transformer 使用了 Positional Encoding 来补充位置信息，但只是权宜之计，没有改变其结构上的固有缺陷。最后，Attention 机制的参数量庞大，训练的门槛与成本也有了一定提高。因此，正是在 Transformer 提出之后，如 BERT、XLNet 等基于 Transformer 结构的强大、昂贵的预训练模型也逐步登上时代的舞台。
 
 参考文献：
 

@@ -161,7 +161,7 @@ x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, mask))
 
 ​	在原论文中，作者也通过实验证实，多头注意力计算中，每个不同的注意力头能够拟合语句中的不同信息，如下图：
 
-<div align=center><img src="C:\Users\24825\thorough-pytorch\source\第十章\figures\transformer_Multi-Head visual.jpg" alt="image-20230207203454545" style="zoom:50%;" />	</div>
+<div align=center><img src=".\figures\transformer_Multi-Head visual.jpg" alt="image-20230207203454545" style="zoom:50%;" />	</div>
 
 ​	上层与下层分别是两个注意力头对同一段语句序列进行自注意力计算的结果，可以看到，对于不同的注意力头，能够拟合不同层次的相关信息。通过多个注意力头同时计算，能够更全面地拟合语句关系。
 

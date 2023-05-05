@@ -65,6 +65,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 图像—torchvision
   - 视频—PyTorchVideo
   - 文本—torchtext
+  - 音频-torchaudio
 - 第九章：模型部署
   - 使用ONNX进行部署并推理
 - 第十章：常见网络代码的解读(推进中)
@@ -73,6 +74,8 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
       - ResNet源码解读
       - Swin Transformer源码解读
       - Vision Transformer源码解读
+      - RNN源码解读
+      - LSTM源码解读及其实战
     - 目标检测
       - YOLO系列解读（与MMYOLO合作）
     - 图像分割
@@ -172,7 +175,7 @@ git push -f
   │            │
   │            └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │
-  └─⫸ Commit Type: lecture{#NO}|others
+  └─⫸ Commit Type: [docs #NO]:others
 ```
 
 `others`包括非课程相关的改动，如本`README.md`中的变动，`.gitignore`的调整等。
@@ -183,7 +186,6 @@ git push -f
 
 | 内容 | 更新时间 |内容|
 | :---- | :---- |:----:|
-|visdom可视化|  |`Visdom`的使用|
 |apex|  |apex的简介和使用|
 |模型部署|  |Flask部署PyTorch模型|
 |TorchScript|  |TorchScript|

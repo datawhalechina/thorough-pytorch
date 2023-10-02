@@ -118,5 +118,3 @@ Temporary Items
 
 # sphinx
 /build
-*.bat
-Makefile

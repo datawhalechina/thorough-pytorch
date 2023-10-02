@@ -1,0 +1,27 @@
+name: Deploy to Github Pages
+on:
+    push:
+      branches:
+        - main
+    pull_request:
+      branches:
+        - main
+jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-python@v2
+          with:
+            python-version: 3.x
+        - uses: actions/cache@v2
+          with:
+            key: ${{ github.ref }}
+            path: .cache
+        - run: pip install sphinx
+        - run: pip install sphinx-book-theme
+        - run: pip install myst-nb
+        - run: pip install matplotlib
+        - run: make clean
+        - run: make html 
+        - run: cp -rf build/html/* docs/

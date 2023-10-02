@@ -75,7 +75,7 @@ def train(epoch):
         data, label = data.cuda(), label.cuda()
         optimizer.zero_grad()
         output = model(data)
-        loss = criterion(label, output)
+        loss = criterion(output, label)
         loss.backward()
         optimizer.step()
         train_loss += loss.item()*data.size(0)
@@ -101,3 +101,15 @@ def val(epoch):
     val_loss = val_loss/len(val_loader.dataset)
     print('Epoch: {} \tTraining Loss: {:.6f}'.format(epoch, val_loss))
 ```
+对于图像分类任务，我们还可以使用sklearn.metrics中的classification_report函数来计算模型的准确率、召回率、F1值等指标，如下所示：
+
+```python
+from sklearn.metrics import classification_report
+"""
+将下方代码的labels和preds替换为模型预测出来的所有label和preds，
+target_names替换为类别名称，
+既可得到模型的分类报告
+"""
+print(classification_report(labels.cpu(), preds.cpu(), target_names=class_names))
+```
+除此之外，我们还可以使用`torcheval`或`torchmetric`来对模型进行评估。

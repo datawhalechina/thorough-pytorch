@@ -91,11 +91,11 @@ tensor([[0.3000, 0.3000, 0.3000, 0.3000, 0.3000, 0.3000, 0.3000, 0.3000, 0.3000,
 ##  初始化函数的封装
 人们常常将各种初始化方法定义为一个`initialize_weights()`的函数并在模型初始后进行使用。
 ```python
-def initialize_weights(self):
-	for m in self.modules():
+def initialize_weights(model):
+	for m in model.modules():
 		# 判断是否属于Conv2d
 		if isinstance(m, nn.Conv2d):
-			torch.nn.init.xavier_normal_(m.weight.data)
+			torch.nn.init.zeros_(m.weight.data)
 			# 判断是否有偏置
 			if m.bias is not None:
 				torch.nn.init.constant_(m.bias.data,0.3)
@@ -125,31 +125,21 @@ class MLP(nn.Module):
     return self.output(o)
 
 mlp = MLP()
-print(list(mlp.parameters()))
+print(mlp.hidden.weight.data)
 print("-------初始化-------")
 
-initialize_weights(mlp)
-print(list(mlp.parameters()))
+mlp.apply(initialize_weights)
+# 或者initialize_weights(mlp)
+print(mlp.hidden.weight.data)
 ```
 ```python
-[Parameter containing:
-tensor([[[[ 0.2103, -0.1679,  0.1757],
-          [-0.0647, -0.0136, -0.0410],
-          [ 0.1371, -0.1738, -0.0850]]]], requires_grad=True), Parameter containing:
-tensor([0.2507], requires_grad=True), Parameter containing:
-tensor([[ 0.2790, -0.1247,  0.2762,  0.1149, -0.2121, -0.3022, -0.1859,  0.2983,
-         -0.0757, -0.2868]], requires_grad=True), Parameter containing:
-tensor([-0.0905], requires_grad=True)]
+tensor([[[[ 0.3069, -0.1865,  0.0182],
+          [ 0.2475,  0.3330,  0.1352],
+          [-0.0247, -0.0786,  0.1278]]]])
 "-------初始化-------"
-[Parameter containing:
- tensor([[[[-0.3196, -0.0204, -0.5784],
-           [ 0.2660,  0.2242, -0.4198],
-           [-0.0952,  0.6033, -0.8108]]]], requires_grad=True),
- Parameter containing:
- tensor([0.3000], requires_grad=True),
- Parameter containing:
- tensor([[ 0.7542,  0.5796,  2.2963, -0.1814, -0.9627,  1.9044,  0.4763,  1.2077,
-           0.8583,  1.9494]], requires_grad=True),
- Parameter containing:
- tensor([0.], requires_grad=True)]
+tensor([[[[0., 0., 0.],
+          [0., 0., 0.],
+          [0., 0., 0.]]]])
 ```
+**注意：**
+我们在初始化时，最好不要将模型的参数初始化为0，因为这样会导致梯度消失，从而影响模型的训练效果。因此，我们在初始化时，可以使用其他初始化方法或者将模型初始化为一个很小的值，如0.01，0.1等。

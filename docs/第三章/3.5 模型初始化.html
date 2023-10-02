@@ -180,7 +180,7 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20%E5%85%B6%E4%BB%96%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
+    <a class="reference internal" href="../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20AI%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
      AI硬件加速设备
     </a>
    </li>
@@ -238,7 +238,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.9 Pytorch优化器
+     3.9 PyTorch优化器
     </a>
    </li>
   </ul>
@@ -254,7 +254,12 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.1%20ResNet.html">
+     4.1 ResNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.4%20FashionMNIST%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
      基础实战——FashionMNIST时装分类
     </a>
    </li>
@@ -364,6 +369,11 @@
      7.3 使用TensorBoard可视化训练过程
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.4%20%E4%BD%BF%E7%94%A8wandb%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.html">
+     7.4 使用wandb可视化训练过程
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -394,6 +404,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.4%20%E6%96%87%E6%9C%AC%20-%20torchtext.html">
      8.4 torchtext简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.5%20%E9%9F%B3%E9%A2%91%20-%20torchaudio.html">
+     8.5 torchaudio简介
     </a>
    </li>
   </ul>
@@ -451,13 +466,23 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E5%8D%81%E7%AB%A0/Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
-     Swin Transformer解读
+    <a class="reference internal" href="../%E7%AC%AC%E5%8D%81%E7%AB%A0/LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98.html">
+     文章结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%8D%81%E7%AB%A0/Transformer%20%E8%A7%A3%E8%AF%BB.html">
+     Transformer 解读
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E5%8D%81%E7%AB%A0/ViT%E8%A7%A3%E8%AF%BB.html">
      ViT解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%8D%81%E7%AB%A0/Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
+     Swin Transformer解读
     </a>
    </li>
   </ul>
@@ -831,11 +856,11 @@ title="Print to PDF"
 <section id="id3">
 <h2>初始化函数的封装<a class="headerlink" href="#id3" title="永久链接至标题">#</a></h2>
 <p>人们常常将各种初始化方法定义为一个<code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code>的函数并在模型初始后进行使用。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-	<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">initialize_weights</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+	<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
 		<span class="c1"># 判断是否属于Conv2d</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">):</span>
-			<span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_normal_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+			<span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 			<span class="c1"># 判断是否有偏置</span>
 			<span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 				<span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="mf">0.3</span><span class="p">)</span>
@@ -865,35 +890,25 @@ title="Print to PDF"
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
 
 <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">parameters</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">hidden</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------初始化-------&quot;</span><span class="p">)</span>
 
-<span class="n">initialize_weights</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">parameters</span><span class="p">()))</span>
+<span class="n">mlp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">initialize_weights</span><span class="p">)</span>
+<span class="c1"># 或者initialize_weights(mlp)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">hidden</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
-<span class="n">tensor</span><span class="p">([[[[</span> <span class="mf">0.2103</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1679</span><span class="p">,</span>  <span class="mf">0.1757</span><span class="p">],</span>
-          <span class="p">[</span><span class="o">-</span><span class="mf">0.0647</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0136</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0410</span><span class="p">],</span>
-          <span class="p">[</span> <span class="mf">0.1371</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1738</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0850</span><span class="p">]]]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
-<span class="n">tensor</span><span class="p">([</span><span class="mf">0.2507</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
-<span class="n">tensor</span><span class="p">([[</span> <span class="mf">0.2790</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1247</span><span class="p">,</span>  <span class="mf">0.2762</span><span class="p">,</span>  <span class="mf">0.1149</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2121</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3022</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1859</span><span class="p">,</span>  <span class="mf">0.2983</span><span class="p">,</span>
-         <span class="o">-</span><span class="mf">0.0757</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2868</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
-<span class="n">tensor</span><span class="p">([</span><span class="o">-</span><span class="mf">0.0905</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tensor</span><span class="p">([[[[</span> <span class="mf">0.3069</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1865</span><span class="p">,</span>  <span class="mf">0.0182</span><span class="p">],</span>
+          <span class="p">[</span> <span class="mf">0.2475</span><span class="p">,</span>  <span class="mf">0.3330</span><span class="p">,</span>  <span class="mf">0.1352</span><span class="p">],</span>
+          <span class="p">[</span><span class="o">-</span><span class="mf">0.0247</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0786</span><span class="p">,</span>  <span class="mf">0.1278</span><span class="p">]]]])</span>
 <span class="s2">&quot;-------初始化-------&quot;</span>
-<span class="p">[</span><span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
- <span class="n">tensor</span><span class="p">([[[[</span><span class="o">-</span><span class="mf">0.3196</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0204</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5784</span><span class="p">],</span>
-           <span class="p">[</span> <span class="mf">0.2660</span><span class="p">,</span>  <span class="mf">0.2242</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4198</span><span class="p">],</span>
-           <span class="p">[</span><span class="o">-</span><span class="mf">0.0952</span><span class="p">,</span>  <span class="mf">0.6033</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8108</span><span class="p">]]]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
- <span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
- <span class="n">tensor</span><span class="p">([</span><span class="mf">0.3000</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
- <span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
- <span class="n">tensor</span><span class="p">([[</span> <span class="mf">0.7542</span><span class="p">,</span>  <span class="mf">0.5796</span><span class="p">,</span>  <span class="mf">2.2963</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1814</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.9627</span><span class="p">,</span>  <span class="mf">1.9044</span><span class="p">,</span>  <span class="mf">0.4763</span><span class="p">,</span>  <span class="mf">1.2077</span><span class="p">,</span>
-           <span class="mf">0.8583</span><span class="p">,</span>  <span class="mf">1.9494</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
- <span class="n">Parameter</span> <span class="n">containing</span><span class="p">:</span>
- <span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+<span class="n">tensor</span><span class="p">([[[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+          <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+          <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]]]])</span>
 </pre></div>
 </div>
+<p><strong>注意：</strong>
+我们在初始化时，最好不要将模型的参数初始化为0，因为这样会导致梯度消失，从而影响模型的训练效果。因此，我们在初始化时，可以使用其他初始化方法或者将模型初始化为一个很小的值，如0.01，0.1等。</p>
 </section>
 </section>
 

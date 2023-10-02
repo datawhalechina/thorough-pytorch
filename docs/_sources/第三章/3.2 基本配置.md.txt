@@ -43,6 +43,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0,1' # 指明调用的GPU为0,1号
 # 方案二：使用“device”，后续对要使用GPU的变量用.to(device)即可
 device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu") # 指明调用的GPU为1号
 ```
-```
+
 
 当然还会有一些其他模块或用户自定义模块会用到的参数，有需要也可以在一开始进行设置。

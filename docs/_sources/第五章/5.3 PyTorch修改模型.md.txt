@@ -16,6 +16,10 @@
 我们这里以PyTorch官方视觉库torchvision预定义好的模型ResNet50为例，探索如何修改模型的某一层或者某几层。我们先看看模型的定义是怎样的：
 
 ```python
+# 导入必要的package
+import torch
+import torch.nn as nn
+from collections import OrderedDict
 import torchvision.models as models
 net = models.resnet50()
 print(net)
@@ -53,7 +57,6 @@ ResNet(
 假设我们要用这个resnet模型去做一个10分类的问题，就应该修改模型的fc层，将其输出节点数替换为10。另外，我们觉得一层全连接层可能太少了，想再加一层。可以做如下修改：
 
 ```python
-from collections import OrderedDict
 classifier = nn.Sequential(OrderedDict([('fc1', nn.Linear(2048, 128)),
                           ('relu1', nn.ReLU()), 
                           ('dropout1',nn.Dropout(0.5)),
@@ -99,7 +102,6 @@ class Model(nn.Module):
 之后对我们修改好的模型结构进行实例化，就可以使用了：
 
 ```python
-import torchvision.models as models
 net = models.resnet50()
 model = Model(net).cuda()
 ```

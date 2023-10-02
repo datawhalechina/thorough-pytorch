@@ -1,4 +1,4 @@
-# 3.9 Pytorch优化器
+# 3.9 PyTorch优化器
 
 深度学习的目标是通过不断改变网络参数，使得参数能够对输入做各种非线性变换拟合输出，本质上就是一个函数去寻找最优解，只不过这个最优解是一个矩阵，而如何快速求得这个最优解是深度学习研究的一个重点，以经典的resnet-50为例，它大约有2000万个系数需要进行计算，那么我们如何计算出这么多系数，有以下两种方法：
 
@@ -15,21 +15,23 @@
 - 优化器的对比
 
 
-## 3.9.1 Pytorch提供的优化器
+## 3.9.1 PyTorch提供的优化器
 
-Pytorch很人性化的给我们提供了一个优化器的库torch.optim，在这里面提供了十种优化器。
+PyTorch很人性化的给我们提供了一个优化器的库`torch.optim`，在这里面提供了多种优化器。
 
++ torch.optim.SGD 
 + torch.optim.ASGD
 + torch.optim.Adadelta
 + torch.optim.Adagrad
 + torch.optim.Adam
 + torch.optim.AdamW
 + torch.optim.Adamax
++ torch.optim.RAdam
++ torch.optim.NAdam
++ torch.optim.SparseAdam
 + torch.optim.LBFGS
 + torch.optim.RMSprop
 + torch.optim.Rprop
-+ torch.optim.SGD
-+ torch.optim.SparseAdam
 
 而以上这些优化算法均继承于`Optimizer`，下面我们先来看下所有优化器的基类`Optimizer`。定义如下：
 
@@ -121,7 +123,7 @@ def add_param_group(self, param_group):
     if len(params) != len(set(params)):
         warnings.warn("optimizer contains a parameter group with duplicate parameters; "
                       "in future, this will cause an error; "
-                      "see github.com/pytorch/pytorch/issues/40967 for more information", stacklevel=3)
+                      "see github.com/PyTorch/PyTorch/issues/40967 for more information", stacklevel=3)
 # 上面好像都在进行一些类的检测，报Warning和Error
     param_set = set()
     for group in self.param_groups:
@@ -422,5 +424,3 @@ class Net(nn.Module):
 **注意:**
 
 优化器的选择是需要根据模型进行改变的，不存在绝对的好坏之分，我们需要多进行一些测试。
-
-后续会添加SparseAdam，LBFGS这两个优化器的可视化结果

@@ -43,7 +43,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="Swin Transformer解读" href="Swin-Transformer%E8%A7%A3%E8%AF%BB.html" />
+    <link rel="next" title="文章结构" href="LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98.html" />
     <link rel="prev" title="ResNet源码解读" href="ResNet%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="zh">
@@ -182,7 +182,7 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20%E5%85%B6%E4%BB%96%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
+    <a class="reference internal" href="../%E7%AC%AC%E4%BA%8C%E7%AB%A0/2.4%20AI%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87.html">
      AI硬件加速设备
     </a>
    </li>
@@ -240,7 +240,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E4%B8%89%E7%AB%A0/3.9%20%E4%BC%98%E5%8C%96%E5%99%A8.html">
-     3.9 Pytorch优化器
+     3.9 PyTorch优化器
     </a>
    </li>
   </ul>
@@ -256,7 +256,12 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94FashionMNIST%E6%97%B6%E8%A3%85%E5%88%86%E7%B1%BB.html">
+    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.1%20ResNet.html">
+     4.1 ResNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0/4.4%20FashionMNIST%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB.html">
      基础实战——FashionMNIST时装分类
     </a>
    </li>
@@ -366,6 +371,11 @@
      7.3 使用TensorBoard可视化训练过程
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E4%B8%83%E7%AB%A0/7.4%20%E4%BD%BF%E7%94%A8wandb%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.html">
+     7.4 使用wandb可视化训练过程
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -396,6 +406,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.4%20%E6%96%87%E6%9C%AC%20-%20torchtext.html">
      8.4 torchtext简介
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../%E7%AC%AC%E5%85%AB%E7%AB%A0/8.5%20%E9%9F%B3%E9%A2%91%20-%20torchaudio.html">
+     8.5 torchaudio简介
     </a>
    </li>
   </ul>
@@ -453,13 +468,23 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
-     Swin Transformer解读
+    <a class="reference internal" href="LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98.html">
+     文章结构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="Transformer%20%E8%A7%A3%E8%AF%BB.html">
+     Transformer 解读
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="ViT%E8%A7%A3%E8%AF%BB.html">
      ViT解读
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="Swin-Transformer%E8%A7%A3%E8%AF%BB.html">
+     Swin Transformer解读
     </a>
    </li>
   </ul>
@@ -739,7 +764,7 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>文章结构<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h1>
-<p>提及 RNN，绝大部分人都知道他是一个用于序列任务的神经网络，会提及他保存了时序信息，但是，为什么需要考虑时序的信息？为什么说 RNN 保存了时序的信息？RNN又存在哪些问题？ 本篇内容将按照以下顺序逐步带你摸清 RNN 的细节之处，并使用 torch 来完成一个自己的文本分类模型。</p>
+<p>提及 RNN，绝大部分人都知道他是一个用于序列任务的神经网络，会提及他保存了时序信息，但是，为什么需要考虑时序的信息？为什么说 RNN 保存了时序的信息？RNN又存在哪些问题？ 本篇内容将按照以下顺序逐步带你摸清 RNN 的细节之处，并使用 PyTorch 来完成一个自己的文本分类模型。</p>
 <ol class="simple">
 <li><p>为什么需要 RNN？</p></li>
 <li><p>RNN 理解及其简单实现。</p></li>
@@ -761,10 +786,9 @@ $<span class="math notranslate nohighlight">\(
 \mathbf{O} = \mathbf{H}\mathbf{W}_{hq} + \mathbf{b}_q
 \)</span><span class="math notranslate nohighlight">\(
 其中，\)</span>\mathbf{O} \in \mathbb{R}^{n \times q}<span class="math notranslate nohighlight">\( 为模型输出变量，\)</span>q<span class="math notranslate nohighlight">\( 表示输出层向量，由于本次的任务是一个文本分类任务，那这里 \)</span>q<span class="math notranslate nohighlight">\( 就表示文本类别，可以使用 \)</span>\mathbf{Softmax(O)}$ 来进行概率预测。</p>
-<p>但是，上面的流程有一个很明显的前置条件：<strong>固定成 <span class="math notranslate nohighlight">\(d\)</span> 维向量</strong>，也就是说，传统的多层感知机，是不能支持向量长度进行变化的。<strong>但是</strong>，在序列任务中，序列长短很明显是并不相同的，不仅需要用一天的数据预测明天的结果，也可能需要拿一年的数据预测明天的结果。在这样的情况下，如果还想要使用传统的多层感知机，就会面临着一个巨大的问题：如何将一天的内容与一年的内容变化成相同的 <span class="math notranslate nohighlight">\(d\)</span> 维向量？</p>
-<p>除此之外，序列信息可能还有另外一个情况：某些信息可能出现在序列的不同位置。虽然信息出现在不同的位置，但是他可能表达出了相同的含义。</p>
-<p>举例来说：当我们和老师谈话时，，如果他表扬了我们半小时，然后说：&quot;但是...&quot;，我们往往是不担心的，因为他可能只是为了指出一些小问题。如果他刚刚表扬了一句话，紧接着就说“但是”，那我们就必须做好面对半小时的狂风暴雨。还有另外一种可能，老师可能连续批评你很久，然后使用“但是”转折，你就会在这时候如释重负，因为你知道这场谈话就快要结束了。
-这就是我们根据前文(表扬的内容和时间)，在老师说出&quot;但是&quot;的时候，所作出的判断。</p>
+<p>但是，上面的流程有一个很明显的前置条件：<strong>固定成 <span class="math notranslate nohighlight">\(d\)</span> 维向量</strong>，也就是说，传统的多层感知机，是不能对变长序列进行处理的。但是，<strong>在序列任务中，序列长短很明显是并不相同的</strong>，不仅需要用一天的数据预测明天的结果，也可能需要拿一年的数据预测明天的结果。在这样的情况下，如果还想要使用传统的多层感知机，就会面临着一个巨大的问题：如何将一天的内容与一年的内容变化成相同的 <span class="math notranslate nohighlight">\(d\)</span> 维向量？</p>
+<p>除此之外，序列信息可能还有另外一个情况：<strong>某些信息可能出现在序列的不同位置。虽然信息出现在不同的位置，但是他可能表达出了相同的含义</strong>。</p>
+<p>举例来说：当我们和老师谈话时，如果他表扬了我们半小时，然后说：&quot;但是...&quot;，我们往往是不担心的，因为他可能只是为了指出一些小问题。如果他刚刚表扬了一句话，紧接着就说“但是”，那我们就必须做好面对半小时的狂风暴雨。还有另外一种可能，老师可能连续批评你很久，然后使用“但是”转折，你就会在这时候如释重负，因为你知道这场谈话就快要结束了。这就是我们根据前文(表扬的内容和时间)，在老师说出&quot;但是&quot;的时候，所作出的判断。</p>
 <p>上面提到的两个问题，使用多层感知机本身似乎难以解决，但是所幸，RNN 从一个更常规的思路出发来解决这个问题：<strong>记住之前看到的内容，并结合当前看到的内容，来预测之后可能的内容。</strong></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="id2">
@@ -918,7 +942,8 @@ $<span class="math notranslate nohighlight">\(
 <p>前面讲解了 RNN 是如何解决简单神经网络无法处理序列问题的，但是 RNN 是否就完美无缺？能应用于全部的序列任务了呢？答案当然是否定的。</p>
 <p>这是由于 RNN 存在一个巨大的缺陷：梯度爆炸与梯度消失。</p>
 <p>重新审查代码与公式，可以很轻松的发现，在序列达到末尾时，我们才需要计算损失与进行梯度回传，此时将 <span class="math notranslate nohighlight">\(\mathbf{H}_t\)</span> 展开，其内部存在 <span class="math notranslate nohighlight">\(\mathbf{W}_{hh} \times \mathbf{H}_{t-1}\)</span>。而将 <span class="math notranslate nohighlight">\(\mathbf{H}_{t-1}\)</span> 展开，也存在一个 <span class="math notranslate nohighlight">\(\mathbf{W}_{hh}\)</span>，那么很明显 如果 <span class="math notranslate nohighlight">\(\mathbf{W}_{hh}\)</span> 大于 1，在经过 <span class="math notranslate nohighlight">\(t\)</span> 次连乘之后会产生梯度爆炸，如果  <span class="math notranslate nohighlight">\(\mathbf{W}_{hh}\)</span> 小于 1，在经过 <span class="math notranslate nohighlight">\(t\)</span> 次连乘之后又会产生梯度消失。同理，在 <span class="math notranslate nohighlight">\(\mathbf{W}_{xh}\)</span> 上，也存在这样的依赖关系，也会导致梯度爆炸或者消失。</p>
-<p>为了解决这个问题，我们可以考虑使用 梯度剪裁的方式保证梯度不会爆炸，当然，也可以查看下一篇，针对 RNN 进行优化的 LSTM、GRU 等算法</p>
+<p>梯度的消失也可以这样思考：前方节点的隐藏信息总和占了 0.5，而当前节点隐藏信息占了 0.5，随着序列长度的增加，位于开始部分节点的隐藏信息占比几乎是指数型下降，从 1/2 到 1/4 到 1/8，以此类推。可以参考下图尝试理解。因此，在 RNN 中，梯度消失就成了一个比梯度爆炸更关注的难题，因为这使得模型只能记得离自己最近的几个节点的状态，而很难考虑更远一步的状态，无法更好的关联上下文信息。</p>
+<p>为了解决这个问题，我们可以考虑使用 梯度剪裁的方式保证梯度传递过程中不大于1，从而使得梯度不会爆炸，但是，我们无法阻止梯度的消失。当然，也可以查看下一篇，针对 RNN 进行优化的 LSTM、GRU 等算法</p>
 </section>
 
 
@@ -936,10 +961,10 @@ $<span class="math notranslate nohighlight">\(
             <p class="prev-next-title">ResNet源码解读</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="Swin-Transformer%E8%A7%A3%E8%AF%BB.html" title="下一页 页">
+    <a class='right-next' id="next-link" href="LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98.html" title="下一页 页">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">Swin Transformer解读</p>
+        <p class="prev-next-title">文章结构</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

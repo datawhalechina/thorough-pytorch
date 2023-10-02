@@ -1,6 +1,6 @@
 # 5.4 PyTorch模型保存与读取
 
-在前面几节的内容中，我们介绍了如何构建和修改PyTorch模型。本节我们来讨论PyTorch如何保存和读取训练好的模型。
+在前面几节的内容中，我们介绍了如何构建和修改PyTorch模型。本节我们来讨论PyTorch如何保存和读取训练好的模型和参数。
 
 另外，在很多场景下我们都会使用多GPU训练。这种情况下，模型会分布于各个GPU上（参加2.3节分布数据式训练，这里暂不考虑分布模型式训练），模型的保存和读取与单GPU训练情景下是否有所不同？
 
@@ -9,6 +9,7 @@
 - PyTorch的模型的存储格式
 - PyTorch如何存储模型
 - 单卡与多卡训练下模型的保存与加载方法
+- 优化器模型参数的保存
 
 
 ## 5.4.1 模型存储格式
@@ -256,7 +257,26 @@ loaded_model = nn.DataParallel(loaded_model).cuda()
 loaded_model.load_state_dict(loaded_dict)
 ```
 
-
+## 5.4.5 其他参数的保存和读取
+在深度学习项目里，有时候我们不仅仅需要保存模型的权重，还需要保存一些其他的参数，比如训练的epoch数、训练的loss，优化器的参数，动态调整学习策略的参数等等。这些参数可以通过字典的形式保存在一个文件里，然后在读取模型时一起读取。这里我们以下方代码为例：
+```python
+torch.save({
+        'model': model.state_dict(),
+        'optimizer': optimizer.state_dict(),
+        'lr_scheduler': lr_scheduler.state_dict(),
+        'epoch': epoch,
+        'args': args,
+    }, checkpoint_path)
+```
+这些参数的读取方式也是类似的：
+```python
+checkpoint = torch.load(checkpoint_path)
+model.load_state_dict(checkpoint['model'])
+optimizer.load_state_dict(checkpoint['optimizer'])
+lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
+epoch = checkpoint['epoch']
+args = checkpoint['args']
+```
 
 ## 附：测试环境
 
@@ -264,9 +284,9 @@ OS: Ubuntu 20.04 LTS GPU: GeForce RTX 2080 Ti (x3)
 
 
 
-## 本节参考
+## 参考资料
 
 本章内容同时发布于[知乎](https://zhuanlan.zhihu.com/p/371090724)和[CSDN](https://blog.csdn.net/goodljq/article/details/117258032)
 
-【1】[pytorch 中pkl和pth的区别？](https://www.zhihu.com/question/274533811)  
-【2】[What is the difference between .pt, .pth and .pwf extentions in PyTorch?](https://stackoverflow.com/questions/59095824/what-is-the-difference-between-pt-pth-and-pwf-extentions-in-pytorch)
+1. [pytorch 中pkl和pth的区别？](https://www.zhihu.com/question/274533811)  
+2. [What is the difference between .pt, .pth and .pwf extentions in PyTorch?](https://stackoverflow.com/questions/59095824/what-is-the-difference-between-pt-pth-and-pwf-extentions-in-pytorch)

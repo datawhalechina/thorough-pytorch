@@ -24,49 +24,56 @@ val_data = datasets.ImageFolder(val_path, transform=data_transform)
 
 这里使用了PyTorch自带的ImageFolder类的用于读取按一定结构存储的图片数据（path对应图片存放的目录，目录下包含若干子目录，每个子目录对应属于同一个类的图片）。
 
-其中“data_transform”可以对图像进行一定的变换，如翻转、裁剪等操作，可自己定义。这里我们会在下一章通过实战加以介绍。
+其中`data_transform`可以对图像进行一定的变换，如翻转、裁剪等操作，可自己定义。这里我们会在下一章通过实战加以介绍并在[notebook](https://github.com/datawhalechina/thorough-pytorch/tree/main/notebook/%E7%AC%AC%E5%85%AB%E7%AB%A0%20PyTorch%E7%94%9F%E6%80%81%E7%AE%80%E4%BB%8B)中做了示例代码。
 
-这里另外给出一个例子，其中图片存放在一个文件夹，另外有一个csv文件给出了图片名称对应的标签。这种情况下需要自己来定义Dataset类：
+这里我们给出一个自己定制Dataset的例子
 
 ```python
 
-class MyDataset(Dataset):
-    def __init__(self, data_dir, info_csv, image_list, transform=None):
-        """
-        Args:
-            data_dir: path to image directory.
-            info_csv: path to the csv file containing image indexes
-                with corresponding labels.
-            image_list: path to the txt file contains image names to training/validation set
-            transform: optional transform to be applied on a sample.
-        """
-        label_info = pd.read_csv(info_csv)
-        image_file = open(image_list).readlines()
-        self.data_dir = data_dir
-        self.image_file = image_file
-        self.label_info = label_info
-        self.transform = transform
+import os
+import pandas as pd
+from torchvision.io import read_image
 
-    def __getitem__(self, index):
+class MyDataset(Dataset):
+    def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
         """
         Args:
-            index: the index of item
-        Returns:
-            image and its labels
+            annotations_file (string): Path to the csv file with annotations.
+            img_dir (string): Directory with all the images.
+            transform (callable, optional): Optional transform to be applied
+                on a sample.
+            target_transform (callable, optional): Optional transform to be applied
+                on the target.
         """
-        image_name = self.image_file[index].strip('\n')
-        raw_label = self.label_info.loc[self.label_info['Image_index'] == image_name]
-        label = raw_label.iloc[:,0]
-        image_name = os.path.join(self.data_dir, image_name)
-        image = Image.open(image_name).convert('RGB')
-        if self.transform is not None:
-            image = self.transform(image)
-        return image, label
+        self.img_labels = pd.read_csv(annotations_file)
+        self.img_dir = img_dir
+        self.transform = transform
+        self.target_transform = target_transform
 
     def __len__(self):
-        return len(self.image_file)
-```
+        return len(self.img_labels)
 
+    def __getitem__(self, idx):
+        """
+        Args:
+            idx (int): Index
+        """
+        img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0])
+        image = read_image(img_path)
+        label = self.img_labels.iloc[idx, 1]
+        if self.transform:
+            image = self.transform(image)
+        if self.target_transform:
+            label = self.target_transform(label)
+        return image, label
+```
+其中，我们的标签类似于以下的形式：
+```csv
+image1.jpg, 0
+image2.jpg, 1
+......
+image9.jpg, 9
+```
 构建好Dataset后，就可以使用DataLoader来按批次读入数据了，实现代码如下：
 
 ```python

@@ -170,8 +170,9 @@ x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, mask))
 
 所谓的多头注意力机制其实就是将原始的输入序列进行多组的自注意力处理；然后再将每一组得到的自注意力结果拼接起来，再通过一个线性层进行处理，得到最终的输出。我们用公式可以表示为：
 $$
-{\rm MultiHead(Q,K,V) = Concat(head_1,...,head_h)W^O}\\
-\rm head_i = Attention(QW_i^Q,KW_i^K,VW_i^V)
+\mathrm{MultiHead}(Q, K, V) = \mathrm{Concat}(\mathrm{head_1}, ...,
+\mathrm{head_h})W^O    \\
+    \text{where}~\mathrm{head_i} = \mathrm{Attention}(QW^Q_i, KW^K_i, VW^V_i)
 $$
 
 ​其代码实现相对复杂，通过矩阵操作实现并行的多头计算，整体计算流程如下：

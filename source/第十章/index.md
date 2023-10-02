@@ -6,6 +6,8 @@
 10.3 图像分割
 ResNet源码解读
 RNN详解及其实现
-Swin-Transformer解读
+LSTM解读及实战
+Transformer 解读
 ViT解读
+Swin-Transformer解读
 ```

@@ -5,4 +5,5 @@
 8.2 图像 - torchvision
 8.3 视频 - PyTorchVideo
 8.4 文本 - torchtext
+8.5 音频 - torchaudio
 ```

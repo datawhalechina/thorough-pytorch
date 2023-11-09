@@ -1,5 +1,3 @@
-# Conda 换源
-
-# pip 换源
-
-# How to Debug
+1. conda 换源
+2. pip 换源
+3. 如何使用vscode debug

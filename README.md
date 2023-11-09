@@ -50,33 +50,33 @@
 
 ### 四、PyTorch基础实战
 
-- 基础实战——Fashion-MNIST时装分类
-- 基础实战——果蔬分类实战（notebook）
+1. 基础实战——Fashion-MNIST时装分类
+2. 基础实战——果蔬分类实战（notebook）
 
 ### 五、PyTorch模型定义
 
-- 模型定义方式
-- 利用模型块快速搭建复杂网络
-- 模型修改
-- 模型保存与读取
+1. 模型定义方式
+2. 利用模型块快速搭建复杂网络
+3. 模型修改
+4. 模型保存与读取
 
 ### 六、PyTorch进阶训练技巧
 
-- 自定义损失函数
-- 动态调整学习率
-- 模型微调-torchvision
-- 模型微调-timm
-- 半精度训练
-- 数据扩充
-- 超参数的修改及保存
-- PyTorch模型定义与进阶训练技巧
+1. 自定义损失函数
+2. 动态调整学习率
+3. 模型微调-torchvision
+4. 模型微调-timm
+5. 半精度训练
+6. 数据扩充
+7. 超参数的修改及保存
+8. PyTorch模型定义与进阶训练技巧
 
 ### 七、PyTorch可视化
 
-- 可视化网络结构
-- 可视化CNN卷积层
-- 使用TensorBoard可视化训练过程
-- 使用wandb可视化训练过程
+1. 可视化网络结构
+2. 可视化CNN卷积层
+3. 使用TensorBoard可视化训练过程
+4. 使用wandb可视化训练过程
 
 
 
@@ -165,7 +165,7 @@ git push -f
 </details>
 
 
-## 六、关注我们
+## 五、关注我们
 <div align=center><img src="https://raw.githubusercontent.com/datawhalechina/easy-rl/master/docs/res/qrcode.jpeg" width = "250" height = "270" alt="Datawhale是一个专注AI领域的开源组织，以“for the learner，和学习者一起成长”为愿景，构建对学习者最有价值的开源学习社区。关注我们，一起学习成长。"></div>
 
 ## LICENSE

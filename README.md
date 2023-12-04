@@ -18,6 +18,19 @@
 - 适用于所有具备基础 Python 能力，想要入门 PyTorch 的AI从业者，同学。
 - 我们希望你具有基础的数理知识，深度学习基础知识，Python编程基础和使用搜索引擎解决问题的能力。
 
+### 教程使用的环境
+
+我们的教程在以下的环境下均进行测试过，我们建议在安装python时，安装3.8以上的版本，同时尽量使用Linux机器进行学习(Windows也可以)
+
+1. torch2.0.1+cpu / Windows11 / python3.9.17
+2. torch1.12+cu113 / Ubuntu 20.04 / python 3.9.18
+3. torch2.0.1+cu118 / Ubuntu 20.04 / python 3.9.18
+
+### 教程的答疑
+
+1. 我们会记录大家在学习中遇到的一些问题并汇聚在FAQ(Frequently Asked Questions)文档中，在提issue前可以查看FAQ文档。我们也欢迎大家把自己遇到的问题Pull request至FAQ文档中。
+2. 关于出现的问题，欢迎大家在[issues](https://github.com/datawhalechina/thorough-pytorch/issues)提问，一个好的问题应该包括：BUG的完整电脑截图，清晰的问题描述，已经在Google/ChatGPT上进行自我解答过。
+
 ## 二、内容大纲
 
 ### 相关前置知识[选学]
@@ -30,53 +43,34 @@
 ### 一、PyTorch的简介和安装
 
 1. PyTorch简介与安装
+2. Tensor的简介
+3. 自动求导机制
 
-### 二、PyTorch基础知识
-
-1. 张量及其运算
-2. 自动求导机制简介
-3. 并行计算、CUDA和cuDNN简介
-
-### 三、PyTorch的主要组成模块
+### 二、PyTorch的主要组成模块
 
 1. 深度学习流程需要的关键环节
-2. 基本配置
-3. 数据读入
-4. 模型构建
-5. 损失函数
-6. 优化器
-7. 训练和评估
-8. 可视化
+2. 数据的读取
+3. 模型的构建
+4. 损失函数的构建
+5. 优化器的选择
+6. 模型的保存与读取
+7. GPU的使用
+8. 指标的评估与记录
 
-### 四、PyTorch基础实战
+### 三、PyTorch计算机视觉基础实战
 
 1. 基础实战——Fashion-MNIST时装分类
 2. 基础实战——果蔬分类实战（notebook）
+3. 基础实战——UNet图像分割
 
-### 五、PyTorch模型定义
+### 四、PyTorch自然语言处理基础实战
 
-1. 模型定义方式
-2. 利用模型块快速搭建复杂网络
-3. 模型修改
-4. 模型保存与读取
+1. 基础实战——RNN/LSTM
+2. 基础实战——Transformer-machine translation实战
 
-### 六、PyTorch进阶训练技巧
+### 五、PyTorch进阶实战
 
-1. 自定义损失函数
-2. 动态调整学习率
-3. 模型微调-torchvision
-4. 模型微调-timm
-5. 半精度训练
-6. 数据扩充
-7. 超参数的修改及保存
-8. PyTorch模型定义与进阶训练技巧
-
-### 七、PyTorch可视化
-
-1. 可视化网络结构
-2. 可视化CNN卷积层
-3. 使用TensorBoard可视化训练过程
-4. 使用wandb可视化训练过程
+1. GPT2实战详解
 
 
 
@@ -96,8 +90,7 @@
 **其他**
 
 - 非常感谢DataWhale成员 叶前坤 @[PureBuckwheat](https://github.com/PureBuckwheat) 和 胡锐锋 @[Relph1119](https://github.com/Relph1119) 对文档的细致校对！
-- 如果有任何想法可以联系我们DataWhale也欢迎大家多多提出issue。
-- 特别感谢以下为教程做出贡献的同学！并特别感谢MMYOLO的贡献者们！
+- 关于本教程有任何意见与建议可发邮件至nzk020109@gmail.com，主题命名为**PyTorch教程建议**开头
 
 <a href="https://github.com/datawhalechina/thorough-pytorch/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=datawhalechina/thorough-pytorch" />
@@ -114,7 +107,7 @@ Made with [contrib.rocks](https://contrib.rocks).
 1. 在GitHub上Fork本仓库
 2. Clone Fork后的个人仓库
 3. 设置`upstream`仓库地址，并禁用`push`
-4. 使用分支开发，课程分支名为`lecture{#NO}`，`#NO`保持两位，如`lecture07`，对应课程目录
+4. 使用分支开发，课程分支名为`ch{#NO}`，`#NO`保持两位，如`ch07`，对应课程目录
 5. PR之前保持与原始仓库的同步，之后发起PR请求
 
 命令示例：
@@ -135,16 +128,16 @@ git remote -v
 # upstream	git@github.com:datawhalechina/thorough-pytorch.git (fetch)
 # upstream	DISABLE (push)
 # do your work
-git checkout -b lecture07
+git checkout -b ch07 # 根据实际情况修改分支
 # edit and commit and push your changes
-git push -u origin lecture07
+git push -u origin ch07
 # keep your fork up to date
 ## fetch upstream main and merge with forked main branch
 git fetch upstream
 git checkout main
 git merge upstream/main
 ## rebase brach and force push
-git checkout lecture07
+git checkout ch07
 git rebase main
 git push -f
 ```

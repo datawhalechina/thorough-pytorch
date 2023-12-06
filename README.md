@@ -29,7 +29,7 @@
 ### 教程的答疑
 
 1. 我们会记录大家在学习中遇到的一些问题并汇聚在FAQ(Frequently Asked Questions)文档中，在提issue前可以查看FAQ文档。我们也欢迎大家把自己遇到的问题Pull request至FAQ文档中。
-2. 关于出现的问题，欢迎大家在[issues](https://github.com/datawhalechina/thorough-pytorch/issues)提问，一个好的问题应该包括：BUG的完整电脑截图，清晰的问题描述，已经在Google/ChatGPT上进行自我解答过。
+2. 关于出现的问题，欢迎大家在[issues](https://github.com/datawhalechina/thorough-pytorch/issues)提问，一个好的问题应该包括：BUG的完整电脑截图，清晰的问题描述，已经在Google/ChatGPT上进行自我查找过问题的解决方案。
 
 ## 二、内容大纲
 
@@ -48,14 +48,15 @@
 
 ### 二、PyTorch的主要组成模块
 
-1. 深度学习流程需要的关键环节
-2. 数据的读取
-3. 模型的构建
-4. 损失函数的构建
-5. 优化器的选择
-6. 模型的保存与读取
-7. GPU的使用
-8. 指标的评估与记录
+1. 引言：一个深度学习项目的组成
+2. 数据读取
+3. 模型构建
+4. 模型初始化
+5. 损失函数
+6. 优化器
+7. 训练与评估
+8. 模型的保存和读取
+9. 模型性能的评价
 
 ### 三、PyTorch计算机视觉基础实战
 
@@ -108,7 +109,8 @@ Made with [contrib.rocks](https://contrib.rocks).
 2. Clone Fork后的个人仓库
 3. 设置`upstream`仓库地址，并禁用`push`
 4. 使用分支开发，课程分支名为`ch{#NO}`，`#NO`保持两位，如`ch07`，对应课程目录
-5. PR之前保持与原始仓库的同步，之后发起PR请求
+5. PR之前保持与原始仓库的同步，之后发起PR请求。
+6. 对 PR 不熟悉的同学，可以查阅[第一次参与开源](https://github.com/firstcontributions/first-contributions/blob/main/translations/README.zh-cn.md)中的流程。
 
 命令示例：
 

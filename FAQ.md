@@ -1,4 +1,7 @@
-## 换源
+# FAQ
+FAQ(Frequently Asked Question)文档记录一些大家经常问到的问题以及它的解决方案。
+
+## pip&conda换源
 
 关于换源的更多内容，可以参考
 
@@ -118,8 +121,6 @@ pip config get global.index-url		# 查看当前默认的pip源地址
       trusted-host=pypi.tuna.tsinghua.edu.cn
       index-url=https://pypi.tuna.tsinghua.edu.cn/simple
       ```
-
-
 
 ### 3. 换源安装pytorch
 

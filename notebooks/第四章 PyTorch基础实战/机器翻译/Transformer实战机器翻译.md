@@ -245,3 +245,387 @@ class MultiHeadAttention(nn.Module):
         y = self.resid_dropout(self.c_proj(y))
         return y
 ```
+
+### 全连接网络（FNN）
+
+如图，每一个 Encoder 块内部其实是一个多头自注意力层再加一个全连接层，在 Transformer 中，一个全连接网络一般包括两个线性层，线性层之间使用 ReLU 函数作为激活函数。此处我们实现一个 FNN 层：
+
+```python
+'''全连接模块'''
+class MLP(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        # Transformer 的全连接模块有两个线性层，中间加了一个 RELU 激活函数
+        # 此处我们将隐藏层维度设为输出层的四倍，也可以设置成其他维度
+        self.c_fc    = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
+        self.relu    = nn.ReLU()
+        self.c_proj  = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
+        self.dropout = nn.Dropout(config.dropout)
+
+    def forward(self, x):
+        x = self.c_fc(x)
+        x = self.relu(x)
+        x = self.c_proj(x)
+        x = self.dropout(x)
+        return x
+```
+
+### Layer Norm
+
+Layer Norm 是 Transformer 的一个重要组成部分，模型在每一层网络计算之前都进行了 Layer Norm 操作。注意，在论文原图中，是先进行注意力计算和全连接计算再进行 Layer Norm 操作，这样也称为 Post Norm；但是在事实上实现 Transformer 模型时，作者其实将 Layer Norm 放在了注意力计算和全连接计算之前，从而将输入规范化到同一区间，减少模型训练的波动，称为 Pre Norm 操作。目前，Pre Norm 是较为常用的策略。
+
+由于 Pytorch 中自带的 Layer Norm 层必须存在偏置，我们此处手动实现一个 Layer Norm 层：
+
+```python
+'''层规范化模块'''
+
+class LayerNorm(nn.Module):
+    # 在 Pytorch 的 LayerNorm 基础上添加了偏置，因为 Pytorch 的 LayerNorm 不支持偏置为 None
+
+    def __init__(self, ndim, bias):
+        super().__init__()
+        # 初始化参数和偏置
+        self.weight = nn.Parameter(torch.ones(ndim))
+        self.bias = nn.Parameter(torch.zeros(ndim)) if bias else None
+
+    def forward(self, input):
+        # 直接调用 Pytorch 的 LayerNorm
+        return F.layer_norm(input, self.weight.shape, self.weight, self.bias, 1e-5)
+```
+
+### 残差连接
+
+由于 Transformer 模型结构较复杂、层数较深，​为了避免模型退化，Transformer 采用了残差连接的思想来连接每一个子层。残差连接，即下一层的输入不仅是上一层的输出，还包括上一层的输入。残差连接允许最底层信息直接传到最高层，让高层专注于残差的学习。
+
+​例如，在 Encoder 中，在第一个子层，输入进入多头自注意力层的同时会直接传递到该层的输出，然后该层的输出会与原输入相加，再进行标准化。在第二个子层也是一样。即：
+$$
+\rm x = x + MultiHeadSelfAttention(LayerNorm(x))
+\rm output = x + FNN(LayerNorm(x))
+$$
+
+我们在代码实现中，通过在 Encoder Layer 的 forward 计算中加上原值来实现残差连接：
+
+```python
+def forward(self, x):
+    # 此处通过加x实现了残差连接
+    x = self.ln_1(x)
+    # Encoder 使用 Self Attention，所以 Q、K、V 都是 x
+    x = x + self.attn(x, x, x)
+    x = x + self.mlp(self.ln_2(x))
+    return x
+```
+
+在上文代码中，self.ln_1 和 self.ln_2 都是 LayerNorm 层，self.attn 是注意力层，而 self.mlp 是全连接层。
+
+### Encoder
+
+在实现上述组件之后，我们可以搭建起 Transformer 的 Encoder。Encoder 由 N 个 Encoder Layer 组成，每一个 Encoder Layer 包括一个注意力层和一个全连接层。因此，我们可以首先实现一个 Encoder Layer：
+
+```python
+'''Encoder Layer'''
+class EncoderLayer(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        # 一个 Layer 中有两个 LayerNorm，分别在 Attention 之前和 MLP 之前
+        self.ln_1 = LayerNorm(config.n_embd, bias=config.bias)
+        # Encoder 不需要掩码，传入 is_causal=False
+        self.attn = MultiHeadAttention(config, is_causal=False)
+        self.ln_2 = LayerNorm(config.n_embd, bias=config.bias)
+        self.mlp = MLP(config)
+
+    def forward(self, x):
+        # 此处前面加了 x 实则是实现了残差连接
+        x = self.ln_1(x)
+        # Encoder 使用 Self Attention，所以 Q、K、V 都是 x
+        # print("x",x.size())
+        x = x + self.attn(x, x, x)
+        x = x + self.mlp(self.ln_2(x))
+        return x
+```
+
+然后我们搭建一个 Encoder，由 N 个 Encoder Layer 组成，在最后会加入一个 Layer Norm 实现规范化：
+
+```python
+'''Encoder'''
+class Encoder(nn.Module):
+
+    def __init__(self, config):
+        super(Encoder, self).__init__() 
+        # 一个 Encoder 由 N 个 Encoder Layer 组成
+        self.layers = nn.ModuleList([EncoderLayer(config) for _ in range(config.n_layer)])
+        self.norm = LayerNorm(config.n_embd, bias=config.bias)
+
+    def forward(self, x):
+        "分别通过 N 层 Encoder Layer"
+        for layer in self.layers:
+            x = layer(x)
+        return self.norm(x)
+```
+
+### Decoder
+
+类似的，我们也可以先搭建 Decoder Layer，再将 N 个 Decoder Layer 组装为 Decoder。但是和 Encoder 不同的是，Decoder 由两个注意力层和一个全连接层组成。第一个注意力层是一个掩码自注意力层，即使用 Mask 的注意力计算，保证每一个 token 只能使用该 token 之前的注意力分数；第二个注意力层是一个多头注意力层，该层将使用第一个注意力层的输出作为 query，使用 Encoder 的输出作为 key 和 value，来计算注意力分数。最后，再经过全连接层：
+
+```python
+'''Decoder Layer'''
+class DecoderLayer(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        # 一个 Layer 中有三个 LayerNorm，分别在 Mask Attention 之前、Self Attention 之前和 MLP 之前
+        self.ln_1 = LayerNorm(config.n_embd, bias=config.bias)
+        # Decoder 的第一个部分是 Mask Attention，传入 is_causal=True
+        self.m_attn = MultiHeadAttention(config, is_causal=True)
+        self.ln_2 = LayerNorm(config.n_embd, bias=config.bias)
+        # Decoder 的第二个部分是 类似于 Encoder 的 Attention，传入 is_causal=False
+        self.attn = MultiHeadAttention(config, is_causal=False)
+        self.ln_3 = LayerNorm(config.n_embd, bias=config.bias)
+        # 第三个部分是 MLP
+        self.mlp = MLP(config)
+
+    def forward(self, x, enc_out):
+        # 此处前面加了 x 实则是实现了残差连接
+        x = self.ln_1(x)
+        # 第一部分是一个 Mask Self Attention，Q、K、V 都是 x
+        x = x + self.m_attn(x, x, x)
+        x = self.ln_2(x)
+        # 第二部分是一个类似于 Encoder 的 Attention，Q 是 x，K、V 是 Encoder 的输出
+        x = x + self.attn(x, enc_out, enc_out)
+        x = self.ln_3(x)
+        x = x + self.mlp(x)
+        return x
+```
+
+### Position Encoding
+
+​Attention 机制可以实现良好的并行计算，但同时，其注意力计算的方式也导致序列中相对位置的丢失。在 RNN、LSTM 中，输入序列会沿着语句本身的顺序被依次递归处理，因此输入序列的顺序提供了极其重要的信息，这也和自然语言的本身特性非常吻合。但从上文对 Attention 机制的分析我们可以发现，在 Attention 机制的计算过程中，对于序列中的每一个 token，其他各个位置对其来说都是平等的，即“我喜欢你”和“你喜欢我”在 Attention 机制看来是完全相同的，但无疑这是 Attention 机制存在的一个巨大问题。因此，为使用序列顺序信息，保留序列中的相对位置信息，Transformer 采用了位置编码机制，该机制也在之后被多种模型沿用。
+
+​位置编码，即根据序列中 token 的相对位置对其进行编码，再将位置编码加入词向量编码中。位置编码的方式有很多，Transformer 使用了正余弦函数来进行位置编码，其编码方式为：
+
+$$
+PE(pos, 2i) = sin(pos/10000^{2i/d_{model}})\\
+PE(pos, 2i+1) = cos(pos/10000^{2i/d_{model}})
+$$
+
+​上式中，pos 为 token 在句子中的位置，2i 和 2i+1 则是指示了 token 是奇数位置还是偶数位置，从上式中我们可以看出对于奇数位置的 token 和偶数位置的 token，Transformer 采用了不同的函数进行编码。我们以一个简单的例子来说明位置编码的计算过程：假如我们输入的是一个长度为 4 的句子"I like to code"，我们可以得到下面的词向量矩阵$\rm x$，其中每一行代表的就是一个词向量，$\rm x_0=[0.1,0.2,0.3,0.4]$对应的就是“I”的词向量，它的pos就是为0，以此类推，第二行代表的是“like”的词向量，它的pos就是1：
+$$
+\rm x = \begin{bmatrix} 0.1 & 0.2 & 0.3 & 0.4 \\ 0.2 & 0.3 & 0.4 & 0.5 \\ 0.3 & 0.4 & 0.5 & 0.6 \\ 0.4 & 0.5 & 0.6 & 0.7 \end{bmatrix}
+$$
+​则经过位置编码后的词向量为：
+$$
+\rm x_{PE} = \begin{bmatrix} 0.1 & 0.2 & 0.3 & 0.4 \\ 0.2 & 0.3 & 0.4 & 0.5 \\ 0.3 & 0.4 & 0.5 & 0.6 \\ 0.4 & 0.5 & 0.6 & 0.7 \end{bmatrix} + \begin{bmatrix} \sin(\frac{0}{10000^0}) & \cos(\frac{0}{10000^0}) & \sin(\frac{0}{10000^{2/4}}) & \cos(\frac{0}{10000^{2/4}}) \\ \sin(\frac{1}{10000^0}) & \cos(\frac{1}{10000^0}) & \sin(\frac{1}{10000^{2/4}}) & \cos(\frac{1}{10000^{2/4}}) \\ \sin(\frac{2}{10000^0}) & \cos(\frac{2}{10000^0}) & \sin(\frac{2}{10000^{2/4}}) & \cos(\frac{2}{10000^{2/4}}) \\ \sin(\frac{3}{10000^0}) & \cos(\frac{3}{10000^0}) & \sin(\frac{3}{10000^{2/4}}) & \cos(\frac{3}{10000^{2/4}}) \end{bmatrix} = \begin{bmatrix} 0.1 & 1.2 & 0.3 & 1.4 \\ 1.041 & 0.84 & 0.41 & 1.49 \\ 1.209 & -0.016 & 0.52 & 1.59 \\ 0.541 & -0.489 & 0.895 & 1.655 \end{bmatrix}
+$$
+我们可以使用如下的代码来获取上述例子的位置编码：
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+def PositionEncoding(seq_len, d_model, n=10000):
+    P = np.zeros((seq_len, d_model))
+    for k in range(seq_len):
+        for i in np.arange(int(d_model/2)):
+            denominator = np.power(n, 2*i/d_model)
+            P[k, 2*i] = np.sin(k/denominator)
+            P[k, 2*i+1] = np.cos(k/denominator)
+    return P
+
+P = PositionEncoding(seq_len=4, d_model=4, n=100)
+print(P)
+```
+```python
+[[ 0.          1.          0.          1.        ]
+ [ 0.84147098  0.54030231  0.09983342  0.99500417]
+ [ 0.90929743 -0.41614684  0.19866933  0.98006658]
+ [ 0.14112001 -0.9899925   0.29552021  0.95533649]]
+```
+这样的位置编码主要有两个好处：
+
+1. 使 PE 能够适应比训练集里面所有句子更长的句子，假设训练集里面最长的句子是有 20 个单词，突然来了一个长度为 21 的句子，则使用公式计算的方法可以计算出第 21 位的 Embedding。
+2. 可以让模型容易地计算出相对位置，对于固定长度的间距 k，PE(pos+k) 可以用 PE(pos) 计算得到。因为 Sin(A+B) = Sin(A)Cos(B) + Cos(A)Sin(B), Cos(A+B) = Cos(A)Cos(B) - Sin(A)Sin(B)。
+
+​关于位置编码，有许多学者从数学的角度证明了该编码方式相对于其他更简单、直观的编码方式的优越性与必要性，由于本文重点在于代码的解析，此处不再赘述，感兴趣的读者可以查阅相关资料，如博客：[Transformer Architecture: The Positional Encoding](https://kazemnejad.com/blog/transformer_architecture_positional_encoding/)、[A Gentle Introduction to Positional Encoding in Transformer Models](https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/) 等。
+
+​编码结果示例如下：
+
+<div align=center><img src="./figures/transformer_position_embedding.png" alt="image-20230129201913077" style="zoom:50%;"/></div>
+
+基于上述原理，我们实现一个​位置编码层：
+
+```python
+'''位置编码模块'''
+class PositionalEncoding(nn.Module):
+    # 在输入上加入了位置编码
+
+    def __init__(self, config):
+        super(PositionalEncoding, self).__init__()
+        # Dropout 层
+        self.dropout = nn.Dropout(p=config.dropout)
+
+        # block size 是序列的最大长度
+        pe = torch.zeros(config.block_size, config.n_embd)
+        position = torch.arange(0, config.block_size).unsqueeze(1)
+        div_term = torch.exp(
+            torch.arange(0, config.n_embd, 2) * -(math.log(10000.0) / config.n_embd)
+        )
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0)
+        self.register_buffer("pe", pe)
+
+    def forward(self, x):
+        x = x + self.pe[:, : x.size(1)].requires_grad_(False)
+        return self.dropout(x)
+```
+
+### 整体模型
+
+在实现上述组件之后，我们可以根据 Transformer 的模型结构将整个模型搭建起来了。Transformer 整体包括一个 Embedding 层，一个位置编码层，一个 Encoder（包括 N 个 Encoder Layer），一个 Decoder（包括 N 个 Decoder Layer），最后还有一个从隐藏层维度映射到词表大小的线性层。从最后线性层输出出来再计算 Softmax，即能得到该预测结果映射到词表上的概率值。
+
+我们可以搭建这样一个 Transformer，并实现其部分方法：
+
+```python
+import inspect
+
+'''整体模型'''
+class Transformer(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        # 必须输入词表大小和 block size
+        assert config.vocab_size is not None
+        assert config.block_size is not None
+        self.config = config
+        self.transformer = nn.ModuleDict(dict(
+            wte = nn.Embedding(config.vocab_size, config.n_embd),
+            wpe = PositionalEncoding(config),
+            drop = nn.Dropout(config.dropout),
+            encoder = Encoder(config),
+            decoder = Decoder(config),
+        ))
+        # 最后的线性层，输入是 n_embd，输出是词表大小
+        self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
+
+        # 初始化所有的权重
+        self.apply(self._init_weights)
+
+        # 查看所有参数的数量
+        print("number of parameters: %.2fM" % (self.get_num_params()/1e6,))
+
+    '''统计所有参数的数量'''
+    def get_num_params(self, non_embedding=False):
+        # non_embedding: 是否统计 embedding 的参数
+        n_params = sum(p.numel() for p in self.parameters())
+        # 如果不统计 embedding 的参数，就减去
+        if non_embedding:
+            n_params -= self.transformer.wpe.weight.numel()
+        return n_params
+
+    '''初始化权重'''
+    def _init_weights(self, module):
+        # 线性层和 Embedding 层初始化为正则分布
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+    
+    '''前向计算函数'''
+    def forward(self, idx, targets=None):
+        # 输入为 idx，维度为 (batch size, sequence length)；targets 为目标序列，用于计算 loss
+        device = idx.device
+        b, t = idx.size()
+        assert t <= self.config.block_size, f"不能计算该序列，该序列长度为 {t}, 最大序列长度只有 {self.config.block_size}"
+
+        # 通过 self.transformer
+        # 首先将输入 idx 通过 Embedding 层，得到维度为 (batch size, sequence length, n_embd)
+        print("idx",idx.size())
+        # 通过 Embedding 层得到的维度是 (batch size, sequence length, vocab_size, n_embd)，因此我们去掉倒数第二个维度
+        tok_emb = self.transformer.wte(idx)
+        print("tok_emb",tok_emb.size())
+        # 然后通过位置编码
+        pos_emb = self.transformer.wpe(tok_emb) 
+        # 再进行 Dropout
+        x = self.transformer.drop(pos_emb)
+        # 然后通过 Encoder
+        print("x after wpe:",x.size())
+        enc_out = self.transformer.encoder(x)
+        print("enc_out:",enc_out.size())
+        # 再通过 Decoder
+        x = self.transformer.decoder(x, enc_out)
+        print("x after decoder:",x.size())
+
+        if targets is not None:
+            # 训练阶段，如果我们给了 targets，就计算 loss
+            # 先通过最后的 Linear 层，得到维度为 (batch size, sequence length, vocab size)
+            logits = self.lm_head(x)
+            # 再跟 targets 计算交叉熵
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
+        else:
+            # 推理阶段，我们只需要 logits，loss 为 None
+            # 取 -1 是只取序列中的最后一个作为输出
+            logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
+            loss = None
+
+        return logits, loss
+
+    '''配置优化器'''
+    def configure_optimizers(self, weight_decay, learning_rate, betas, device_type):
+        # weight_decay: 权重衰减系数，learning_rate: 学习率，betas: AdamW 的 betas，device_type: 设备类型
+        # 首先获取所有命名参数
+        param_dict = {pn: p for pn, p in self.named_parameters()}
+        # 过滤掉不需要更新的参数
+        param_dict = {pn: p for pn, p in param_dict.items() if p.requires_grad}
+        # 参数根据维度分为两组。
+        # 维度大于等于2的参数（通常是权重）会应用权重衰减，而维度小于2的参数（通常是偏置和层归一化参数）不会应用权重衰减。
+        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2]
+        nodecay_params = [p for n, p in param_dict.items() if p.dim() < 2]
+        optim_groups = [
+            {'params': decay_params, 'weight_decay': weight_decay},
+            {'params': nodecay_params, 'weight_decay': 0.0}
+        ]
+        # 打印一下参数数量
+        num_decay_params = sum(p.numel() for p in decay_params)
+        num_nodecay_params = sum(p.numel() for p in nodecay_params)
+        print(f"应用权重衰减的层数: {len(decay_params)}； 总参数量为：{num_decay_params:,}")
+        print(f"不应用权重衰减的层数: {len(nodecay_params)}, 总参数量为：{num_nodecay_params:,}")
+        # 检查 torch.optim.AdamW 是否支持融合版本（fused version），这是针对 CUDA 设备优化的版本。如果可用且 device_type 为 'cuda'，则使用融合版本。
+        fused_available = 'fused' in inspect.signature(torch.optim.AdamW).parameters
+        use_fused = fused_available and device_type == 'cuda'
+        extra_args = dict(fused=True) if use_fused else dict()
+        # 创建优化器
+        optimizer = torch.optim.AdamW(optim_groups, lr=learning_rate, betas=betas, **extra_args)
+        print(f"是否使用 fused AdamW: {use_fused}")
+
+        return optimizer
+
+    '''进行推理'''
+    @torch.no_grad()
+    def generate(self, idx, max_new_tokens, temperature=1.0, top_k=None):
+        # 推理阶段，输入为 idx，维度为 (batch size, sequence length)，max_new_tokens 为最大生成的 token 数量即按序推理 max_new_tokens 次
+        for _ in range(max_new_tokens):
+            # 如果输入序列太长，我们需要将它截断到 block_size
+            idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]
+            # 前向计算，得到 logits，维度为 (batch size, sequence length, vocab size)
+            logits, _ = self(idx_cond)
+            # 使用最后一个 token 的 logits 作为当前输出，除以温度系数控制其多样性
+            logits = logits[:, -1, :] / temperature
+            # 如果使用 Top K 采样，将 logits 中除了 top_k 个元素的概率置为 0
+            if top_k is not None:
+                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+                logits[logits < v[:, [-1]]] = -float('Inf')
+            # 对输出结果进行 Softmax
+            probs = F.softmax(logits, dim=-1)
+            # 对结果概率进行采样
+            idx_next = torch.multinomial(probs, num_samples=1)
+            # 将输出结果拼接到输入序列后面，作为下一次的输入
+            idx = torch.cat((idx, idx_next), dim=1)
+            # print("idx:", idx)
+
+        return idx
+```
+
+在上述代码中，我们主要实现了模型的构造函数、前向计算函数和推理阶段的生成函数。构造函数根据传入的参数构造模型的每个层，前向计算函数主要根据模型结构依次在各层之间进行传递。前向计算到最后一层，如果同时传入了 label，即训练阶段，那么通过最后一层之后与 label 计算交叉熵损失函数；如果没有 label 即推理阶段，那么直接通过最后一层得到结果即可。推理阶段的生成函数核心在于需要依次生成，因为 Seq2Seq 任务，在生成时以 LM 的形式生成，如果要生成长度为 N 的目标序列，那么会连续推理 N 次，每次将推理得到的结果附加到输入中再进行下一次生成。
+
+通过上述代码，我们即可实现一个 Transformer 模型。接下来，我们会结合具体的机器翻译数据集，讲解如何使用我们自定义的 Transformer 模型来实现训练和推理机器翻译任务。

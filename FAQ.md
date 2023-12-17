@@ -1,7 +1,7 @@
 # FAQ
 FAQ(Frequently Asked Question)文档记录一些大家经常问到的问题以及它的解决方案。
 
-## pip&conda换源
+## 一、关于pip&conda换源的问题
 
 关于换源的更多内容，可以参考
 
@@ -143,7 +143,7 @@ conda install cudatoolkit=版本–c 镜像地址
 # conda install cudatoolkit=11.3 –c https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
 ```
 
-## 使用 debugpy 调试 python 项目
+## 二、如何使用 debugpy 调试 python 项目
 
 > 在这里我们仅讲解如何在 vscode 中使用 debugpy 模块进行debug
 
@@ -152,34 +152,33 @@ conda install cudatoolkit=版本–c 镜像地址
 1. [命令行pyd方式在vscode中优雅debug Python](https://zhuanlan.zhihu.com/p/615198529)
 2. [Debugpy——如何使用VSCode调试无法直接执行的Python程序](https://zhuanlan.zhihu.com/p/560405414)
 3. [在 Linux 上远程调试 Python 代码](https://learn.microsoft.com/zh-cn/visualstudio/python/debugging-python-code-on-remote-linux-machines?view=vs-2022)
-### 为什么使用 debugpy 进行debug
+### 1. 为什么使用 debugpy 进行debug
 
 在使用 debugpy 模块 debug 之前，我们还有很多调试的办法，例如：`print` 大法， pdb 调试，同时 vscode ，pycharm 等 ide 也提供了基于 pdb 的调试方法，但是这些方法或多或少都存在一定的问题
 
-`print` 方法在调试启动时间长，运行代价大的项目上非常麻烦，而且要同时查看多个变量信息开销很大
-
-pdb 调试，记忆语句多，学习成本高，调试不方便
-
-利用 ide 调试，对于带参数的程序，需要写冗长的配置文件后才能调试，而且很难复用，而且无法调试通过 `.sh` 文件启动的python程序，在调试 python 模块的时候还需要专门配置，非常低效，有的计算集群计算和开发是分开的，在开发机开发完成后提交到集群上动态分配节点执行。由于动态分布的节点每次ip都不一样，因此没办法直接使用vscode调试。
+- `print` 方法在调试启动时间长，运行代价大的项目上非常麻烦，而且要同时查看多个变量信息开销很大
+- `pdb` 调试，记忆语句多，学习成本高，调试不方便
+- `ide`调试，对于带参数的程序，需要写冗长的配置文件后才能调试，而且很难复用，而且无法调试通过 `.sh` 文件启动的python程序，在调试 python 模块的时候还需要专门配置，非常低效，有的计算集群计算和开发是分开的，在开发机开发完成后提交到集群上动态分配节点执行。由于动态分布的节点每次ip都不一样，因此没办法直接使用vscode调试。
 
 而使用 debugpy 调试能够解决上面的绝大多数问题
 
-### 使用 debugpy debug 的具体操作
+### 2. 使用 debugpy debug 的具体操作
 
-首先确保你获取了 debugpy 模块
-在命令行中执行
+#### 2.1 debugpy的安装
+
+在使用debugpy前，我们首先需要安装 debugpy 模块，如果没有安装的话只需要在终端中执行
 
 ```shell
 pip install debugpy
 ```
-  
-接着配置vscode调试配置文件
 
-[![pi5NKMT.png](https://s11.ax1x.com/2023/12/17/pi5NKMT.png)](https://imgse.com/i/pi5NKMT)
+#### 2.2 配置launch.json文件
 
-选择侧边栏中运行与调试，创建 launch.json 文件，如果你看不到创建文件的选项的话，把之前的配置删掉就好了
+我们点击vscode侧边栏中的运行与调试，创建 launch.json 文件
 
-配置文件内容如下：
+<img src="https://github.com/datawhalechina/thorough-pytorch/assets/73390819/c6ec6d84-1ee9-441a-b4a3-8c695d78f5ca" alt="set_launch" align="center" style="zoom:80%;" />
+
+我们只需要将以下的内容复制到你的配置文件即可，需要改动的参数只有 connect 部分，修改调试要监听的地址与端口（如果没有特殊需求，可以不用修改下面的内容）：
 
 ```json
 {
@@ -201,56 +200,61 @@ pip install debugpy
 }
 
 ```
-需要改动的参数只有 connect 部分，修改调试要监听的地址与端口，与程序中设定的地址与端口一致就可以
-,这里我选择调试本地的文件，所以host就写的localhost
+#### 2.3 debugpy使用步骤
 
-接着在命令行中运行
+我们执行一个python文件往往使用以下的方式
+
+```shell
+python xxx.py
+```
+
+当我们配置好debugpy后，我们只需要将`python`换成`python -m debugpy --listen 设定的端口 --wait-for-client`即可，我们在命令行中运行如下的命令即可。
+
 ```shell
 python -m debugpy --listen 5678 --wait-for-client xxx.py
+# 或者启动的shell scripts也可以
+# python -m debugpy --listen 5678 --wait-for-client xxx.sh
 ```
-或者
-```shell
-python -m debugpy --listen 5678 --wait-for-client xxx.sh
-```
-启动后，由于设置了--wait-for-client选择，当前进程会等待你打开调试接收端口(我们在launch.json文件中配置的地址)
+启动后，由于设置了`--wait-for-client`选择，当前进程会等待你打开调试接收端口(我们在launch.json文件中配置的地址)
 
-[![pi5UUts.png](https://s11.ax1x.com/2023/12/17/pi5UUts.png)](https://imgse.com/i/pi5UUts)
+<img src="https://github.com/datawhalechina/thorough-pytorch/assets/73390819/b5be1636-cc5e-4c37-8621-cdcbcc3703d9" alt="run" align="center" style="zoom:80%;" />
 
-启动后就能够使用vscode正常调试了
+当我们点击启动按键后就能够使用vscode正常调试了
 
-[![pi5U3X8.md.png](https://s11.ax1x.com/2023/12/17/pi5U3X8.md.png)](https://imgse.com/i/pi5U3X8)
+<img src="https://github.com/datawhalechina/thorough-pytorch/assets/73390819/0caaec85-6303-4a7f-8c8a-563b0af29063" alt="start_debug" align="center" style="zoom:80%;" />
 
-同时，我们可以使用 alias 添加别称的方式对debug命令进行简化。
+但是每一次输入那么长的命令也显得过于复杂，因此我们可以使用 alias 添加别称的方式对debug命令进行简化。
 
 ```shell
+# 原始的命令
 python -m debugpy --listen 5678 --wait-for-client
 ```
 
-我们通过在Linux系统中的 ~/.bashrc 文件中添加以下命令
+我们可以在Linux系统中的 `~/.bashrc` 文件中添加以下命令
 
 ```
 alias pyd='python -m debugpy --wait-for-client --listen 5678'
 ```
 
-然后执行
+保存完后，我们只需要执行即可
 
 ```shell
 source ~/.bashrc
 ```
 
-下次启动时就可以直接使用 pyd 命令代替
+当我们下次启动时就可以直接使用 `pyd` 命令代替`python -m debugpy --wait-for-client --listen 5678`，这样会使得我们的启动更加的方便简洁。
 
 ```
 pyd xxx.py
 ```
 
-也可以不在命令行中指定连接地址，在代码中添加如下代码来设定连接
+同样，我们也可以不在命令行中指定连接地址，而是在代码中添加如下代码来设定连接（我们更加推荐第一种方式）。
 
 ```python
 import debugpy;debugpy.connect(('localhost', 5678))
 ```
 
-使用上面的方法时，要修改launch.json文件内容
+当我们使用上面的方法时，我们需要修改`launch.json`文件内容
 
 ```json
 {
@@ -275,4 +279,4 @@ import debugpy;debugpy.connect(('localhost', 5678))
 }
 ```
 
-修改好后先启动python远程调试，接着在命令行正常运行命令就能够启动调试了
+修改好后先启动python远程调试，接着在命令行正常运行命令就能够启动调试了。在学习一些成熟的基于PyTorch二次开发的框架时，debug可以帮助我们更好的了解整个项目的组成以及运行的逻辑，而debugpy可以大大提高你的debug的效率。

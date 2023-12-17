@@ -73,6 +73,9 @@
 
 1. GPT2实战详解
 
+### FAQ（frequently asked question）文档
+1. Pip/conda的换源
+2. 如何在vscode使用debugpy进行python的debug
 
 
 ## 三、贡献者
@@ -83,10 +86,11 @@
 - @[李嘉骐-核心贡献者](https://github.com/LiJiaqi96)（Datawhale成员-清华大学研究生）
 - @[陈安东-贡献者](https://github.com/andongBlue)（Datawhale成员-哈尔滨工业大学博士生）
 - @[刘洋-贡献者](https://github.com/liu-yang-maker)（Datawhale成员-中国科学院数学与系统科学研究所研究生）
-- @[徐茗-贡献者](https://github.com/laffycat)（Datawhale成员-北京邮电大学本科生）
+- @[徐茗-贡献者](https://github.com/laffycat)（Datawhale成员北京邮电大学本科生）
 - @[邹雨衡-贡献者](https://github.com/logan-zou)（Datawhale成员-对外经济贸易大学研究生）
 - @[潘笃驿-贡献者](https://github.com/limafang)（Datawhale成员-西安电子科技大学本科生）
-- @[李鑫-贡献者](https://github.com/Mr-atomer)（Datawhale成员-西安电子科技大学本科生）
+- @[沈豪-贡献则](https://github.com/shenhao-stu)（Datawhale成员-复旦大学博士研究生）
+- @[李鑫-贡献者](https://github.com/Mr-atomer)（西安电子科技大学本科生）
 
 **其他**
 

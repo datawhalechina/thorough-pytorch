@@ -1,6 +1,6 @@
 # Transformer 实战机器翻译
 
-## 引言
+## 一、引言
 
 自然语言处理与图像具有显著差异，自然语言处理任务也具有其独特性。相对于 CNN（卷积神经网络）在 CV 中的霸主地位，在很长一段时间里，RNN（循环神经网络）、LSTM（长短期记忆递归神经网络）占据了 NLP 的主流地位。作为针对序列建模的模型，RNN、LSTM 在以序列为主要呈现形式的 NLP 任务上展现出远超 CNN 的卓越性能。​但是 RNN、LSTM 虽然在处理自然语言处理的序列建模任务中得天独厚，却也有着难以忽视的缺陷：
 
@@ -16,9 +16,9 @@
 
 本文参考的代码实现仓库包括：[NanoGPT](https://github.com/karpathy/nanoGPT)、[ChineseNMT](https://github.com/hemingkx/ChineseNMT)、[transformer-translator-pytorch](https://github.com/devjwsong/transformer-translator-pytorch)
 
-## Transformer 模型架构
+## 二、Transformer 模型架构
 
-### Seq2Seq 模型
+### 2.1 Seq2Seq 模型
 
 Seq2Seq，即序列到序列，是一种经典 NLP 任务。具体而言，是指模型输入的是一个自然语言序列 $input = (x_1, x_2, x_3...x_n)$，输出的是一个可能不等长的自然语言序列 $output = (y_1, y_2, y_3...y_m)$。事实上，Seq2Seq 是 NLP 最经典的任务，几乎所有的 NLP 任务都可以视为 Seq2Seq 任务。例如文本分类任务，可以视为输出长度为 1 的目标序列（如在上式中 $m$ = 1）；词性标注任务，可以视为输出与输入序列等长的目标序列（如在上式中 $m$ = $n$）。
 
@@ -36,11 +36,11 @@ Transformer 是一个经典的 Seq2Seq 模型，即模型的输入为文本序�
 
 接下来我们将从 Attention 机制出发，自底向上逐层解析 Transformer 的模型原理，并基于 Pytorch 框架进行模型实现，并最后搭建一个 Transformer 模型。
 
-### Attention 机制
+### 2.2 Attention 机制
 
 ​Attention 机制是 Transformer 的核心之一，此处我们简要概述 attention 机制的思想和大致计算方法，如想要探究更多细节请大家具体查阅相关资料，例如：[Understanding Attention In Deep Learning (NLP)](https://towardsdatascience.com/attaining-attention-in-deep-learning-a712f93bdb1e)、[Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)等。在下文中，我们将从何为 Attention、self-attention 和 Multi-Head Attention 三个方面逐步介绍 Transformer 中使用的 Attention 机制，并手动实现 Transformer 中 Multi-Head Attention 层。
 
-#### 何为 Attention
+#### 2.2.1 何为 Attention
 
 ​Attention 机制最先源于计算机视觉领域，其核心思想为当我们关注一张图片，我们往往无需看清楚全部内容而仅将注意力集中在重点部分即可。而在自然语言处理领域，我们往往也可以通过将重点注意力集中在一个或几个 token，从而取得更高效高质的计算效果。
 
@@ -86,7 +86,7 @@ def attention(q, k, v):
     return y
 ```
 
-#### Mask
+#### 2.2.2 Mask
 
 由于​Transformer 是一个自回归模型，类似于语言模型，其将利用历史信息依序对输出进行预测。例如，如果语料的句对为：
     
@@ -105,9 +105,9 @@ def attention(q, k, v):
     <BOS> I like you
     <BoS> I like you </EOS>
 
-即当输入维度为 （B, T, n_embed），我们的 Mask 矩阵维度一般为 (1, T, T)（通过广播实现同一个 batch 中不同样本的计算），通过下三角掩码来遮蔽历史信息。在 Encoder 的 Attention 中，我们不会生成掩码，因此 Attention 是全部可见的；在 Decoder 的 Attention 中，我们会生成如上所述的掩码，从而保证每一个 token 只能使用自己之前 token 的注意力信息。
+即当输入维度为 （B, T, n_embed），我们的 Mask 矩阵维度一般为 (1, T, T)（通过广播实现同一个 batch 中不同样本的计算），通过下三角掩码来遮蔽历史信息。在 Encoder 的 Attention 中，Attention 是全部可见的，但是我们同样需要传入一个掩码，在 Encoder 中的掩码是遮蔽了 \<PAD\> 符号，因为在处理批量数据时会将他们补齐到同一长度，我们需要忽略 \<PAD\> 符号的注意力，否则会将该符号纳入语义计算；在 Decoder 的 Attention 中，我们会生成如上所述的下三角掩码，从而保证每一个 token 只能使用自己之前 token 的注意力信息。
 
-在具体实现中，我们通过以下代码生成 Mask 矩阵：
+在具体实现中，我们会在 DataLoader 中生成对 \<PAD\> 的 Mask 矩阵，并传入 Attention 计算。同时，我们通过以下代码生成 Causal LM 的 Mask 矩阵：
 
 ```python
 # 此处使用 register_buffer 注册一个 bias 属性
@@ -116,7 +116,38 @@ self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.blo
                                         .view(1, config.block_size, config.block_size))
 ```
 
-#### Self-Attention
+在考虑两种 Mask 矩阵（用于遮蔽 \<PAD\> 的 Mask 矩阵 和用在 Decoder 中遮蔽历史信息的 Mask 矩阵）后，我们可以将 attention 的计算修改为下列形式（注意，此处传入的 attn_mask 对 Encoder 是仅用作遮蔽 \<PAD\> 的矩阵，对 Decoder 是遮蔽矩阵和上文生成的下三角矩阵做布尔运算得到的统一 Mask 矩阵）：
+
+```python
+'''注意力计算函数'''
+import math
+from torch.nn import functional as F
+import torch
+
+def attention(q, k, v, dropout_module = None, is_causal=False, dropout=0.0, mask=None):
+    # 计算 QK^T / sqrt(d_k)，维度为 (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
+    att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
+    # 如果是解码器的 Casual LM，需要 mask 掉右上角的元素
+    mask.unsqueeze_(1)
+    if is_causal:
+        # 生成一个下三角矩阵
+        casual_mask = torch.tril(torch.ones(k.size(-2), k.size(-2)).view(1, 1, k.size(-2), k.size(-2)))
+        # casual_mask 和原先的 attention_mask 做位运算
+        mask = mask & casual_mask
+    # 进行 Mask
+    att = att.masked_fill(mask == False, float('-inf'))
+    # 计算 softmax，维度为 (B, nh, T, T)
+    att = F.softmax(att, dim=-1)
+    # Attention Dropout
+    if dropout_module is not None:
+        att = dropout_module(dropout)
+    # V * Score，维度为(B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
+    y = att @ v 
+    return y
+```
+
+
+#### 2.2.3 Self-Attention
 
 ​从上对 Attention 机制原理的叙述中我们可以发现，Attention 机制的本质是对两段序列的元素依次进行相似度计算，寻找出一个序列的每个元素对另一个序列的每个元素的相关度，然后基于相关度进行加权，即分配注意力。而这两段序列即是我们计算过程中 $Q$、$K$、$V$ 的来源。
 
@@ -132,12 +163,12 @@ self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.blo
 
 ```python
 # attn 为一个注意力计算层
-self.attn(x, x, x)
+self.attn(x, x, x, attn_mask)
 ```
 
 ​上述代码是 Encoder 层的部分实现，self.attn 即是注意力层，传入的三个参数都是 $x$，分别是 $Q$、$K$、$V$ 的计算输入，从而 $Q$、$K$、$$ 均来源于同一个输入，则实现了自注意力的拟合。
 
-#### Multi-Head Attention
+#### 2.2.4 Multi-Head Attention
 
 ​Attention 机制可以实现并行化与长期依赖关系拟合，但一次注意力计算只能拟合一种相关关系，单一的 Attention 机制很难全面拟合语句序列里的相关关系。因此 Transformer 使用了 Multi-Head attention 机制，即同时对一个语料进行多次注意力计算，每次注意力计算都能拟合不同的关系，将最后的多次结果拼接起来作为最后的输出，即可更全面深入地拟合语言信息。
 
@@ -169,6 +200,7 @@ $$
 import torch.nn as nn
 import torch
 
+
 '''多头注意力计算模块'''
 class MultiHeadAttention(nn.Module):
 
@@ -176,10 +208,9 @@ class MultiHeadAttention(nn.Module):
         # 构造函数
         # config: 配置对象
         super().__init__()
-        # 隐藏层维度必须是头数的整数倍，因为后面我们会将输入拆成头数个矩阵
+        # 隐藏层维度必须是头数的整数倍
         assert config.n_embd % config.n_head == 0
         # Wq, Wk, Wv 参数矩阵，每个参数矩阵为 n_embd x n_embd
-        # 这里通过三个组合矩阵来代替了n个参数矩阵的组合，其逻辑在于矩阵内积再拼接其实等同于拼接矩阵再内积，不理解的读者可以自行模拟一下，每一个线性层其实相当于n个参数矩阵的拼接
         self.c_attns = nn.ModuleList([nn.Linear(config.n_embd, config.n_embd, bias=config.bias) for _ in range(3)])
         # 输出的线性层，维度为 n_embd x n_embd
         self.c_proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
@@ -196,7 +227,8 @@ class MultiHeadAttention(nn.Module):
         # 是否是解码器的 Casual LM
         self.is_causal = is_causal
         # 判断是否使用 Flash Attention，Pytorch 2.0 支持，即判断 torch.nn.functional.scaled_dot_product_attention 是否存在
-        self.flash = hasattr(torch.nn.functional, 'scaled_dot_product_attention')
+        # self.flash = hasattr(torch.nn.functional, 'scaled_dot_product_attention')
+        self.flash = False
         
         # 如果不使用 Flash Attention，打印一个警告
         if not self.flash:
@@ -207,30 +239,47 @@ class MultiHeadAttention(nn.Module):
             self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.block_size))
                                         .view(1, 1, config.block_size, config.block_size))
 
-    def forward(self, query, key, value):
+    def forward(self, query, key, value, attention_mask=None):
         # 输入为 query、key、value，维度为 (B, T, n_embed)
+        # attention_mask 为注意力 mask，维度为 (B, 1, T)
         # print("query",query.size())
-        B, T, C = query.size() # batch size, sequence length, embedding dimensionality (n_embd)
+        B, _, C = key.size() # batch size, sequence length, embedding dimensionality (n_embd)
         # 计算 Q、K、V，输入通过参数矩阵层，维度为 (B, T, n_embed) x (n_embed, n_embed) -> (B, T, n_embed)
         q, k, v  = [self.c_attns[i](x) for i, x in zip(range(3), (query, key, value))]
-        # 将 Q、K、V 拆分成多头，维度为 (B, T, n_head, C // n_head)，然后交换维度，变成 (B, n_head, T, C // n_head)，因为在注意力计算中我们是取了后两个维度参与计算
-        # 为什么要先按B*T*n_head*C//n_head展开再互换1、2维度而不是直接按注意力输入展开，是因为view的展开方式是直接把输入全部排开，然后按要求构造，可以发现只有上述操作能够实现我们将每个头对应部分取出来的目标
-        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
-        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
-        v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
+        # 将 Q、K、V 拆分成多头，维度为 (B, T, n_head, C // n_head)，然后交换维度，变成 (B, n_head, T, C // n_head)
+        k = k.view(B, -1, self.n_head, C // self.n_head).transpose(1, 2)
+        q = q.view(B, -1, self.n_head, C // self.n_head).transpose(1, 2)
+        v = v.view(B, -1, self.n_head, C // self.n_head).transpose(1, 2)
 
         # 注意力计算 
         if self.flash:
-            # 直接使用 Flash Attention
+            # 直接使用 Flash Attention，其处理的是可变序列，不进行 PAD
+            # 但我们在使用数据时进行了 PAD，所以会出现问题，目前暂时不考虑 PAD 带来的语义歧义
             y = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=self.dropout if self.training else 0, is_causal=self.is_causal)
         else:
             # 手动实现注意力计算
             # 计算 QK^T / sqrt(d_k)，维度为 (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
             att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
+            if attention_mask is not None:
+                # 给 attention_mask 增加一个维度
+                mask = attention_mask.clone()
+                mask.unsqueeze_(1)
             # 如果是解码器的 Casual LM，需要 mask 掉右上角的元素
             if self.is_causal:
-                # 这里截取到序列长度，因为有些序列可能比 block_size 短
-                att = att.masked_fill(self.bias[:,:,:T,:T] == 0, float('-inf'))
+                # 先对初始化的下三角矩阵做截断并转化为Bool矩阵
+                casual_mask = self.bias[:,:,:k.size(-2),:k.size(-2)] == 1
+                # print(casual_mask.size())
+                # print(mask.size())
+                # casual_mask 和原先的 attention_mask 做位运算
+                if attention_mask is not None:
+                    mask = mask & casual_mask
+                else:
+                    mask = casual_mask
+            if attention_mask is None and not self.is_causal:
+                # 不进行 Mask
+                pass
+            else:
+                att = att.masked_fill(mask == False, float('-inf'))
             # 计算 softmax，维度为 (B, nh, T, T)
             att = F.softmax(att, dim=-1)
             # Attention Dropout
@@ -238,15 +287,18 @@ class MultiHeadAttention(nn.Module):
             # V * Score，维度为(B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
             y = att @ v 
         # 将多头的结果拼接起来, 先交换维度为 (B, T, n_head, C // n_head)，再拼接成 (B, T, n_head * C // n_head)
-        # contiguous 函数用于重新开辟一块新内存存储，因为Pytorch设置先transpose再view会报错，因为view直接基于底层存储得到，然而transpose并不会改变底层存储，因此需要额外存储
-        y = y.transpose(1, 2).contiguous().view(B, T, C)
+        # 使用 contigonous() 函数保证内存是连续的，否则会报错
+        # print(self.is_causal)
+        # print(y.size())
+        # print(B, T, C)
+        y = y.transpose(1, 2).contiguous().view(B, -1, C)
 
         # 经过输出层计算，维度为 (B, T, C)，再经过线性层残差连接
         y = self.resid_dropout(self.c_proj(y))
         return y
 ```
 
-### 全连接网络（FNN）
+### 2.3 全连接网络（FNN）
 
 如图，每一个 Encoder 块内部其实是一个多头自注意力层再加一个全连接层，在 Transformer 中，一个全连接网络一般包括两个线性层，线性层之间使用 ReLU 函数作为激活函数。此处我们实现一个 FNN 层：
 
@@ -271,7 +323,7 @@ class MLP(nn.Module):
         return x
 ```
 
-### Layer Norm
+### 2.4 Layer Norm
 
 Layer Norm 是 Transformer 的一个重要组成部分，模型在每一层网络计算之前都进行了 Layer Norm 操作。注意，在论文原图中，是先进行注意力计算和全连接计算再进行 Layer Norm 操作，这样也称为 Post Norm；但是在事实上实现 Transformer 模型时，作者其实将 Layer Norm 放在了注意力计算和全连接计算之前，从而将输入规范化到同一区间，减少模型训练的波动，称为 Pre Norm 操作。目前，Pre Norm 是较为常用的策略。
 
@@ -294,7 +346,7 @@ class LayerNorm(nn.Module):
         return F.layer_norm(input, self.weight.shape, self.weight, self.bias, 1e-5)
 ```
 
-### 残差连接
+### 2.5 残差连接
 
 由于 Transformer 模型结构较复杂、层数较深，​为了避免模型退化，Transformer 采用了残差连接的思想来连接每一个子层。残差连接，即下一层的输入不仅是上一层的输出，还包括上一层的输入。残差连接允许最底层信息直接传到最高层，让高层专注于残差的学习。
 
@@ -318,7 +370,7 @@ def forward(self, x):
 
 在上文代码中，self.ln_1 和 self.ln_2 都是 LayerNorm 层，self.attn 是注意力层，而 self.mlp 是全连接层。
 
-### Encoder
+### 2.6 Encoder
 
 在实现上述组件之后，我们可以搭建起 Transformer 的 Encoder。Encoder 由 N 个 Encoder Layer 组成，每一个 Encoder Layer 包括一个注意力层和一个全连接层。因此，我们可以首先实现一个 Encoder Layer：
 
@@ -335,12 +387,12 @@ class EncoderLayer(nn.Module):
         self.ln_2 = LayerNorm(config.n_embd, bias=config.bias)
         self.mlp = MLP(config)
 
-    def forward(self, x):
+    def forward(self, x, attn_mask=None):
         # 此处前面加了 x 实则是实现了残差连接
         x = self.ln_1(x)
         # Encoder 使用 Self Attention，所以 Q、K、V 都是 x
         # print("x",x.size())
-        x = x + self.attn(x, x, x)
+        x = x + self.attn(x, x, x, attention_mask=attn_mask)
         x = x + self.mlp(self.ln_2(x))
         return x
 ```
@@ -357,14 +409,14 @@ class Encoder(nn.Module):
         self.layers = nn.ModuleList([EncoderLayer(config) for _ in range(config.n_layer)])
         self.norm = LayerNorm(config.n_embd, bias=config.bias)
 
-    def forward(self, x):
+    def forward(self, x, attn_mask=None):
         "分别通过 N 层 Encoder Layer"
         for layer in self.layers:
-            x = layer(x)
+            x = layer(x, attn_mask=attn_mask)
         return self.norm(x)
 ```
 
-### Decoder
+### 2.7 Decoder
 
 类似的，我们也可以先搭建 Decoder Layer，再将 N 个 Decoder Layer 组装为 Decoder。但是和 Encoder 不同的是，Decoder 由两个注意力层和一个全连接层组成。第一个注意力层是一个掩码自注意力层，即使用 Mask 的注意力计算，保证每一个 token 只能使用该 token 之前的注意力分数；第二个注意力层是一个多头注意力层，该层将使用第一个注意力层的输出作为 query，使用 Encoder 的输出作为 key 和 value，来计算注意力分数。最后，再经过全连接层：
 
@@ -385,20 +437,39 @@ class DecoderLayer(nn.Module):
         # 第三个部分是 MLP
         self.mlp = MLP(config)
 
-    def forward(self, x, enc_out):
+    def forward(self, x, enc_out, attn_mask=None, label_mask=None):
         # 此处前面加了 x 实则是实现了残差连接
         x = self.ln_1(x)
         # 第一部分是一个 Mask Self Attention，Q、K、V 都是 x
-        x = x + self.m_attn(x, x, x)
+        x = x + self.m_attn(x, x, x, attention_mask=label_mask)
         x = self.ln_2(x)
         # 第二部分是一个类似于 Encoder 的 Attention，Q 是 x，K、V 是 Encoder 的输出
-        x = x + self.attn(x, enc_out, enc_out)
+        x = x + self.attn(x, enc_out, enc_out, attention_mask=attn_mask)
         x = self.ln_3(x)
         x = x + self.mlp(x)
         return x
 ```
 
-### Position Encoding
+同样，我们通过搭建 Decoder_layer 来构造一个 Decoder：
+
+```python
+'''Decoder'''
+class Decoder(nn.Module):
+
+    def __init__(self, config):
+        super(Decoder, self).__init__() 
+        # 一个 Decoder 由 N 个 Decoder Layer 组成
+        self.layers = nn.ModuleList([DecoderLayer(config) for _ in range(config.n_layer)])
+        self.norm = LayerNorm(config.n_embd, bias=config.bias)
+
+    def forward(self, x, enc_out, attn_mask=None, label_mask=None):
+        # 分别为 labels、encoder输出、encoder 的 mask 和 label 的 mask
+        for layer in self.layers:
+            x = layer(x, enc_out, attn_mask=attn_mask, label_mask=label_mask)
+        return self.norm(x)
+```
+
+### 2.8 Position Encoding
 
 ​Attention 机制可以实现良好的并行计算，但同时，其注意力计算的方式也导致序列中相对位置的丢失。在 RNN、LSTM 中，输入序列会沿着语句本身的顺序被依次递归处理，因此输入序列的顺序提供了极其重要的信息，这也和自然语言的本身特性非常吻合。但从上文对 Attention 机制的分析我们可以发现，在 Attention 机制的计算过程中，对于序列中的每一个 token，其他各个位置对其来说都是平等的，即“我喜欢你”和“你喜欢我”在 Attention 机制看来是完全相同的，但无疑这是 Attention 机制存在的一个巨大问题。因此，为使用序列顺序信息，保留序列中的相对位置信息，Transformer 采用了位置编码机制，该机制也在之后被多种模型沿用。
 
@@ -478,7 +549,7 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 ```
 
-### 整体模型
+### 2.9 整体模型
 
 在实现上述组件之后，我们可以根据 Transformer 的模型结构将整个模型搭建起来了。Transformer 整体包括一个 Embedding 层，一个位置编码层，一个 Encoder（包括 N 个 Encoder Layer），一个 Decoder（包括 N 个 Decoder Layer），最后还有一个从隐藏层维度映射到词表大小的线性层。从最后线性层输出出来再计算 Softmax，即能得到该预测结果映射到词表上的概率值。
 
@@ -532,7 +603,7 @@ class Transformer(nn.Module):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
     
     '''前向计算函数'''
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets, attn_mask=None, label_mask=None):
         # 输入为 idx，维度为 (batch size, sequence length)；targets 为目标序列，用于计算 loss
         device = idx.device
         b, t = idx.size()
@@ -543,23 +614,27 @@ class Transformer(nn.Module):
         print("idx",idx.size())
         # 通过 Embedding 层得到的维度是 (batch size, sequence length, vocab_size, n_embd)，因此我们去掉倒数第二个维度
         tok_emb = self.transformer.wte(idx)
+        label_emb = self.transformer.wte(targets)
         print("tok_emb",tok_emb.size())
         # 然后通过位置编码
         pos_emb = self.transformer.wpe(tok_emb) 
+        labels_pos_emb = self.transformer.wpe(label_emb)
         # 再进行 Dropout
         x = self.transformer.drop(pos_emb)
         # 然后通过 Encoder
         print("x after wpe:",x.size())
-        enc_out = self.transformer.encoder(x)
+        enc_out = self.transformer.encoder(x, attn_mask=attn_mask)
         print("enc_out:",enc_out.size())
         # 再通过 Decoder
-        x = self.transformer.decoder(x, enc_out)
+        x = self.transformer.decoder(labels_pos_emb, enc_out, attn_mask=attn_mask, label_mask=label_mask)
         print("x after decoder:",x.size())
 
         if targets is not None:
             # 训练阶段，如果我们给了 targets，就计算 loss
             # 先通过最后的 Linear 层，得到维度为 (batch size, sequence length, vocab size)
             logits = self.lm_head(x)
+            print("logits: ", logits.size())
+            print("targets: ", targets.size())
             # 再跟 targets 计算交叉熵
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
         else:
@@ -608,7 +683,7 @@ class Transformer(nn.Module):
             # 如果输入序列太长，我们需要将它截断到 block_size
             idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]
             # 前向计算，得到 logits，维度为 (batch size, sequence length, vocab size)
-            logits, _ = self(idx_cond)
+            logits, _ = self(idx_cond, idx_cond)
             # 使用最后一个 token 的 logits 作为当前输出，除以温度系数控制其多样性
             logits = logits[:, -1, :] / temperature
             # 如果使用 Top K 采样，将 logits 中除了 top_k 个元素的概率置为 0
@@ -626,6 +701,259 @@ class Transformer(nn.Module):
         return idx
 ```
 
-在上述代码中，我们主要实现了模型的构造函数、前向计算函数和推理阶段的生成函数。构造函数根据传入的参数构造模型的每个层，前向计算函数主要根据模型结构依次在各层之间进行传递。前向计算到最后一层，如果同时传入了 label，即训练阶段，那么通过最后一层之后与 label 计算交叉熵损失函数；如果没有 label 即推理阶段，那么直接通过最后一层得到结果即可。推理阶段的生成函数核心在于需要依次生成，因为 Seq2Seq 任务，在生成时以 LM 的形式生成，如果要生成长度为 N 的目标序列，那么会连续推理 N 次，每次将推理得到的结果附加到输入中再进行下一次生成。
+在上述代码中，我们主要实现了模型的构造函数、前向计算函数和推理阶段的生成函数。构造函数根据传入的参数构造模型的每个层，前向计算函数主要根据模型结构依次在各层之间进行传递。前向计算通过最后一层，再与 label 计算交叉熵损失函数；在推理阶段，label 与 input 一致。推理阶段的生成函数核心在于需要依次生成，因为 Seq2Seq 任务，在生成时以 LM 的形式生成，如果要生成长度为 N 的目标序列，那么会连续推理 N 次，每次将推理得到的结果附加到输入中再进行下一次生成。
 
 通过上述代码，我们即可实现一个 Transformer 模型。接下来，我们会结合具体的机器翻译数据集，讲解如何使用我们自定义的 Transformer 模型来实现训练和推理机器翻译任务。
+
+## 三、机器翻译任务
+
+机器翻译是 NLP 的经典任务，也是经典的 Seq2Seq 任务。机器翻译任务的输入一般是源语言，输出一般是目标语言，例如：
+
+    input: Today is a nice day!
+    output: 今天天气真好！
+
+这就是一个典型的英翻中机器翻译任务。本章我们将结合上文我们自定义的 Transformer 模型，来实战机器翻译任务。
+
+### 3.1 数据集
+
+我们使用 [WMT 2018 中-英翻译数据集（新闻领域）](https://statmt.org/wmt18/translation-task.html)来作为实战数据集。我们已将数据集存储在同级目录的 data 目录下，数据集分别包括：train.json（训练集）、test.json（测试集）、dev.json（验证集）。我们可以直接使用第三方库 json 来读取数据集并进行观察：
+
+<div align=center><img src="figures/transformer_dataset.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+
+### 3.2 训练分词器
+
+分词器，即 tokenizer，是 NLP 模型的一个重要组成部分。tokenizer 用于将自然语言文本拆分为 token，并转化为特定的序号，例如，对“今天天气很好”这句话，tokenizer 的处理结果可能是：
+
+    input:今天天气很好
+    切分成token：今天 天气 很 好
+    转化为序号：1 2 3 4
+
+很多模型都有开源的 tokenizer 可使用，此处我们尝试基于自己的语料，使用 Sentence piece 第三方库训练一个 tokenizer。
+
+目前，主流的 tokenizer 一般基于 BPE（Byte Pair Encoding）。对于 BPE，可以简单理解为该类分词器会将一个字符切分开成为字节对，从而解决 OOV（Out of Vocabulary，词典未登录词，即未在词典中出现过的词如何表示）的问题。关于 BPE 的原理和基本算法，可以参考该博客：[理解NLP最重要的编码方式 — Byte Pair Encoding (BPE)，这一篇就够了](https://zhuanlan.zhihu.com/p/424631681)。
+
+此处，我们直接使用 sentencepiece 来训练一个 tokenizer。首先，我们将数据集中的中英句对拆分开，分别形成中文语料库和英文语料库：
+
+```python
+import os
+
+# 源数据路径
+file_path = "data"
+# 将三个数据集都纳入语料库
+files = ['train', 'dev', 'test']
+# 中文语料库的地址
+ch_path = 'corpus.ch'
+# 英文语料库的地址
+en_path = 'corpus.en'
+# 存储所有中文、英文语料的列表
+ch_lines = []
+en_lines = []
+
+for file in files:
+    # 分别加载每一个数据集
+    corpus = json.load(open(os.path.join(file_path, file + '.json'), 'r'))
+    # 加到列表中
+    for item in corpus:
+        ch_lines.append(item[1] + '\n')
+        en_lines.append(item[0] + '\n')
+
+# 分别写到两个语料库中
+with open(os.path.join(file_path, ch_path), "w") as fch:
+    fch.writelines(ch_lines)
+
+with open(os.path.join(file_path, en_path), "w") as fen:
+    fen.writelines(en_lines)
+
+# lines of Chinese: 252777
+print("lines of Chinese: ", len(ch_lines))
+# lines of English: 252777
+print("lines of English: ", len(en_lines))
+print("-------- Get Corpus ! --------")
+```
+
+接着，我们使用 sentencepiece 工具，分别在中、英文语料库训练中、英文 tokenzier：
+
+```python
+import sentencepiece as spm
+
+def train(input_file, vocab_size, model_name, model_type, character_coverage):
+    # 使用 Sentence Piece 基于训练数据来训练一个分词器
+    # args:
+    # input_file: 训练使用的数据
+    # vocab_size: 设定的词表大小
+    # model_name: 模型命名
+    # model_type: 模型类型，一般选择 bpe
+    # character_coverage: 覆盖的字符范围，中文一类的表意文字一般0.995，英文一类的字母文字一般1
+    # 采用命令行的形式实现
+    input_argument = '--input=%s --model_prefix=%s --vocab_size=%s --model_type=%s --character_coverage=%s ' \
+                     '--pad_id=0 --unk_id=1 --bos_id=2 --eos_id=3 '
+    cmd = input_argument % (input_file, model_name, vocab_size, model_type, character_coverage)
+    spm.SentencePieceTrainer.Train(cmd)
+
+
+en_input = 'data/corpus.en'
+en_vocab_size = 32000
+en_model_name = 'eng'
+en_model_type = 'bpe'
+en_character_coverage = 1
+train(en_input, en_vocab_size, en_model_name, en_model_type, en_character_coverage)
+
+ch_input = 'data/corpus.ch'
+ch_vocab_size = 32000
+ch_model_name = 'chn'
+ch_model_type = 'bpe'
+ch_character_coverage = 0.9995
+train(ch_input, ch_vocab_size, ch_model_name, ch_model_type, ch_character_coverage)
+```
+
+注意，上文的代码需要一定的训练时间，在 1/4 块 A100（80G）上约训练 30 min。
+
+训练得到 tokenizer 后，我们分别定义两个函数来加载它们，后续将在数据加载中使用：
+
+```python
+# 加载训练好的分词器
+import sentencepiece as spm
+
+def chinese_tokenizer_load():
+    sp_chn = spm.SentencePieceProcessor()
+    sp_chn.Load('{}.model'.format("data/chn"))
+    return sp_chn
+
+
+def english_tokenizer_load():
+    sp_eng = spm.SentencePieceProcessor()
+    sp_eng.Load('{}.model'.format("data/eng"))
+    return sp_eng
+```
+
+### 3.3 自定义 Dataset
+
+接下来我们基于 Pytorch 的 Dataset 类自定义一个 Dataset 类，该类会调用我们上文训练出的 tokenizer 来对数据文本进行处理，定义特殊的标记（例如 \<PAD\>、\<BOS\> 等）。同时，我们会在自定义 Dataset 中定义一个排序函数，将数据按照文本长度来排序，从而尽可能让相同长度的文本放在一起，降低做遮蔽操作的时间消耗：
+
+```python
+from torch.utils.data import Dataset
+import json
+from torch.nn.utils.rnn import pad_sequence
+import numpy as np
+
+class MTDataset(Dataset):
+    # 自定义机器翻译数据集
+    def __init__(self, data_path):
+        # 获取源数据
+        self.out_en_sent, self.out_ch_sent = self.get_dataset(data_path, sort=True)
+        # 加载 tokenizer
+        self.sp_eng = english_tokenizer_load()
+        self.sp_chn = chinese_tokenizer_load()
+        # 定义特殊 token
+        self.PAD = self.sp_eng.pad_id()  # 0
+        self.BOS = self.sp_eng.bos_id()  # 2
+        self.EOS = self.sp_eng.eos_id()  # 3
+
+    @staticmethod
+    def len_argsort(seq):
+        """传入一系列句子数据(分好词的列表形式)，按照句子长度排序后，返回排序后原来各句子在数据中的索引下标"""
+        return sorted(range(len(seq)), key=lambda x: len(seq[x]))
+
+    def get_dataset(self, data_path, sort=False):
+        """把中文和英文按照同样的顺序排序, 以英文句子长度排序的(句子下标)顺序为基准"""
+        # 加载数据集
+        dataset = json.load(open(data_path, 'r'))
+        # 将中文和英文分别加载为两个列表
+        out_en_sent = []
+        out_ch_sent = []
+        for idx, _ in enumerate(dataset):
+            out_en_sent.append(dataset[idx][0])
+            out_ch_sent.append(dataset[idx][1])
+        # 如果要按长度排序
+        if sort:
+            sorted_index = self.len_argsort(out_en_sent)
+            out_en_sent = [out_en_sent[i] for i in sorted_index]
+            out_ch_sent = [out_ch_sent[i] for i in sorted_index]
+        return out_en_sent, out_ch_sent
+
+    def __getitem__(self, idx):
+        # get 方法，返回一个句对
+        eng_text = self.out_en_sent[idx]
+        chn_text = self.out_ch_sent[idx]
+        return [eng_text, chn_text]
+
+    def __len__(self):
+        return len(self.out_en_sent)
+```
+
+我们将可以直接基于上述自定义 Dataset 来加载一个 Pytorch 的 DataLoader，从而进行数据的加载。
+
+### 3.4 处理变长序列的 collate_fn
+
+collate_fn 是采样函数，用于定义如何从数据集中加载一批数据。在机器翻译任务中，我们需要在 collate_fn 函数中实现对变长序列的处理，并通过 tokenizer 进行分词，从而加载一批数据传入模型：
+
+```python
+# 我们实则将该函数定义在 MTDataset 的方法中
+def collate_fn(self, batch):
+    # 变长序列的 collate_fn 方法，需要进行 padding
+    # 形成列表
+    src_text = [x[0] for x in batch]
+    tgt_text = [x[1] for x in batch]
+    # 进行 tokenizer，然后加上 BOS 和 EOS
+    src_tokens = [[self.BOS] + self.sp_eng.EncodeAsIds(sent) + [self.EOS] for sent in src_text]
+    tgt_tokens = [[self.BOS] + self.sp_chn.EncodeAsIds(sent) + [self.EOS] for sent in tgt_text]
+    # 进行 padding
+    batch_input = pad_sequence([torch.LongTensor(np.array(l_)) for l_ in src_tokens],
+                                batch_first=True, padding_value=self.PAD)
+    batch_target = pad_sequence([torch.LongTensor(np.array(l_)) for l_ in tgt_tokens],
+                                batch_first=True, padding_value=self.PAD)
+    # 分别加载输入和输出的 attn_mask
+    src_mask = (batch_input != self.PAD).unsqueeze(-2)
+    label_mask = (batch_target != self.PAD).unsqueeze(-2)
+    # 每批数据我们都会返回转化之后的输入和 label 的 id，以及输入和 label 的 attn_mask
+    return {"input_ids": batch_input, "label_ids": batch_target, "attention_mask": src_mask, "label_mask": label_mask}
+```
+
+在完成上述函数后，我们可以在训练时实现一个 DataLoader：
+
+```python
+dataset = MTDataset("data/train.json")
+dataloader = torch.utils.data.DataLoader(dataset, shuffle=True, batch_size=4, collate_fn=dataset.collate_fn)
+```
+
+这个 DataLoader 每一次迭代都会返回给一个 batch 的数据，我们可以将该 batch 的数据按照之前模型定义的方式来传入模型，从而实现模型的计算：
+
+```python
+for item in dataloader:
+    inputs = item["input_ids"]
+    attn_mask = item["attention_mask"]
+    labels = item["label_ids"]
+    label_mask = item["label_mask"]
+    logits, _ = model(inputs, labels, attn_mask=attn_mask, label_mask=label_mask)
+    print("result: ", logits)
+    break
+```
+
+### 3.5 输入输出概览
+
+我们可以简要观察一下我们训练时模型的输入输出，例如，在 batch_size 为 4 的情况下：
+
+输入源文本：
+
+<div align=center><img src="figures/transformer_input_text.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+输出源文本：
+
+<div align=center><img src="figures/transformer_label_text.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+输入 index：
+
+<div align=center><img src="figures/transformer_input_ids.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+输入的 Mask 矩阵：
+
+<div align=center><img src="figures/transformer_attn_mask.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+输出 labels：
+
+<div align=center><img src="figures/transformer_label_ids.png" alt="image-20230129185638102" style="zoom:50%;"/></div>
+
+最后，我们展示一下一次获取的输入形状：
+
+<div align=center><img src="figures/transformer_data_size.png" alt="image-20230129185638102" style="zoom:50%;"/></div>

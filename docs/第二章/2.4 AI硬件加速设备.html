@@ -862,7 +862,7 @@ title="Print to PDF"
 <section id="id1">
 <h3>芯片架构设计<a class="headerlink" href="#id1" title="永久链接至标题">#</a></h3>
 <p>TPU的设计架构如下图</p>
-<img src="./figures/TPU.jpg"  />
+<img src="../../source/第二章/figures/TPU.jpg"  />
 <p>上图：In-datacenter performance analysis of a tensor processing unit，figure 1</p>
 <p>由上图可见，整个TPU中最重要的计算单元是右上角黄色的矩阵乘单元“Matrix Multiply Unit”，它包含256x256个MAC部件，每一个能够执行有符号或者无符号的8位乘加操作。它的输入为权重数据队列FIFO和统一缓冲Unified Buffer，即图中指向它的两个蓝色部分。在计算结束后，16位结果被收集并传递到位于矩阵单元下方的4MiB 32位蓝色累加器Accumulators中，之后由黄色的激活单元在累加后执行非线性函数，并最终将数据返回给统一缓冲。</p>
 <p>Matrix Multiply Unit矩阵处理器作为TPU的核心部分，它可以在单个时钟周期内处理数十万次矩阵（Matrix）运算。MMU有着与传统CPU、GPU截然不同的架构，称为脉动阵列（systolic array）。之所以叫“脉动”，是因为在这种结构中，数据一波一波地流过芯片，与心脏跳动供血的方式类似。而如下图所示，CPU和GPU在每次运算中都需要从多个寄存器（register）中进行存取，而TPU的脉动阵列将多个运算逻辑单元（ALU）串联在一起，复用从一个寄存器中读取的结果。每个ALU单元结构简单，一般只包含乘法器、加法器以及寄存器三部分，适合大量堆砌。</p>

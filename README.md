@@ -1,7 +1,9 @@
 # 深入浅出PyTorch
-**在线阅读地址**：https://datawhalechina.github.io/thorough-pytorch/
 
-**配套视频教程**：https://www.bilibili.com/video/BV1L44y1472Z
+>[!IMPORTANT]
+>[在线阅读地址](https://datawhalechina.github.io/thorough-pytorch/) | [配套视频教程](https://www.bilibili.com/video/BV1L44y1472Z) | [智海（国家级AI科教平台）](https://aiplusx.momodel.cn/classroom/class/664bf5db24cff38ad7d2a20e?activeKey=intro)
+>
+>请注意：在线文档更新落后于主仓库更新，建议看source文件夹下的markdown文件
 
 ## 一、项目初衷
 

@@ -62,6 +62,7 @@ PyTorch是利用深度学习进行数据科学研究的重要工具，在灵活�
   - 可视化CNN卷积层
   - 使用TensorBoard可视化训练过程
   - 使用wandb可视化训练过程
+  - 使用SwanLab可视化训练过程
 - 第八章：PyTorch生态简介
   - 简介
   - 图像—torchvision

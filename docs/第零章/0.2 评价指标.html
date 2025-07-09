@@ -846,12 +846,12 @@ title="Print to PDF"
 <img src="figures/confusion_matrix.png" align="center" style="zoom:50%;" />
 <p>在这里我们以一个二分类的例子来帮助大家理解。假设我们是某核酸检测机构，将对100个人进行核酸检测，实际结果为98个阴性，2个阳性，但是我们的模型对核酸检测结果进行预测，预测结果为94个阴性，6个阳性结果，在这里我们定义核酸结果阴性为正样本，核酸结果阳性为负样本。在这个例子中，TP代表实际为阴性且被预测为阴性的数量，共有94人；FP代表实际为阳性，模型预测为阴性的数量，共有0人；FN代表实际为阴性被模型判断为阳性的数量，共有4人；TN代表实际为阳性，被模型识别为阳性的数量，共有2人。 于是我们就可以得到下面的这个混淆矩阵。</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{bmatrix}
-    94 &amp; 0 \\
-    4 &amp; 2
-  \end{bmatrix} \tag{2}
-\end{split}\]</div>
+\begin{equation}
+  \begin{bmatrix}
+      94 & 0 \\
+      4 & 2
+    \end{bmatrix} \tag{2}
+\end{equation}</div>
 <p>我们在此也展示一个10类标+1个背景所产生的归一化的混淆矩阵</p>
 <img src="figures/normalized_confusion_matrix.png" align="center" style="zoom:50%;" />
 <p>我们在拥有混淆矩阵后，可以计算Accuracy，Precision，Recall，F1 Score等衡量模型的评价指标。关于混淆矩阵的代码实现，我们可以使用<code class="docutils literal notranslate"><span class="pre">sklearn.metrics.confusion_matrix()</span></code>函数进行计算</p>

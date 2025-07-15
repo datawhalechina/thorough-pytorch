@@ -517,7 +517,7 @@ print('TripletMarginLoss损失函数的计算结果为',output)
     TripletMarginLoss损失函数的计算结果为 tensor(1.1667, grad_fn=<MeanBackward0>)
 
 
-## 3.5.13 HingEmbeddingLoss
+## 3.5.13 HingeEmbeddingLoss
 ```python
 torch.nn.HingeEmbeddingLoss(margin=1.0, size_average=None, reduce=None, reduction='mean')
 ```
@@ -550,12 +550,12 @@ $
 loss_f = nn.HingeEmbeddingLoss()
 inputs = torch.tensor([[1., 0.8, 0.5]])
 target = torch.tensor([[1, 1, -1]])
-output = loss_f(inputs,target)
+output = loss_f(inputs, target)
 
-print('HingEmbeddingLoss损失函数的计算结果为',output)
+print('HingeEmbeddingLoss损失函数的计算结果为',output)
 ```
 
-    HingEmbeddingLoss损失函数的计算结果为 tensor(0.7667)
+    HingeEmbeddingLoss损失函数的计算结果为 tensor(0.7667)
 
 
 ## 3.5.14 余弦相似度

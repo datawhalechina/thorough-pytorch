@@ -823,17 +823,17 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p>数学上，若有向量函数<span class="math notranslate nohighlight">\(\vec{y}=f(\vec{x})\)</span>，那么 <span class="math notranslate nohighlight">\(\vec{y}\)</span> 关于 <span class="math notranslate nohighlight">\(\vec{x}\)</span> 的梯度就是一个雅可比矩阵：
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 J=\left(\begin{array}{ccc}\frac{\partial y_{1}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{1}}{\partial x_{n}} \\ \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial y_{m}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{m}}{\partial x_{n}}\end{array}\right)
-\)</span>
+\]</span>
 而 <code class="docutils literal notranslate"><span class="pre">torch.autograd</span></code> 这个包就是用来计算一些雅可比矩阵的乘积的。例如，如果 <span class="math notranslate nohighlight">\(v\)</span> 是一个标量函数 <span class="math notranslate nohighlight">\(l = g(\vec{y})\)</span> 的梯度：
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 v=\left(\begin{array}{lll}\frac{\partial l}{\partial y_{1}} &amp; \cdots &amp; \frac{\partial l}{\partial y_{m}}\end{array}\right)
-\)</span>
+\]</span>
 由链式法则，我们可以得到：
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 v J=\left(\begin{array}{lll}\frac{\partial l}{\partial y_{1}} &amp; \cdots &amp; \frac{\partial l}{\partial y_{m}}\end{array}\right)\left(\begin{array}{ccc}\frac{\partial y_{1}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{1}}{\partial x_{n}} \\ \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial y_{m}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{m}}{\partial x_{n}}\end{array}\right)=\left(\begin{array}{lll}\frac{\partial l}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial l}{\partial x_{n}}\end{array}\right)
-\)</span></p>
+\]</span></p>
 <p>注意：grad在反向传播过程中是累加的(accumulated)，这意味着每一次运行反向传播，梯度都会累加之前的梯度，所以一般在反向传播之前需把梯度清零。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 再来反向传播⼀一次，注意grad是累加的</span>
 <span class="n">out2</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>

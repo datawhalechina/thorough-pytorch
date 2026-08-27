@@ -884,12 +884,12 @@ title="Print to PDF"
 <p><code class="docutils literal notranslate"><span class="pre">size_average</span></code>:数据为bool，为True时，返回的loss为平均值；为False时，返回的各样本的loss之和。</p>
 <p><code class="docutils literal notranslate"><span class="pre">reduce</span></code>:数据类型为bool，为True时，loss的返回是标量。</p>
 <p>计算公式如下：
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 \ell(x, y)=\left\{\begin{array}{ll}
 \operatorname{mean}(L), &amp; \text { if reduction }=\text { 'mean' } \\
 \operatorname{sum}(L), &amp; \text { if reduction }=\text { 'sum' }
 \end{array}\right.
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
 <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
 <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -917,9 +917,9 @@ title="Print to PDF"
 <p><code class="docutils literal notranslate"><span class="pre">ignore_index</span></code>:忽略某个类的损失函数。</p>
 <p><code class="docutils literal notranslate"><span class="pre">reduce</span></code>:数据类型为bool，为True时，loss的返回是标量。</p>
 <p>计算公式如下：
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 \operatorname{loss}(x, \text { class })=-\log \left(\frac{\exp (x[\text { class }])}{\sum_{j} \exp (x[j])}\right)=-x[\text { class }]+\log \left(\sum_{j} \exp (x[j])\right)
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
 <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span><span class="o">.</span><span class="n">random_</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -945,9 +945,9 @@ sum：所有元素求和，返回标量。
 mean：加权平均，返回标量。
 如果选择<code class="docutils literal notranslate"><span class="pre">none</span></code>，那么返回的结果是和输入元素相同尺寸的。默认计算方式是求平均。</p>
 <p><strong>计算公式如下：</strong>
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 L_{n} = |x_{n}-y_{n}|
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">L1Loss</span><span class="p">()</span>
 <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -971,9 +971,9 @@ L_{n} = |x_{n}-y_{n}|
 <p>和<code class="docutils literal notranslate"><span class="pre">L1Loss</span></code>一样，<code class="docutils literal notranslate"><span class="pre">MSELoss</span></code>损失函数中，<code class="docutils literal notranslate"><span class="pre">reduction</span></code>参数决定了计算模式。有三种计算模式可选：none：逐个元素计算。
 sum：所有元素求和，返回标量。默认计算方式是求平均。</p>
 <p><strong>计算公式如下：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 l_{n}=\left(x_{n}-y_{n}\right)^{2}
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
 <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -998,16 +998,16 @@ l_{n}=\left(x_{n}-y_{n}\right)^{2}
 sum：所有元素求和，返回标量。默认计算方式是求平均。</p>
 <p><strong>提醒：</strong> 之后的损失函数中，关于<code class="docutils literal notranslate"><span class="pre">reduction</span></code> 这个参数依旧会存在。所以，之后就不再单独说明。</p>
 <p><strong>计算公式如下：</strong>
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 \operatorname{loss}(x, y)=\frac{1}{n} \sum_{i=1}^{n} z_{i}
-\)</span>
+\]</span>
 其中，
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 z_{i}=\left\{\begin{array}{ll}
 0.5\left(x_{i}-y_{i}\right)^{2}, &amp; \text { if }\left|x_{i}-y_{i}\right|&lt;1 \\
 \left|x_{i}-y_{i}\right|-0.5, &amp; \text { otherwise }
 \end{array}\right.
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">SmoothL1Loss</span><span class="p">()</span>
 <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -1056,11 +1056,11 @@ z_{i}=\left\{\begin{array}{ll}
 <p><strong>数学公式：</strong></p>
 <ul>
 <li><p>当参数<code class="docutils literal notranslate"><span class="pre">log_input=True</span></code>：
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 \operatorname{loss}\left(x_{n}, y_{n}\right)=e^{x_{n}}-x_{n} \cdot y_{n}
-\)</span></p></li>
+\]</span></p></li>
 <li><p>当参数<code class="docutils literal notranslate"><span class="pre">log_input=False</span></code>：</p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
   \operatorname{loss}\left(x_{n}, y_{n}\right)=x_{n}-y_{n} \cdot \log \left(x_{n}+\text { eps }\right)
   \)</span></p>
 </li>
@@ -1102,7 +1102,7 @@ batchmean：batchsize 维度求平均值。
 D_{\mathrm{KL}}(P, Q)=\mathrm{E}_{X \sim P}\left[\log \frac{P(X)}{Q(X)}\right] &amp;=\mathrm{E}_{X \sim P}[\log P(X)-\log Q(X)] \\
 &amp;=\sum_{i=1}^{n} P\left(x_{i}\right)\left(\log P\left(x_{i}\right)-\log Q\left(x_{i}\right)\right)
 \end{aligned}
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]])</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
 <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">KLDivLoss</span><span class="p">()</span>
@@ -1125,9 +1125,9 @@ D_{\mathrm{KL}}(P, Q)=\mathrm{E}_{X \sim P}\left[\log \frac{P(X)}{Q(X)}\right] &
 <p><code class="docutils literal notranslate"><span class="pre">margin</span></code>：边界值，<span class="math notranslate nohighlight">\(x_{1}\)</span> 与<span class="math notranslate nohighlight">\(x_{2}\)</span> 之间的差异值。</p>
 <p><code class="docutils literal notranslate"><span class="pre">reduction</span></code>：计算模式，可为 none/sum/mean。</p>
 <p><strong>计算公式：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 \operatorname{loss}(x 1, x 2, y)=\max (0,-y *(x 1-x 2)+\operatorname{margin})
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MarginRankingLoss</span><span class="p">()</span>
 <span class="n">input1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">input2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1151,15 +1151,15 @@ D_{\mathrm{KL}}(P, Q)=\mathrm{E}_{X \sim P}\left[\log \frac{P(X)}{Q(X)}\right] &
 <p><strong>主要参数:</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">reduction</span></code>：计算模式，可为 none/sum/mean。</p>
 <p><strong>计算公式：</strong>
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 \operatorname{loss}(x, y)=\sum_{i j} \frac{\max (0,1-x[y[j]]-x[i])}{x \cdot \operatorname{size}(0)}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+\]</span></p>
+<p><span class="math notranslate nohighlight">\[
 \begin{array}{l}
 \text { 其中, } i=0, \ldots, x \cdot \operatorname{size}(0), j=0, \ldots, y \cdot \operatorname{size}(0), \text { 对于所有的 } i \text { 和 } j \text {, 都有 } y[j] \geq 0 \text { 并且 }\\
 i \neq y[j]
 \end{array}
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MultiLabelMarginLoss</span><span class="p">()</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">([[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]])</span>
 <span class="c1"># for target y, only consider labels 3 and 0, not after label -1</span>
@@ -1182,14 +1182,14 @@ i \neq y[j]
 <p><strong>主要参数:</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">reduction</span></code>：计算模式，可为 none/sum/mean。</p>
 <p><strong>计算公式：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 \operatorname{loss}(x, y)=\sum_{i} \frac{\log (1+\exp (-y[i] \cdot x[i]))}{x \cdot \operatorname{nelement}()}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+\]</span></p>
+<p><span class="math notranslate nohighlight">\[
 \
 \text { 其中, } x . \text { nelement() 为输入 } x \text { 中的样本个数。注意这里 } y \text { 也有 } 1 \text { 和 }-1 \text { 两种模式。 }
 \
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]])</span>  <span class="c1"># 两个样本，两个神经元</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>  <span class="c1"># 该 loss 为逐个神经元计算，需要为每个神经元单独设置标签</span>
 
@@ -1215,15 +1215,15 @@ i \neq y[j]
 <p><code class="docutils literal notranslate"><span class="pre">weight</span></code>：各类别的 loss 设置权值。</p>
 <p><code class="docutils literal notranslate"><span class="pre">margin</span></code>：边界值</p>
 <p><strong>计算公式：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 \operatorname{loss}(x, y)=\frac{\sum_{i} \max (0, \operatorname{margin}-x[y]+x[i])^{p}}{x \cdot \operatorname{size}(0)}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+\]</span></p>
+<p><span class="math notranslate nohighlight">\[
 \begin{array}{l}
 \text { 其中, } x \in\{0, \ldots, x \cdot \operatorname{size}(0)-1\}, y \in\{0, \ldots, y \cdot \operatorname{size}(0)-1\} \text {, 并且对于所有的 } i \text { 和 } j \text {, }\\
 \text { 都有 } 0 \leq y[j] \leq x \cdot \operatorname{size}(0)-1, \text { 以及 } i \neq y[j] \text { 。 }
 \end{array}
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]])</span> 
 <span class="n">target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span> 
 
@@ -1250,12 +1250,12 @@ i \neq y[j]
 <p><code class="docutils literal notranslate"><span class="pre">p：</span></code>可选 1 或 2。</p>
 <p><code class="docutils literal notranslate"><span class="pre">margin</span></code>：边界值</p>
 <p><strong>计算公式：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 L(a, p, n)=\max \left\{d\left(a_{i}, p_{i}\right)-d\left(a_{i}, n_{i}\right)+\operatorname{margin}, 0\right\}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+\]</span></p>
+<p><span class="math notranslate nohighlight">\[
 \text { 其中, } d\left(x_{i}, y_{i}\right)=\left\|\mathbf{x}_{i}-\mathbf{y}_{i}\right\|_{\text {・ }}
-\)</span></p>
+\]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">triplet_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">TripletMarginLoss</span><span class="p">(</span><span class="n">margin</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">anchor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">positive</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1279,12 +1279,12 @@ L(a, p, n)=\max \left\{d\left(a_{i}, p_{i}\right)-d\left(a_{i}, n_{i}\right)+\op
 <p><code class="docutils literal notranslate"><span class="pre">reduction</span></code>：计算模式，可为 none/sum/mean。</p>
 <p><code class="docutils literal notranslate"><span class="pre">margin</span></code>：边界值</p>
 <p><strong>计算公式：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 l_{n}=\left\{\begin{array}{ll}
 x_{n}, &amp; \text { if } y_{n}=1 \\
 \max \left\{0, \Delta-x_{n}\right\}, &amp; \text { if } y_{n}=-1
 \end{array}\right.
-\)</span>
+\]</span>
 <strong>注意事项：</strong> 输入x应为两个输入之差的绝对值。</p>
 <p>可以这样理解，让个输出的是正例yn=1,那么loss就是x，如果输出的是负例y=-1，那么输出的loss就是要做一个比较。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss_f</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HingeEmbeddingLoss</span><span class="p">()</span>
@@ -1309,16 +1309,16 @@ x_{n}, &amp; \text { if } y_{n}=1 \\
 <p><code class="docutils literal notranslate"><span class="pre">reduction</span></code>：计算模式，可为 none/sum/mean。</p>
 <p><code class="docutils literal notranslate"><span class="pre">margin</span></code>：可取值[-1,1] ，推荐为[0,0.5] 。</p>
 <p><strong>计算公式：</strong></p>
-<p><span class="math notranslate nohighlight">\(
+<p><span class="math notranslate nohighlight">\[
 \operatorname{loss}(x, y)=\left\{\begin{array}{ll}
 1-\cos \left(x_{1}, x_{2}\right), &amp; \text { if } y=1 \\
 \max \left\{0, \cos \left(x_{1}, x_{2}\right)-\text { margin }\right\}, &amp; \text { if } y=-1
 \end{array}\right.
-\)</span>
+\]</span>
 其中,
-<span class="math notranslate nohighlight">\(
+<span class="math notranslate nohighlight">\[
 \cos (\theta)=\frac{A \cdot B}{\|A\|\|B\|}=\frac{\sum_{i=1}^{n} A_{i} \times B_{i}}{\sqrt{\sum_{i=1}^{n}\left(A_{i}\right)^{2}} \times \sqrt{\sum_{i=1}^{n}\left(B_{i}\right)^{2}}}
-\)</span></p>
+\]</span></p>
 <p>这个损失函数应该是最广为人知的。对于两个向量，做余弦相似度。将余弦相似度作为一个距离的计算方式，如果两个向量的距离近，则损失函数值小，反之亦然。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loss_f</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CosineEmbeddingLoss</span><span class="p">()</span>
 <span class="n">inputs_1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]])</span>
